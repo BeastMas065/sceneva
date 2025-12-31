@@ -1,13 +1,56 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { WelcomeScreen } from '@/components/WelcomeScreen';
+import { QuizScreen } from '@/components/QuizScreen';
+import { ProcessingScreen } from '@/components/ProcessingScreen';
+import { ResultScreen } from '@/components/ResultScreen';
+import { Scores, recommendMovie, Movie } from '@/data/movies';
+
+type AppState = 'welcome' | 'quiz' | 'processing' | 'result';
 
 const Index = () => {
+  const [state, setState] = useState<AppState>('welcome');
+  const [userName, setUserName] = useState('');
+  const [scores, setScores] = useState<Scores | null>(null);
+  const [recommendation, setRecommendation] = useState<{ movie: Movie; reasons: string[] } | null>(null);
+
+  const handleStart = (name: string) => {
+    setUserName(name);
+    setState('quiz');
+  };
+
+  const handleQuizComplete = (finalScores: Scores) => {
+    setScores(finalScores);
+    setState('processing');
+  };
+
+  const handleProcessingComplete = () => {
+    if (scores) {
+      const result = recommendMovie(scores);
+      setRecommendation(result);
+      setState('result');
+    }
+  };
+
+  const handleRetake = () => {
+    setScores(null);
+    setRecommendation(null);
+    setState('quiz');
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {state === 'welcome' && <WelcomeScreen onStart={handleStart} />}
+      {state === 'quiz' && <QuizScreen userName={userName} onComplete={handleQuizComplete} />}
+      {state === 'processing' && <ProcessingScreen onComplete={handleProcessingComplete} />}
+      {state === 'result' && recommendation && (
+        <ResultScreen 
+          movie={recommendation.movie} 
+          reasons={recommendation.reasons}
+          userName={userName}
+          onRetake={handleRetake}
+        />
+      )}
+    </>
   );
 };
 
