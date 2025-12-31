@@ -96,6 +96,68 @@
 }
 
 @layer utilities {
+  /* Outstanding hover effects */
+  
+  /* Card with glow on hover */
+  .card-glow {
+    @apply relative transition-all duration-300 ease-out;
+  }
+  
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--foreground) / 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .card-glow:hover {
+    @apply -translate-y-1 shadow-lg;
+    box-shadow: 0 20px 40px -20px hsl(var(--foreground) / 0.15);
+  }
+  
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+
+  /* Border animation on hover */
+  .border-animate {
+    @apply relative overflow-hidden;
+  }
+  
+  .border-animate::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--foreground) / 0.2), transparent, hsl(var(--foreground) / 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .border-animate:hover::after {
+    opacity: 1;
+  }
+
+  /* Interactive lift with shadow */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 12px 24px -8px hsl(var(--foreground) / 0.12);
+  }
+
   /* Underline animation for links */
   .link-underline {
     position: relative;
@@ -111,7 +173,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .link-underline:hover::after {
@@ -119,54 +181,60 @@
     transform-origin: left;
   }
 
-  /* Card hover effect - subtle lift */
-  .card-hover {
-    @apply transition-all duration-200 ease-out;
+  /* Icon rotate on hover */
+  .icon-spin:hover svg {
+    @apply rotate-12;
+    transition: transform 0.3s ease;
+  }
+
+  /* Scale on hover */
+  .hover-scale {
+    @apply transition-transform duration-300 ease-out;
   }
   
-  .card-hover:hover {
-    @apply -translate-y-0.5;
-    box-shadow: 0 4px 20px -8px hsl(var(--foreground) / 0.08);
+  .hover-scale:hover {
+    @apply scale-[1.02];
   }
 
-  /* Interactive element hover */
-  .hover-lift {
-    @apply transition-transform duration-200 ease-out;
-  }
-
-  .hover-lift:hover {
-    @apply -translate-y-0.5;
-  }
-
-  /* Subtle background transition */
-  .hover-bg {
-    @apply transition-colors duration-150 ease-out;
-  }
-
-  /* Glass effect for dark mode */
+  /* Glass effect */
   .glass {
     @apply bg-card/80 backdrop-blur-sm border border-border;
   }
 
   .glass-hover {
-    @apply transition-all duration-200 hover:bg-card hover:border-foreground/10;
+    @apply transition-all duration-300;
+  }
+  
+  .glass-hover:hover {
+    @apply bg-card border-foreground/20;
+    box-shadow: 0 8px 32px -8px hsl(var(--foreground) / 0.1);
   }
 
-  /* Clean button styles */
+  /* Arrow slide on hover */
+  .arrow-slide svg:last-child {
+    @apply transition-transform duration-300;
+  }
+  
+  .arrow-slide:hover svg:last-child {
+    @apply translate-x-1;
+  }
+
+  /* Button styles */
   .btn-primary {
-    @apply px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg transition-all duration-150 ease-out;
+    @apply px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg transition-all duration-300 ease-out;
   }
   
   .btn-primary:hover {
-    @apply opacity-90 -translate-y-px;
+    @apply -translate-y-0.5;
+    box-shadow: 0 8px 20px -8px hsl(var(--foreground) / 0.3);
   }
 
   .btn-outline {
-    @apply px-6 py-3 border border-border bg-transparent text-foreground font-medium rounded-lg transition-all duration-150 ease-out;
+    @apply px-6 py-3 border border-border bg-transparent text-foreground font-medium rounded-lg transition-all duration-300 ease-out;
   }
   
   .btn-outline:hover {
-    @apply bg-muted/50 border-foreground/15 -translate-y-px;
+    @apply bg-muted/50 border-foreground/20 -translate-y-0.5;
   }
 
   /* Page transitions */

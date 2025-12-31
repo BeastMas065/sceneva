@@ -19,13 +19,13 @@ export function Header() {
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center gap-2.5"
+            className="group flex items-center gap-2.5 hover-lift"
           >
-            <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
               <Film className="w-4 h-4" />
             </div>
             <span className="font-display font-semibold tracking-tight">
-              CineMatch
+              Sceneva
             </span>
           </Link>
 
@@ -35,10 +35,10 @@ export function Header() {
               <Link
                 key={path}
                 to={path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(path)
                     ? 'bg-muted text-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70 hover:-translate-y-px'
                 }`}
               >
                 {label}

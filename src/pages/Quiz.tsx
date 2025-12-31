@@ -113,10 +113,10 @@ export default function Quiz() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <button
                   onClick={() => setRegion('indian')}
-                  className="group p-6 rounded-xl border border-border bg-card hover:bg-muted hover:border-foreground/20 transition-all duration-300 text-left"
+                  className="group p-6 rounded-xl border border-border bg-card card-glow border-animate text-left"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4">
-                    <MapPin className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110">
+                    <MapPin className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
                   </div>
                   <h3 className="font-display text-xl font-semibold mb-2">Indian Cinema</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -126,10 +126,10 @@ export default function Quiz() {
 
                 <button
                   onClick={() => setRegion('foreign')}
-                  className="group p-6 rounded-xl border border-border bg-card hover:bg-muted hover:border-foreground/20 transition-all duration-300 text-left"
+                  className="group p-6 rounded-xl border border-border bg-card card-glow border-animate text-left"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4">
-                    <Globe className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110">
+                    <Globe className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
                   </div>
                   <h3 className="font-display text-xl font-semibold mb-2">International</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -205,8 +205,8 @@ export default function Quiz() {
                     disabled={isTransitioning}
                     className={`group w-full p-5 rounded-xl border transition-all duration-300 text-left ${
                       selectedOption === index
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-card border-border hover:bg-muted hover:border-foreground/20'
+                        ? 'bg-primary text-primary-foreground border-primary scale-[1.02]'
+                        : 'bg-card border-border hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-md'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-4">
@@ -226,7 +226,7 @@ export default function Quiz() {
                         className={`w-5 h-5 shrink-0 transition-all duration-300 ${
                           selectedOption === index 
                             ? 'translate-x-1' 
-                            : 'text-muted-foreground opacity-0 group-hover:opacity-100'
+                            : 'text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5'
                         }`}
                       />
                     </div>
