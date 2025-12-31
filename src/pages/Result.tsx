@@ -13,10 +13,10 @@ import {
   Rocket,
   CheckCircle2,
   Share2,
-  Home,
   Copy,
   Check,
   User,
+  Globe,
 } from 'lucide-react';
 import { getHistory, SavedResult, Movie } from '@/data/movies';
 import { PageTransition } from '@/components/ui/PageTransition';
@@ -43,7 +43,6 @@ export default function Result() {
     const found = history.find(r => r.id === id);
     if (found) {
       setResult(found);
-      // Dramatic reveal delay
       setTimeout(() => setIsRevealed(true), 300);
     } else {
       navigate('/');
@@ -60,7 +59,6 @@ export default function Result() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -75,7 +73,7 @@ export default function Result() {
   if (!result) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse-soft text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -84,93 +82,99 @@ export default function Result() {
   const GenreIcon = genreIcons[movie.genre] || Film;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20 pb-12 px-4">
+      <main className="pt-20 pb-16 px-4">
         <PageTransition>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-2xl mx-auto">
             {/* Pre-reveal text */}
             <div 
-              className={`text-center mb-8 transition-all duration-700 ${
+              className={`text-center mb-8 transition-all duration-500 ${
                 isRevealed ? 'opacity-100' : 'opacity-0 translate-y-4'
               }`}
             >
-              <p className="text-muted-foreground text-lg">
-                Based on your answers, we found your perfect match...
+              <p className="text-muted-foreground">
+                Based on your answers, here's your perfect match...
               </p>
             </div>
 
             {/* Movie Card */}
             <div 
-              className={`relative transition-all duration-1000 ${
+              className={`transition-all duration-700 ${
                 isRevealed 
-                  ? 'opacity-100 scale-100 translate-y-0' 
-                  : 'opacity-0 scale-95 translate-y-8'
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-8'
               }`}
             >
-              {/* Glow effect behind card */}
-              <div className="absolute inset-0 bg-primary/20 blur-[80px] rounded-full" />
-              
-              <div className="relative glass rounded-3xl p-8 md:p-12 glow-intense overflow-hidden">
-                {/* Top accent line */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                
+              <div className="border border-border rounded-2xl p-8 md:p-10 bg-card">
                 {/* Match percentage */}
                 <div className="flex justify-center mb-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30">
-                    <span className="text-sm text-primary font-medium">
-                      {matchPercent}% Match
-                    </span>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+                    {matchPercent}% Match
                   </div>
                 </div>
 
                 {/* Movie icon */}
                 <div className="flex justify-center mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-card flex items-center justify-center border border-border">
-                    <GenreIcon className="w-8 h-8 text-primary" />
+                  <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center">
+                    <GenreIcon className="w-6 h-6" />
                   </div>
                 </div>
 
                 {/* Movie title */}
-                <h1 className="font-display text-4xl md:text-6xl font-bold text-center mb-4 text-gradient">
+                <h1 className="font-display text-3xl md:text-5xl font-semibold text-center mb-4">
                   {movie.displayName}
                 </h1>
 
                 {/* Tagline */}
                 {movie.tagline && (
-                  <p className="text-lg md:text-xl text-muted-foreground text-center italic mb-8">
+                  <p className="text-lg text-muted-foreground text-center italic mb-6">
                     "{movie.tagline}"
                   </p>
                 )}
 
                 {/* Tags */}
-                <div className="flex items-center justify-center gap-3 mb-10 flex-wrap">
+                <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
                   {movie.year && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-sm">
-                      <Clock className="w-3.5 h-3.5 text-primary" />
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
+                      <Clock className="w-3.5 h-3.5" />
                       {movie.year}
                     </span>
                   )}
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-sm capitalize">
-                    <GenreIcon className="w-3.5 h-3.5 text-primary" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm capitalize">
+                    <GenreIcon className="w-3.5 h-3.5" />
                     {movie.genre}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-sm capitalize">
-                    <Star className="w-3.5 h-3.5 text-primary" />
-                    {movie.pace}-paced
-                  </span>
-                  {movie.director && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-sm">
-                      <User className="w-3.5 h-3.5 text-primary" />
-                      {movie.director}
+                  {movie.language && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
+                      <Globe className="w-3.5 h-3.5" />
+                      {movie.language}
+                    </span>
+                  )}
+                  {movie.rating && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
+                      <Star className="w-3.5 h-3.5" />
+                      {movie.rating}/10
                     </span>
                   )}
                 </div>
 
+                {/* Synopsis */}
+                {movie.synopsis && (
+                  <div className="mb-8 p-5 bg-muted/50 rounded-xl">
+                    <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+                      The Story
+                    </h3>
+                    <p className="text-foreground/90 leading-relaxed">
+                      {movie.synopsis}
+                    </p>
+                  </div>
+                )}
+
                 {/* Why this movie */}
-                <div className="bg-background/40 rounded-2xl p-6">
-                  <h3 className="text-sm uppercase tracking-wider text-muted-foreground mb-4 font-medium">
+                <div className="p-5 border border-border rounded-xl">
+                  <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 font-medium">
                     Why this movie?
                   </h3>
                   <ul className="space-y-3">
@@ -180,30 +184,33 @@ export default function Result() {
                         className={`flex items-start gap-3 transition-all duration-500 ${
                           isRevealed ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                         }`}
-                        style={{ transitionDelay: `${800 + index * 150}ms` }}
+                        style={{ transitionDelay: `${600 + index * 100}ms` }}
                       >
-                        <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                        <span className="text-foreground/90">{reason}</span>
+                        <CheckCircle2 className="w-5 h-5 text-foreground shrink-0 mt-0.5" />
+                        <span className="text-foreground/80">{reason}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                {/* Bottom accent line */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
+                {movie.director && (
+                  <p className="text-center text-sm text-muted-foreground mt-6">
+                    Directed by {movie.director}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Actions */}
             <div 
-              className={`flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 transition-all duration-700 ${
+              className={`flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 transition-all duration-500 ${
                 isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
-              style={{ transitionDelay: '1s' }}
+              style={{ transitionDelay: '800ms' }}
             >
               <Link
                 to="/"
-                className="flex items-center gap-2 px-6 py-3 glass glass-hover rounded-xl font-medium"
+                className="flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
                 Take Quiz Again
@@ -211,7 +218,7 @@ export default function Result() {
               
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
               >
                 {copied ? (
                   <>
@@ -225,22 +232,14 @@ export default function Result() {
                   </>
                 )}
               </button>
-              
-              <Link
-                to="/"
-                className="flex items-center gap-2 px-6 py-3 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Home className="w-4 h-4" />
-                Home
-              </Link>
             </div>
 
             {/* Disclaimer */}
             <p 
-              className={`text-center text-xs text-muted-foreground/50 mt-10 transition-all duration-700 ${
+              className={`text-center text-xs text-muted-foreground mt-10 transition-all duration-500 ${
                 isRevealed ? 'opacity-100' : 'opacity-0'
               }`}
-              style={{ transitionDelay: '1.2s' }}
+              style={{ transitionDelay: '1s' }}
             >
               Powered by CineMatch AI™ (not actual AI)
             </p>
