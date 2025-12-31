@@ -52,7 +52,7 @@ export default function Result() {
   const handleShare = async () => {
     if (!result) return;
     
-    const text = `🎬 CineMatch recommended "${result.movie.displayName}" for me with a ${result.matchPercent}% match!\n\n"${result.movie.tagline}"\n\nFind your perfect movie: ${window.location.origin}`;
+    const text = `🎬 Sceneva recommended "${result.movie.displayName}" for me with a ${result.matchPercent}% match!\n\n"${result.movie.tagline}"\n\nFind your perfect movie: ${window.location.origin}`;
     
     try {
       await navigator.clipboard.writeText(text);
@@ -210,15 +210,18 @@ export default function Result() {
             >
               <Link
                 to="/"
-                className="flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
+                className="group flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium transition-all duration-300 hover:bg-muted hover:border-foreground/20 hover:-translate-y-1 hover:shadow-md"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-180" />
                 Take Quiz Again
               </Link>
               
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+                className="group flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                style={{ boxShadow: 'none' }}
+                onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 12px 24px -8px hsl(var(--foreground) / 0.25)'}
+                onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
               >
                 {copied ? (
                   <>
@@ -227,7 +230,7 @@ export default function Result() {
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-4 h-4" />
+                    <Share2 className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                     Share Result
                   </>
                 )}
@@ -241,7 +244,7 @@ export default function Result() {
               }`}
               style={{ transitionDelay: '1s' }}
             >
-              Powered by CineMatch AI™ (not actual AI)
+              Powered by Sceneva AI™ (not actual AI)
             </p>
           </div>
         </PageTransition>

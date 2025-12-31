@@ -56,9 +56,9 @@ export default function About() {
               </div>
               
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                How CineMatch
+                How Sceneva
                 <br />
-                <span className="text-gradient">Actually Works</span>
+                <span className="text-muted-foreground">Actually Works</span>
               </h1>
               
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -72,14 +72,14 @@ export default function About() {
               {steps.map((step, index) => (
                 <div 
                   key={step.number}
-                  className="glass rounded-2xl p-6 animate-fade-in"
+                  className="group glass rounded-2xl p-6 animate-fade-in card-glow border-animate"
                   style={{ animationDelay: `${0.1 * index}s` }}
                 >
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="text-3xl font-display font-bold text-primary/30">
+                    <span className="text-3xl font-display font-bold text-primary/30 transition-colors duration-300 group-hover:text-primary/50">
                       {step.number}
                     </span>
-                    <step.icon className="w-6 h-6 text-primary" />
+                    <step.icon className="w-6 h-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
                   </div>
                   <h3 className="font-display text-xl font-semibold mb-2">
                     {step.title}

@@ -323,6 +323,268 @@ export const movies: Movie[] = [
     region: 'indian',
     language: 'Malayalam'
   },
+  
+  // More Indian Movies
+  { 
+    name: "Gangs", 
+    displayName: "Gangs of Wasseypur", 
+    genre: "action", 
+    pace: "slow", 
+    year: 2012, 
+    tagline: "Revenge is a dish best served cold",
+    synopsis: "A multi-generational saga of coal mafia, blood feuds, and burning vengeance in the heartland of India. Five hours of pure, unfiltered storytelling.",
+    director: "Anurag Kashyap", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Zindagi", 
+    displayName: "Zindagi Na Milegi Dobara", 
+    genre: "comedy", 
+    pace: "slow", 
+    year: 2011, 
+    tagline: "Life is for living",
+    synopsis: "Three childhood friends reunite for a bachelor trip across Spain. What begins as adventure becomes a journey of self-discovery, friendship, and second chances.",
+    director: "Zoya Akhtar", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "QueenB", 
+    displayName: "Queen", 
+    genre: "comedy", 
+    pace: "slow", 
+    year: 2013, 
+    tagline: "It's never too late to find yourself",
+    synopsis: "Jilted at the altar, a sheltered Delhi girl decides to go on her honeymoon alone. Paris and Amsterdam teach her what her small world never could.",
+    director: "Vikas Bahl", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Dil Chahta", 
+    displayName: "Dil Chahta Hai", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2001, 
+    tagline: "A story about friendship",
+    synopsis: "Three inseparable college friends navigate love, heartbreak, and growing up. A film that redefined Indian cinema for a generation.",
+    director: "Farhan Akhtar", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Rang De", 
+    displayName: "Rang De Basanti", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2006, 
+    tagline: "A generation awakens",
+    synopsis: "A British filmmaker casts college students in a documentary about Indian freedom fighters. The lines between past and present begin to blur.",
+    director: "Rakeysh Omprakash Mehra", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Taare", 
+    displayName: "Taare Zameen Par", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2007, 
+    tagline: "Every child is special",
+    synopsis: "A dyslexic boy struggling in school finds hope when an unconventional art teacher recognizes his hidden genius. A story that changed how India sees education.",
+    director: "Aamir Khan", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Masaan", 
+    displayName: "Masaan", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2015, 
+    tagline: "Man conquers death",
+    synopsis: "Two parallel stories of love, loss, and liberation unfold along the ghats of Varanasi. A hauntingly beautiful meditation on grief and hope.",
+    director: "Neeraj Ghaywan", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Article15", 
+    displayName: "Article 15", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2019, 
+    tagline: "Are we not Indians firstly and lastly?",
+    synopsis: "A city-bred cop investigates the disappearance of village girls and confronts the ugly reality of caste discrimination. Based on true events.",
+    director: "Anubhav Sinha", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Tumbbad", 
+    displayName: "Tumbbad", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2018, 
+    tagline: "There's a curse that waits",
+    synopsis: "A man pursues an ancestral treasure hidden in a cursed village, guarded by a monstrous deity. Gothic horror meets Indian mythology.",
+    director: "Rahi Anil Barve", 
+    rating: 8.3,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Pushpa", 
+    displayName: "Pushpa: The Rise", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2021, 
+    tagline: "The rule of the jungle",
+    synopsis: "A small-time laborer rises through the ranks of red sandalwood smuggling to become the most feared name in the forest. Fire meets fire.",
+    director: "Sukumar", 
+    rating: 7.6,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "Ala", 
+    displayName: "Ala Vaikunthapurramuloo", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2020, 
+    tagline: "A family drama with a twist",
+    synopsis: "A young man raised in a troubled home discovers he was swapped at birth with a business tycoon's son. Identity, revenge, and redemption collide.",
+    director: "Trivikram Srinivas", 
+    rating: 7.3,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "Jersey", 
+    displayName: "Jersey", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2019, 
+    tagline: "For his son's wish, he'll risk it all",
+    synopsis: "A failed cricketer attempts a comeback at 36 to fulfill his son's wish for a jersey. A father's love knows no age limit.",
+    director: "Gowtam Tinnanuri", 
+    rating: 8.6,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "Ratsasan", 
+    displayName: "Ratsasan", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2018, 
+    tagline: "Evil has a new face",
+    synopsis: "A cop-turned-filmmaker becomes a sub-inspector and hunts a serial killer targeting schoolgirls. A cat-and-mouse game where failure means death.",
+    director: "Ram Kumar", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "Kaithi", 
+    displayName: "Kaithi", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2019, 
+    tagline: "One night. Multiple obstacles.",
+    synopsis: "An ex-convict's plan to reunite with his daughter goes awry when he's forced to help a cop survive a drug lord's wrath. No songs. Pure adrenaline.",
+    director: "Lokesh Kanagaraj", 
+    rating: 8.5,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "96Film", 
+    displayName: "96", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2018, 
+    tagline: "Some love stories never end",
+    synopsis: "High school sweethearts meet after 22 years at a class reunion. One night to revisit all the memories, feelings, and what-ifs they left behind.",
+    director: "C. Prem Kumar", 
+    rating: 8.5,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "Charlie", 
+    displayName: "Charlie", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2015, 
+    tagline: "Follow your heart",
+    synopsis: "A free-spirited woman moves into a new apartment and becomes fascinated by its previous tenant. She sets out to find him, one story at a time.",
+    director: "Martin Prakkat", 
+    rating: 8.0,
+    region: 'indian',
+    language: 'Malayalam'
+  },
+  { 
+    name: "Ustad", 
+    displayName: "Ustad Hotel", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2012, 
+    tagline: "Food is love made visible",
+    synopsis: "A young chef defies his father to work at his grandfather's small restaurant. Through cooking, he discovers the true meaning of home and family.",
+    director: "Anwar Rasheed", 
+    rating: 8.5,
+    region: 'indian',
+    language: 'Malayalam'
+  },
+  { 
+    name: "Bangalore Days", 
+    displayName: "Bangalore Days", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2014, 
+    tagline: "Live your dreams",
+    synopsis: "Three cousins move to Bangalore to chase their dreams. Love, disappointment, and life lessons await in the big city.",
+    director: "Anjali Menon", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Malayalam'
+  },
+  { 
+    name: "KGF2", 
+    displayName: "K.G.F: Chapter 2", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2022, 
+    tagline: "The end will be violent",
+    synopsis: "Rocky's reign over the Kolar Gold Fields is challenged by enemies old and new. When legends fall, chaos rises. The saga concludes in blood and fire.",
+    director: "Prashanth Neel", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Kannada'
+  },
+  { 
+    name: "Lucia", 
+    displayName: "Lucia", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2013, 
+    tagline: "What if dreams were the reality?",
+    synopsis: "A theater usher discovers pills that let him control his dreams. But as the line between dreams and reality blurs, which world is real?",
+    director: "Pawan Kumar", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Kannada'
+  },
 
   // ========== FOREIGN MOVIES (Hollywood & International) ==========
   
@@ -742,6 +1004,137 @@ export const movies: Movie[] = [
     region: 'foreign',
     language: 'English'
   },
+  // More International Movies
+  { 
+    name: "Prestige", 
+    displayName: "The Prestige", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2006, 
+    tagline: "Are you watching closely?",
+    synopsis: "Two rival magicians engage in a bitter war of one-upmanship, each pushing boundaries of obsession. The final trick will cost everything.",
+    director: "Christopher Nolan", 
+    rating: 8.5,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "FightClub", 
+    displayName: "Fight Club", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 1999, 
+    tagline: "Mischief. Mayhem. Soap.",
+    synopsis: "An insomniac office worker forms an underground fight club with a charismatic soap salesman. The first rule is you don't talk about it.",
+    director: "David Fincher", 
+    rating: 8.8,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Oldboy", 
+    displayName: "Oldboy", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2003, 
+    tagline: "15 years of imprisonment. 5 days of vengeance.",
+    synopsis: "A man is mysteriously imprisoned for 15 years then suddenly released. His quest for answers leads to a truth more horrifying than captivity.",
+    director: "Park Chan-wook", 
+    rating: 8.4,
+    region: 'foreign',
+    language: 'Korean'
+  },
+  { 
+    name: "Amelie", 
+    displayName: "Amélie", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2001, 
+    tagline: "She'll change your life",
+    synopsis: "A shy Parisian waitress decides to secretly improve the lives of those around her while struggling with her own isolation. Whimsy meets heart.",
+    director: "Jean-Pierre Jeunet", 
+    rating: 8.3,
+    region: 'foreign',
+    language: 'French'
+  },
+  { 
+    name: "Spirited", 
+    displayName: "Spirited Away", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2001, 
+    tagline: "The tunnel led Chihiro to a mysterious town",
+    synopsis: "A young girl enters a world of spirits and gods to save her parents. Miyazaki's masterpiece about courage, identity, and growing up.",
+    director: "Hayao Miyazaki", 
+    rating: 8.6,
+    region: 'foreign',
+    language: 'Japanese'
+  },
+  { 
+    name: "Godfather", 
+    displayName: "The Godfather", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 1972, 
+    tagline: "An offer you can't refuse",
+    synopsis: "The aging patriarch of an organized crime dynasty transfers control to his reluctant son. Power, loyalty, and family collide in this American epic.",
+    director: "Francis Ford Coppola", 
+    rating: 9.2,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "PulpFiction", 
+    displayName: "Pulp Fiction", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 1994, 
+    tagline: "You won't know the facts until you've seen the fiction",
+    synopsis: "Interlocking tales of crime and redemption in Los Angeles. Hitmen, boxers, and gangsters dance through Tarantino's nonlinear masterpiece.",
+    director: "Quentin Tarantino", 
+    rating: 8.9,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Departed", 
+    displayName: "The Departed", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2006, 
+    tagline: "Lies. Betrayal. Sacrifice.",
+    synopsis: "A cop goes undercover in the mob while a mole infiltrates the police. Each must discover the other before their cover is blown.",
+    director: "Martin Scorsese", 
+    rating: 8.5,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "MemoriesM", 
+    displayName: "Memories of Murder", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2003, 
+    tagline: "Based on a true story",
+    synopsis: "Two detectives hunt South Korea's first serial killer in the 1980s. The truth remains just out of reach. Based on real unsolved murders.",
+    director: "Bong Joon-ho", 
+    rating: 8.1,
+    region: 'foreign',
+    language: 'Korean'
+  },
+  { 
+    name: "Prisoners", 
+    displayName: "Prisoners", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2013, 
+    tagline: "Every moment matters",
+    synopsis: "When his daughter is kidnapped, a father takes matters into his own hands. How far would you go to protect your child?",
+    director: "Denis Villeneuve", 
+    rating: 8.1,
+    region: 'foreign',
+    language: 'English'
+  },
 ];
 
 export type QuizMode = 'quick' | 'standard' | 'deep';
@@ -1015,19 +1408,19 @@ export function saveResult(result: Omit<SavedResult, 'id' | 'date'>): SavedResul
   
   const history = getHistory();
   history.unshift(saved);
-  localStorage.setItem('cinematch-history', JSON.stringify(history.slice(0, 20)));
+  localStorage.setItem('sceneva-history', JSON.stringify(history.slice(0, 20)));
   
   return saved;
 }
 
 export function getHistory(): SavedResult[] {
   try {
-    return JSON.parse(localStorage.getItem('cinematch-history') || '[]');
+    return JSON.parse(localStorage.getItem('sceneva-history') || '[]');
   } catch {
     return [];
   }
 }
 
 export function clearHistory(): void {
-  localStorage.removeItem('cinematch-history');
+  localStorage.removeItem('sceneva-history');
 }

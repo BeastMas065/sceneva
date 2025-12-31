@@ -29,16 +29,19 @@ export function HeroSection() {
         >
           <Link
             to="/quiz"
-            className="group flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-medium rounded-lg hover:opacity-90 transition-all"
+            className="group flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-medium rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            style={{ boxShadow: 'none' }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 16px 32px -12px hsl(var(--foreground) / 0.25)'}
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
             Start Quiz
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
           
           <Link
             to="/about"
-            className="flex items-center gap-2 px-8 py-4 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
+            className="group flex items-center gap-2 px-8 py-4 border border-border rounded-lg font-medium transition-all duration-300 hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-1"
           >
             How it works
           </Link>
@@ -50,12 +53,12 @@ export function HeroSection() {
           style={{ animationDelay: '0.3s' }}
         >
           {[
-            { value: '60+', label: 'Movies' },
+            { value: '100+', label: 'Movies' },
             { value: '2', label: 'Regions' },
             { value: '12', label: 'Questions' },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="font-display text-2xl md:text-3xl font-semibold">
+            <div key={stat.label} className="text-center group cursor-default">
+              <div className="font-display text-2xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110">
                 {stat.value}
               </div>
               <div className="text-sm text-muted-foreground">
