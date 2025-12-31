@@ -1,4 +1,4 @@
-import { Film, Heart } from 'lucide-react';
+vaimport { Film, Heart } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
             <Film className="w-4 h-4" />
-            <span>CineMatch</span>
+            <span>Sceneva</span>
             <span className="text-muted-foreground/50">·</span>
             <span className="text-muted-foreground/70">Not actual AI</span>
           </div>
