@@ -1,3 +1,5 @@
+export type Region = 'indian' | 'foreign';
+
 export interface Movie {
   name: string;
   displayName: string;
@@ -5,78 +7,741 @@ export interface Movie {
   pace: 'fast' | 'slow';
   year?: number;
   tagline?: string;
-  poster?: string;
+  synopsis?: string;
   director?: string;
   rating?: number;
+  region: Region;
+  language?: string;
 }
 
 export const movies: Movie[] = [
+  // ========== INDIAN MOVIES ==========
+  
+  // Bollywood - Action
+  { 
+    name: "Dangal", 
+    displayName: "Dangal", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2016, 
+    tagline: "You have it in your blood",
+    synopsis: "A former wrestler trains his daughters to become world-class wrestlers, challenging societal norms in a small Indian village. A story of grit, dreams, and a father's unconventional love.",
+    director: "Nitesh Tiwari", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "RRR", 
+    displayName: "RRR", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2022, 
+    tagline: "Rise. Roar. Revolt.",
+    synopsis: "Two legendary revolutionaries forge an unlikely friendship, only to discover their paths are destined to clash. An electrifying tale of brotherhood, sacrifice, and rebellion.",
+    director: "S.S. Rajamouli", 
+    rating: 7.8,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "Baahubali", 
+    displayName: "Baahubali: The Beginning", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2015, 
+    tagline: "Begin an adventure like never before",
+    synopsis: "A young man discovers his royal lineage and embarks on a quest to reclaim his kingdom. Epic battles, palace intrigue, and a love that transcends lifetimes await.",
+    director: "S.S. Rajamouli", 
+    rating: 8.0,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "KGF", 
+    displayName: "K.G.F: Chapter 1", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2018, 
+    tagline: "The rise of a hero",
+    synopsis: "A man with a dying mother's wish rises from the slums of Mumbai to become the most feared name in Kolar Gold Fields. A violent, stylish saga of power and promise.",
+    director: "Prashanth Neel", 
+    rating: 8.2,
+    region: 'indian',
+    language: 'Kannada'
+  },
+  { 
+    name: "War", 
+    displayName: "War", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2019, 
+    tagline: "Believe nothing. Trust no one.",
+    synopsis: "An elite soldier is assigned to hunt down his former mentor who has gone rogue. The chase spans continents, but nothing is as it seems.",
+    director: "Siddharth Anand", 
+    rating: 6.5,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Pathaan", 
+    displayName: "Pathaan", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2023, 
+    tagline: "Apni kursi ki peti baandh lijiye",
+    synopsis: "A banished spy returns from the shadows to thwart a devastating attack on his country. High-octane action meets espionage in this adrenaline-fueled ride.",
+    director: "Siddharth Anand", 
+    rating: 6.0,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  
+  // Bollywood - Romance
+  { 
+    name: "DDLJ", 
+    displayName: "Dilwale Dulhania Le Jayenge", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 1995, 
+    tagline: "Come, fall in love",
+    synopsis: "Two young Indians meet on a European vacation and fall deeply in love. But winning her traditional father's blessing will require patience, respect, and a whole lot of charm.",
+    director: "Aditya Chopra", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "YJHD", 
+    displayName: "Yeh Jawaani Hai Deewani", 
+    genre: "romance", 
+    pace: "fast", 
+    year: 2013, 
+    tagline: "Live. Love. One last time.",
+    synopsis: "A free-spirited traveler and a studious wallflower reunite years after a life-changing trek. Can they still find each other when their worlds have grown so far apart?",
+    director: "Ayan Mukerji", 
+    rating: 7.2,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Barfi", 
+    displayName: "Barfi!", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2012, 
+    tagline: "Life is what you make it",
+    synopsis: "A deaf-mute man navigates love, loss, and laughter in this heartwarming tale. His infectious spirit touches everyone he meets, proving that love needs no words.",
+    director: "Anurag Basu", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Rockstar", 
+    displayName: "Rockstar", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2011, 
+    tagline: "Live to love. Love to live.",
+    synopsis: "A college nobody transforms into a rock sensation after heartbreak. But fame can't heal the wounds of a love that was never meant to be ordinary.",
+    director: "Imtiaz Ali", 
+    rating: 7.7,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Tamasha", 
+    displayName: "Tamasha", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2015, 
+    tagline: "Why always the same story?",
+    synopsis: "A man trapped in a soul-crushing job reconnects with a woman who knew him when he was truly alive. A raw exploration of identity, creativity, and breaking free.",
+    director: "Imtiaz Ali", 
+    rating: 7.5,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  
+  // Bollywood - Comedy
+  { 
+    name: "3Idiots", 
+    displayName: "3 Idiots", 
+    genre: "comedy", 
+    pace: "slow", 
+    year: 2009, 
+    tagline: "All is well",
+    synopsis: "Two friends embark on a journey to find their long-lost college buddy, reliving memories that challenge India's pressure-cooker education system. Hilarious, heartfelt, revolutionary.",
+    director: "Rajkumar Hirani", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Andhadhun", 
+    displayName: "Andhadhun", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2018, 
+    tagline: "A symphony of sound and deception",
+    synopsis: "A blind pianist becomes an unwitting witness to a murder. Or is he really blind? A wickedly clever thriller with more twists than a pretzel.",
+    director: "Sriram Raghavan", 
+    rating: 8.3,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Hera Pheri", 
+    displayName: "Hera Pheri", 
+    genre: "comedy", 
+    pace: "fast", 
+    year: 2000, 
+    tagline: "Comedy. Confusion. Chaos.",
+    synopsis: "Three down-on-their-luck men accidentally intercept a ransom call and hatch a harebrained scheme to collect the money. Nothing goes according to plan.",
+    director: "Priyadarshan", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "PK", 
+    displayName: "PK", 
+    genre: "comedy", 
+    pace: "slow", 
+    year: 2014, 
+    tagline: "Question everything",
+    synopsis: "An alien stranded on Earth observes human behavior with childlike curiosity, especially our religious practices. Innocent questions lead to profound insights.",
+    director: "Rajkumar Hirani", 
+    rating: 8.1,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  { 
+    name: "Stree", 
+    displayName: "Stree", 
+    genre: "comedy", 
+    pace: "fast", 
+    year: 2018, 
+    tagline: "There's something in the night",
+    synopsis: "A small town lives in fear of a female ghost who abducts men. When a tailor falls for a mysterious woman, he must uncover the truth before it's too late.",
+    director: "Amar Kaushik", 
+    rating: 7.6,
+    region: 'indian',
+    language: 'Hindi'
+  },
+  
+  // South Indian - Drama & Thriller
+  { 
+    name: "Drishyam", 
+    displayName: "Drishyam", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2013, 
+    tagline: "What would you do for your family?",
+    synopsis: "A simple cable operator devises an ingenious plan to protect his family when they accidentally commit a crime. Every detail matters in this nerve-wracking game of cat and mouse.",
+    director: "Jeethu Joseph", 
+    rating: 8.3,
+    region: 'indian',
+    language: 'Malayalam'
+  },
+  { 
+    name: "Vikram", 
+    displayName: "Vikram", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2022, 
+    tagline: "There's always a way",
+    synopsis: "A special agent investigates a series of brutal killings, only to uncover a conspiracy that goes deeper than he imagined. Three titans collide in this stylish action spectacle.",
+    director: "Lokesh Kanagaraj", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "Kantara", 
+    displayName: "Kantara", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2022, 
+    tagline: "A divine saga",
+    synopsis: "A fiery young man protects his village's sacred traditions against outside forces. When gods walk among mortals, ancient promises must be kept.",
+    director: "Rishab Shetty", 
+    rating: 8.5,
+    region: 'indian',
+    language: 'Kannada'
+  },
+  { 
+    name: "Super Deluxe", 
+    displayName: "Super Deluxe", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2019, 
+    tagline: "Life is Super. Life is Deluxe.",
+    synopsis: "Four interconnected stories unfold over a single day, exploring fate, morality, and the bizarre coincidences that shape our lives. Provocative and unforgettable.",
+    director: "Thiagarajan Kumararaja", 
+    rating: 8.4,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "Asuran", 
+    displayName: "Asuran", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2019, 
+    tagline: "Survival is the only option",
+    synopsis: "A peace-loving farmer unleashes his violent past to protect his family from a powerful landlord. A searing tale of caste, dignity, and a father's ultimate sacrifice.",
+    director: "Vetrimaaran", 
+    rating: 8.5,
+    region: 'indian',
+    language: 'Tamil'
+  },
+  { 
+    name: "Sita Ramam", 
+    displayName: "Sita Ramam", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2022, 
+    tagline: "A love story like never before",
+    synopsis: "An orphaned soldier receives letters from a mysterious woman named Sita. Decades later, someone must deliver his final letter across borders and through time.",
+    director: "Hanu Raghavapudi", 
+    rating: 8.6,
+    region: 'indian',
+    language: 'Telugu'
+  },
+  { 
+    name: "Premam", 
+    displayName: "Premam", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2015, 
+    tagline: "First love. Second love. True love.",
+    synopsis: "A young man experiences love three times across different stages of his life. Each love shapes him, breaks him, and ultimately leads him home.",
+    director: "Alphonse Puthren", 
+    rating: 8.3,
+    region: 'indian',
+    language: 'Malayalam'
+  },
+
+  // ========== FOREIGN MOVIES (Hollywood & International) ==========
+  
   // Action - Fast
-  { name: "Avengers", displayName: "The Avengers", genre: "action", pace: "fast", year: 2012, tagline: "Some assembly required", director: "Joss Whedon", rating: 8.0 },
-  { name: "Inception", displayName: "Inception", genre: "action", pace: "fast", year: 2010, tagline: "Your mind is the scene of the crime", director: "Christopher Nolan", rating: 8.8 },
-  { name: "MadMax", displayName: "Mad Max: Fury Road", genre: "action", pace: "fast", year: 2015, tagline: "What a lovely day", director: "George Miller", rating: 8.1 },
-  { name: "JohnWick", displayName: "John Wick", genre: "action", pace: "fast", year: 2014, tagline: "Don't set him off", director: "Chad Stahelski", rating: 7.4 },
-  { name: "DieHard", displayName: "Die Hard", genre: "action", pace: "fast", year: 1988, tagline: "Yippee-ki-yay", director: "John McTiernan", rating: 8.2 },
-  { name: "DarkKnight", displayName: "The Dark Knight", genre: "action", pace: "fast", year: 2008, tagline: "Why so serious?", director: "Christopher Nolan", rating: 9.0 },
-  { name: "TopGun", displayName: "Top Gun: Maverick", genre: "action", pace: "fast", year: 2022, tagline: "Feel the need for speed", director: "Joseph Kosinski", rating: 8.3 },
-  { name: "Mission", displayName: "Mission: Impossible", genre: "action", pace: "fast", year: 2023, tagline: "Your mission, should you choose to accept it", director: "Christopher McQuarrie", rating: 7.8 },
+  { 
+    name: "Avengers", 
+    displayName: "The Avengers", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2012, 
+    tagline: "Some assembly required",
+    synopsis: "Earth's mightiest heroes must learn to work together when an otherworldly army threatens global annihilation. Egos clash before they can save the world.",
+    director: "Joss Whedon", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Inception", 
+    displayName: "Inception", 
+    genre: "scifi", 
+    pace: "fast", 
+    year: 2010, 
+    tagline: "Your mind is the scene of the crime",
+    synopsis: "A thief who steals secrets from dreams is offered a chance at redemption: plant an idea instead. Reality becomes a maze where nothing is what it seems.",
+    director: "Christopher Nolan", 
+    rating: 8.8,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "MadMax", 
+    displayName: "Mad Max: Fury Road", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2015, 
+    tagline: "What a lovely day",
+    synopsis: "In a post-apocalyptic wasteland, a drifter and a rebel warrior flee a tyrannical warlord in a relentless chase across the desert. Pure vehicular mayhem.",
+    director: "George Miller", 
+    rating: 8.1,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "JohnWick", 
+    displayName: "John Wick", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2014, 
+    tagline: "Don't set him off",
+    synopsis: "A retired assassin comes out of hiding to seek revenge on those who took everything from him. All this over a puppy? You'd understand if you saw what they did.",
+    director: "Chad Stahelski", 
+    rating: 7.4,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "DarkKnight", 
+    displayName: "The Dark Knight", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2008, 
+    tagline: "Why so serious?",
+    synopsis: "Batman faces his greatest psychological test when a chaos-loving criminal mastermind holds Gotham hostage. Some men just want to watch the world burn.",
+    director: "Christopher Nolan", 
+    rating: 9.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "TopGun", 
+    displayName: "Top Gun: Maverick", 
+    genre: "action", 
+    pace: "fast", 
+    year: 2022, 
+    tagline: "Feel the need for speed",
+    synopsis: "An aging fighter pilot must confront his past while training a new generation for an impossible mission. Legacy, sacrifice, and breathtaking aerial combat await.",
+    director: "Joseph Kosinski", 
+    rating: 8.3,
+    region: 'foreign',
+    language: 'English'
+  },
   
-  // Action - Slow
-  { name: "Gladiator", displayName: "Gladiator", genre: "action", pace: "slow", year: 2000, tagline: "What we do in life echoes in eternity", director: "Ridley Scott", rating: 8.5 },
-  { name: "Interstellar", displayName: "Interstellar", genre: "action", pace: "slow", year: 2014, tagline: "Mankind was born on Earth. It was never meant to die here", director: "Christopher Nolan", rating: 8.7 },
-  { name: "Dune", displayName: "Dune", genre: "action", pace: "slow", year: 2021, tagline: "Beyond fear, destiny awaits", director: "Denis Villeneuve", rating: 8.0 },
-  { name: "Oppenheimer", displayName: "Oppenheimer", genre: "action", pace: "slow", year: 2023, tagline: "The world forever changes", director: "Christopher Nolan", rating: 8.4 },
+  // Action - Slow/Epic
+  { 
+    name: "Gladiator", 
+    displayName: "Gladiator", 
+    genre: "action", 
+    pace: "slow", 
+    year: 2000, 
+    tagline: "What we do in life echoes in eternity",
+    synopsis: "A betrayed Roman general is sold into slavery and rises as a gladiator to avenge his family. In this life or the next, he will have his revenge.",
+    director: "Ridley Scott", 
+    rating: 8.5,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Interstellar", 
+    displayName: "Interstellar", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2014, 
+    tagline: "Mankind was born on Earth. It was never meant to die here",
+    synopsis: "A father leaves a dying Earth to find humanity a new home among the stars. Love, time, and space itself will be tested in this cosmic odyssey.",
+    director: "Christopher Nolan", 
+    rating: 8.7,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Dune", 
+    displayName: "Dune", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2021, 
+    tagline: "Beyond fear, destiny awaits",
+    synopsis: "A noble heir becomes the catalyst for revolution on a dangerous desert planet. Politics, prophecy, and giant sandworms collide in this visionary epic.",
+    director: "Denis Villeneuve", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Oppenheimer", 
+    displayName: "Oppenheimer", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2023, 
+    tagline: "The world forever changes",
+    synopsis: "The physicist who built the atomic bomb wrestles with the moral weight of his creation. Genius, guilt, and the fate of humanity collide.",
+    director: "Christopher Nolan", 
+    rating: 8.4,
+    region: 'foreign',
+    language: 'English'
+  },
   
-  // Romance - Slow
-  { name: "Titanic", displayName: "Titanic", genre: "romance", pace: "slow", year: 1997, tagline: "Nothing on Earth could come between them", director: "James Cameron", rating: 7.9 },
-  { name: "Notebook", displayName: "The Notebook", genre: "romance", pace: "slow", year: 2004, tagline: "Behind every great love is a great story", director: "Nick Cassavetes", rating: 7.8 },
-  { name: "LaLaLand", displayName: "La La Land", genre: "romance", pace: "slow", year: 2016, tagline: "Here's to the fools who dream", director: "Damien Chazelle", rating: 8.0 },
-  { name: "PridePrejudice", displayName: "Pride & Prejudice", genre: "romance", pace: "slow", year: 2005, tagline: "Sometimes the last person on earth you want to be with...", director: "Joe Wright", rating: 7.8 },
-  { name: "BeforeSunrise", displayName: "Before Sunrise", genre: "romance", pace: "slow", year: 1995, tagline: "Can the greatest romance of your life last only one night?", director: "Richard Linklater", rating: 8.1 },
-  { name: "Atonement", displayName: "Atonement", genre: "romance", pace: "slow", year: 2007, tagline: "Torn apart by betrayal. Separated by war.", director: "Joe Wright", rating: 7.8 },
-  { name: "PastLives", displayName: "Past Lives", genre: "romance", pace: "slow", year: 2023, tagline: "In-yun: The connections between people across lives", director: "Celine Song", rating: 8.0 },
+  // Romance
+  { 
+    name: "Titanic", 
+    displayName: "Titanic", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 1997, 
+    tagline: "Nothing on Earth could come between them",
+    synopsis: "A society girl and a penniless artist fall deeply in love aboard a doomed ocean liner. When tragedy strikes, their love becomes eternal.",
+    director: "James Cameron", 
+    rating: 7.9,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Notebook", 
+    displayName: "The Notebook", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2004, 
+    tagline: "Behind every great love is a great story",
+    synopsis: "A poor young man and a rich young woman fall in love one magical summer. Decades later, their story is read to a woman who can no longer remember.",
+    director: "Nick Cassavetes", 
+    rating: 7.8,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "LaLaLand", 
+    displayName: "La La Land", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2016, 
+    tagline: "Here's to the fools who dream",
+    synopsis: "An aspiring actress and a jazz musician chase their dreams in Los Angeles. As careers take off, they must choose between ambition and love.",
+    director: "Damien Chazelle", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "PastLives", 
+    displayName: "Past Lives", 
+    genre: "romance", 
+    pace: "slow", 
+    year: 2023, 
+    tagline: "In-yun: The connections between people across lives",
+    synopsis: "Childhood sweethearts separated by continents reconnect as adults. A profound meditation on fate, choices, and the lives we might have lived.",
+    director: "Celine Song", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
   
-  // Romance - Fast
-  { name: "CrazyRich", displayName: "Crazy Rich Asians", genre: "romance", pace: "fast", year: 2018, tagline: "The only thing crazier than love is family", director: "Jon M. Chu", rating: 7.0 },
-  { name: "10Things", displayName: "10 Things I Hate About You", genre: "romance", pace: "fast", year: 1999, tagline: "How do I loathe thee? Let me count the ways", director: "Gil Junger", rating: 7.3 },
+  // Comedy
+  { 
+    name: "Hangover", 
+    displayName: "The Hangover", 
+    genre: "comedy", 
+    pace: "fast", 
+    year: 2009, 
+    tagline: "Some guys just can't handle Vegas",
+    synopsis: "Three friends wake up from a bachelor party in Vegas with no memory and no groom. A tiger, a baby, and Mike Tyson are just the beginning.",
+    director: "Todd Phillips", 
+    rating: 7.7,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Deadpool", 
+    displayName: "Deadpool", 
+    genre: "comedy", 
+    pace: "fast", 
+    year: 2016, 
+    tagline: "With great power comes great irresponsibility",
+    synopsis: "A wisecracking mercenary becomes an unkillable antihero after a rogue experiment. He's after the man who ruined his life. Fourth wall? What fourth wall?",
+    director: "Tim Miller", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "ForrestGump", 
+    displayName: "Forrest Gump", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 1994, 
+    tagline: "Life is like a box of chocolates",
+    synopsis: "A simple man with a big heart unknowingly influences major historical events while pursuing his one true love. Running becomes a metaphor for life.",
+    director: "Robert Zemeckis", 
+    rating: 8.8,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "GrandBudapest", 
+    displayName: "The Grand Budapest Hotel", 
+    genre: "comedy", 
+    pace: "fast", 
+    year: 2014, 
+    tagline: "A story that never was",
+    synopsis: "A legendary concierge and his lobby boy get caught up in theft, murder, and a priceless painting. Wes Anderson at his most whimsical.",
+    director: "Wes Anderson", 
+    rating: 8.1,
+    region: 'foreign',
+    language: 'English'
+  },
   
-  // Comedy - Fast
-  { name: "Hangover", displayName: "The Hangover", genre: "comedy", pace: "fast", year: 2009, tagline: "Some guys just can't handle Vegas", director: "Todd Phillips", rating: 7.7 },
-  { name: "Superbad", displayName: "Superbad", genre: "comedy", pace: "fast", year: 2007, tagline: "Come and get some", director: "Greg Mottola", rating: 7.6 },
-  { name: "Deadpool", displayName: "Deadpool", genre: "comedy", pace: "fast", year: 2016, tagline: "With great power comes great irresponsibility", director: "Tim Miller", rating: 8.0 },
-  { name: "Jumanji", displayName: "Jumanji", genre: "comedy", pace: "fast", year: 2017, tagline: "The game has evolved", director: "Jake Kasdan", rating: 6.9 },
-  { name: "HomeAlone", displayName: "Home Alone", genre: "comedy", pace: "fast", year: 1990, tagline: "A family comedy without the family", director: "Chris Columbus", rating: 7.7 },
-  { name: "GameNight", displayName: "Game Night", genre: "comedy", pace: "fast", year: 2018, tagline: "This is not a game", director: "John Francis Daley", rating: 7.0 },
-  { name: "GrandBudapest", displayName: "The Grand Budapest Hotel", genre: "comedy", pace: "fast", year: 2014, tagline: "A story that never was", director: "Wes Anderson", rating: 8.1 },
+  // Thriller
+  { 
+    name: "SevenSe", 
+    displayName: "Se7en", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 1995, 
+    tagline: "Seven deadly sins. Seven ways to die.",
+    synopsis: "Two detectives track a serial killer using the seven deadly sins as his murder methodology. What's in the box? You don't want to know.",
+    director: "David Fincher", 
+    rating: 8.6,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "GoneGirl", 
+    displayName: "Gone Girl", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2014, 
+    tagline: "You don't know what you've got 'til it's gone",
+    synopsis: "When a woman disappears on her wedding anniversary, suspicion falls on her husband. But marriage has many secrets, and nothing is as it appears.",
+    director: "David Fincher", 
+    rating: 8.1,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "GetOut", 
+    displayName: "Get Out", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2017, 
+    tagline: "Just because you're invited, doesn't mean you're welcome",
+    synopsis: "A young Black man visits his white girlfriend's family estate and uncovers a disturbing secret. Social commentary meets pure terror.",
+    director: "Jordan Peele", 
+    rating: 7.7,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Parasite", 
+    displayName: "Parasite", 
+    genre: "thriller", 
+    pace: "fast", 
+    year: 2019, 
+    tagline: "Act like you own the place",
+    synopsis: "A poor family infiltrates a wealthy household one by one. When their worlds collide, the consequences are explosive. Class warfare has never been this twisted.",
+    director: "Bong Joon-ho", 
+    rating: 8.5,
+    region: 'foreign',
+    language: 'Korean'
+  },
+  { 
+    name: "Shutter", 
+    displayName: "Shutter Island", 
+    genre: "thriller", 
+    pace: "slow", 
+    year: 2010, 
+    tagline: "Some places never let you go",
+    synopsis: "A U.S. Marshal investigates a psychiatric facility on a remote island. The truth he finds will shatter everything he thought he knew about himself.",
+    director: "Martin Scorsese", 
+    rating: 8.2,
+    region: 'foreign',
+    language: 'English'
+  },
   
-  // Comedy - Slow
-  { name: "ForrestGump", displayName: "Forrest Gump", genre: "comedy", pace: "slow", year: 1994, tagline: "Life is like a box of chocolates", director: "Robert Zemeckis", rating: 8.8 },
-  { name: "TheIntern", displayName: "The Intern", genre: "comedy", pace: "slow", year: 2015, tagline: "Experience never gets old", director: "Nancy Meyers", rating: 7.1 },
-  { name: "LittleMissSunshine", displayName: "Little Miss Sunshine", genre: "comedy", pace: "slow", year: 2006, tagline: "A family on the verge of a breakdown", director: "Jonathan Dayton", rating: 7.8 },
-  { name: "JoJoRabbit", displayName: "Jojo Rabbit", genre: "comedy", pace: "slow", year: 2019, tagline: "An anti-hate satire", director: "Taika Waititi", rating: 7.9 },
-  
-  // Thriller - Fast
-  { name: "SevenSe", displayName: "Se7en", genre: "thriller", pace: "fast", year: 1995, tagline: "Seven deadly sins. Seven ways to die.", director: "David Fincher", rating: 8.6 },
-  { name: "GoneGirl", displayName: "Gone Girl", genre: "thriller", pace: "fast", year: 2014, tagline: "You don't know what you've got 'til it's gone", director: "David Fincher", rating: 8.1 },
-  { name: "GetOut", displayName: "Get Out", genre: "thriller", pace: "fast", year: 2017, tagline: "Just because you're invited, doesn't mean you're welcome", director: "Jordan Peele", rating: 7.7 },
-  { name: "Parasite", displayName: "Parasite", genre: "thriller", pace: "fast", year: 2019, tagline: "Act like you own the place", director: "Bong Joon-ho", rating: 8.5 },
-  
-  // Thriller - Slow
-  { name: "Silence", displayName: "Silence of the Lambs", genre: "thriller", pace: "slow", year: 1991, tagline: "To enter the mind of a killer she must challenge the mind of a madman", director: "Jonathan Demme", rating: 8.6 },
-  { name: "Shutter", displayName: "Shutter Island", genre: "thriller", pace: "slow", year: 2010, tagline: "Some places never let you go", director: "Martin Scorsese", rating: 8.2 },
-  { name: "Zodiac", displayName: "Zodiac", genre: "thriller", pace: "slow", year: 2007, tagline: "There's more than one way to lose your life to a killer", director: "David Fincher", rating: 7.7 },
-  
-  // Drama - Slow
-  { name: "Shawshank", displayName: "The Shawshank Redemption", genre: "drama", pace: "slow", year: 1994, tagline: "Fear can hold you prisoner. Hope can set you free.", director: "Frank Darabont", rating: 9.3 },
-  { name: "GoodWill", displayName: "Good Will Hunting", genre: "drama", pace: "slow", year: 1997, tagline: "Some people can never believe in themselves, until someone believes in them", director: "Gus Van Sant", rating: 8.3 },
-  { name: "WhaleRider", displayName: "Whiplash", genre: "drama", pace: "slow", year: 2014, tagline: "The road to greatness can take you to the edge", director: "Damien Chazelle", rating: 8.5 },
-  { name: "Everything", displayName: "Everything Everywhere All at Once", genre: "drama", pace: "fast", year: 2022, tagline: "The universe is so much bigger than you realize", director: "Daniels", rating: 8.0 },
+  // Drama
+  { 
+    name: "Shawshank", 
+    displayName: "The Shawshank Redemption", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 1994, 
+    tagline: "Fear can hold you prisoner. Hope can set you free.",
+    synopsis: "A wrongfully imprisoned banker befriends a fellow inmate over decades. Through patience and quiet genius, he never loses hope for freedom.",
+    director: "Frank Darabont", 
+    rating: 9.3,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "GoodWill", 
+    displayName: "Good Will Hunting", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 1997, 
+    tagline: "Some people can never believe in themselves, until someone believes in them",
+    synopsis: "A janitor at MIT is secretly a math genius carrying deep emotional wounds. A therapist becomes his unlikely guide to healing and self-discovery.",
+    director: "Gus Van Sant", 
+    rating: 8.3,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Whiplash", 
+    displayName: "Whiplash", 
+    genre: "drama", 
+    pace: "slow", 
+    year: 2014, 
+    tagline: "The road to greatness can take you to the edge",
+    synopsis: "A young drummer enrolls at a cutthroat music conservatory where a ruthless instructor will stop at nothing to push students to their limits.",
+    director: "Damien Chazelle", 
+    rating: 8.5,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Everything", 
+    displayName: "Everything Everywhere All at Once", 
+    genre: "scifi", 
+    pace: "fast", 
+    year: 2022, 
+    tagline: "The universe is so much bigger than you realize",
+    synopsis: "A laundromat owner discovers she can access parallel universe versions of herself. The fate of the multiverse depends on embracing what she's always overlooked.",
+    director: "Daniels", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
   
   // Sci-Fi
-  { name: "Matrix", displayName: "The Matrix", genre: "scifi", pace: "fast", year: 1999, tagline: "Reality is a thing of the past", director: "Wachowskis", rating: 8.7 },
-  { name: "BladeRunner", displayName: "Blade Runner 2049", genre: "scifi", pace: "slow", year: 2017, tagline: "The key to the future is finally unearthed", director: "Denis Villeneuve", rating: 8.0 },
-  { name: "Arrival", displayName: "Arrival", genre: "scifi", pace: "slow", year: 2016, tagline: "Why are they here?", director: "Denis Villeneuve", rating: 7.9 },
-  { name: "ExMachina", displayName: "Ex Machina", genre: "scifi", pace: "slow", year: 2014, tagline: "There is nothing more human than the will to survive", director: "Alex Garland", rating: 7.7 },
+  { 
+    name: "Matrix", 
+    displayName: "The Matrix", 
+    genre: "scifi", 
+    pace: "fast", 
+    year: 1999, 
+    tagline: "Reality is a thing of the past",
+    synopsis: "A computer hacker learns that reality as he knows it is a simulation. Taking the red pill is just the beginning of the rabbit hole.",
+    director: "Wachowskis", 
+    rating: 8.7,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "BladeRunner", 
+    displayName: "Blade Runner 2049", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2017, 
+    tagline: "The key to the future is finally unearthed",
+    synopsis: "A blade runner unearths a secret that could plunge society into chaos. His search for answers leads to a man who has been missing for thirty years.",
+    director: "Denis Villeneuve", 
+    rating: 8.0,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "Arrival", 
+    displayName: "Arrival", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2016, 
+    tagline: "Why are they here?",
+    synopsis: "A linguist is recruited to communicate with aliens who have landed on Earth. Understanding their language changes everything she knows about time.",
+    director: "Denis Villeneuve", 
+    rating: 7.9,
+    region: 'foreign',
+    language: 'English'
+  },
+  { 
+    name: "ExMachina", 
+    displayName: "Ex Machina", 
+    genre: "scifi", 
+    pace: "slow", 
+    year: 2014, 
+    tagline: "There is nothing more human than the will to survive",
+    synopsis: "A programmer is invited to administer the Turing test on an AI with human appearance. Who is testing whom becomes increasingly unclear.",
+    director: "Alex Garland", 
+    rating: 7.7,
+    region: 'foreign',
+    language: 'English'
+  },
 ];
 
 export type QuizMode = 'quick' | 'standard' | 'deep';
@@ -106,12 +771,12 @@ export const questions: Question[] = [
   // Quick Mode Questions (3)
   {
     id: 1,
-    text: "What's your vibe tonight?",
-    subtext: "First instinct only",
+    text: "What's your mood tonight?",
+    subtext: "First instinct, don't overthink it",
     options: [
-      { text: "Get my heart racing", subtext: "Adrenaline, explosions, or suspense", effects: { action: 2, thriller: 1, fast: 1 } },
-      { text: "Feel something deep", subtext: "Emotions, connections, stories", effects: { romance: 2, drama: 1, slow: 1 } },
-      { text: "Escape reality", subtext: "Laugh, dream, wonder", effects: { comedy: 2, scifi: 1 } },
+      { text: "I want excitement", subtext: "Action, thrills, edge-of-seat stuff", effects: { action: 2, thriller: 1, fast: 1 } },
+      { text: "I want to feel something", subtext: "Emotions, love, real stories", effects: { romance: 2, drama: 1, slow: 1 } },
+      { text: "I want to escape", subtext: "Laughs, wonder, new worlds", effects: { comedy: 2, scifi: 1 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
@@ -119,10 +784,10 @@ export const questions: Question[] = [
     id: 2,
     text: "Pick your perfect movie moment",
     options: [
-      { text: "An epic showdown under rain", effects: { action: 2, thriller: 1, fast: 1 } },
-      { text: "Two strangers meet, time stops", effects: { romance: 2, drama: 1, slow: 1 } },
-      { text: "A perfectly timed joke lands", effects: { comedy: 2, fast: 1 } },
-      { text: "A mind-bending twist you didn't see coming", effects: { thriller: 2, scifi: 1 } },
+      { text: "An epic showdown", effects: { action: 2, thriller: 1, fast: 1 } },
+      { text: "Two strangers connect", effects: { romance: 2, drama: 1, slow: 1 } },
+      { text: "A perfectly timed joke", effects: { comedy: 2, fast: 1 } },
+      { text: "A mind-bending twist", effects: { thriller: 2, scifi: 1 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
@@ -130,9 +795,9 @@ export const questions: Question[] = [
     id: 3,
     text: "How do you want to feel after?",
     options: [
-      { text: "Pumped up and energized", effects: { action: 1, comedy: 1, fast: 2 } },
-      { text: "Thoughtful and reflective", effects: { drama: 2, slow: 2 } },
-      { text: "Happily satisfied", effects: { romance: 1, comedy: 1 } },
+      { text: "Energized and pumped", effects: { action: 1, comedy: 1, fast: 2 } },
+      { text: "Thoughtful and moved", effects: { drama: 2, slow: 2 } },
+      { text: "Satisfied and happy", effects: { romance: 1, comedy: 1 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
@@ -140,24 +805,23 @@ export const questions: Question[] = [
   // Standard Mode Additional Questions (+4 = 7 total)
   {
     id: 4,
-    text: "It's Friday night. Your ideal setting?",
-    subtext: "Imagine yourself there",
+    text: "Your ideal movie setting?",
     options: [
-      { text: "Packed theater, opening night energy", effects: { action: 1, fast: 1 } },
-      { text: "Cozy couch, blanket, dim lights", effects: { romance: 1, drama: 1, slow: 1 } },
-      { text: "With friends, snacks everywhere", effects: { comedy: 2 } },
-      { text: "Alone, fully immersed", effects: { thriller: 1, scifi: 1, slow: 1 } },
+      { text: "Packed theater, opening night", effects: { action: 1, fast: 1 } },
+      { text: "Cozy couch, dim lights", effects: { romance: 1, drama: 1, slow: 1 } },
+      { text: "With friends, lots of snacks", effects: { comedy: 2 } },
+      { text: "Alone, fully focused", effects: { thriller: 1, scifi: 1, slow: 1 } },
     ],
     mode: ['standard', 'deep'],
   },
   {
     id: 5,
-    text: "Choose your protagonist",
+    text: "Choose your hero",
     options: [
-      { text: "The unstoppable hero", subtext: "Fights against all odds", effects: { action: 2, fast: 1 } },
-      { text: "The hopeless romantic", subtext: "Searching for connection", effects: { romance: 2, slow: 1 } },
-      { text: "The underdog with heart", subtext: "Proves everyone wrong", effects: { comedy: 1, drama: 1 } },
-      { text: "The brilliant mind", subtext: "Sees what others can't", effects: { thriller: 1, scifi: 2 } },
+      { text: "The unstoppable fighter", effects: { action: 2, fast: 1 } },
+      { text: "The hopeless romantic", effects: { romance: 2, slow: 1 } },
+      { text: "The lovable underdog", effects: { comedy: 1, drama: 1 } },
+      { text: "The brilliant mind", effects: { thriller: 1, scifi: 2 } },
     ],
     mode: ['standard', 'deep'],
   },
@@ -166,9 +830,9 @@ export const questions: Question[] = [
     text: "Your attention span right now?",
     subtext: "Be honest",
     options: [
-      { text: "Hook me fast or lose me", effects: { fast: 2, comedy: 1 } },
-      { text: "I'm ready to be patient", effects: { slow: 2, drama: 1 } },
-      { text: "Depends on how good it is", effects: { thriller: 1 } },
+      { text: "Hook me fast", effects: { fast: 2, comedy: 1 } },
+      { text: "I can be patient", effects: { slow: 2, drama: 1 } },
+      { text: "Depends on the story", effects: { thriller: 1 } },
     ],
     mode: ['standard', 'deep'],
   },
@@ -176,10 +840,10 @@ export const questions: Question[] = [
     id: 7,
     text: "Pick a soundtrack",
     options: [
-      { text: "Epic orchestral score", effects: { action: 2, drama: 1 } },
-      { text: "Indie, melancholic melody", effects: { romance: 2, slow: 1 } },
-      { text: "Upbeat, catchy tunes", effects: { comedy: 2, fast: 1 } },
-      { text: "Synth, electronic, atmospheric", effects: { scifi: 2, thriller: 1 } },
+      { text: "Epic orchestral", effects: { action: 2, drama: 1 } },
+      { text: "Melancholic and soft", effects: { romance: 2, slow: 1 } },
+      { text: "Upbeat and fun", effects: { comedy: 2, fast: 1 } },
+      { text: "Electronic and moody", effects: { scifi: 2, thriller: 1 } },
     ],
     mode: ['standard', 'deep'],
   },
@@ -187,40 +851,39 @@ export const questions: Question[] = [
   // Deep Mode Additional Questions (+5 = 12 total)
   {
     id: 8,
-    text: "The best movies make you question...",
+    text: "Great movies make you question...",
     options: [
       { text: "What you're capable of", effects: { action: 2, drama: 1 } },
-      { text: "Who you love and why", effects: { romance: 2, drama: 1 } },
-      { text: "If life should be taken so seriously", effects: { comedy: 2 } },
-      { text: "What is real", effects: { scifi: 2, thriller: 2 } },
+      { text: "Who and how you love", effects: { romance: 2, drama: 1 } },
+      { text: "If life is too serious", effects: { comedy: 2 } },
+      { text: "What reality even is", effects: { scifi: 2, thriller: 2 } },
     ],
     mode: ['deep'],
   },
   {
     id: 9,
-    text: "How do you handle sad endings?",
+    text: "How do you feel about sad endings?",
     options: [
       { text: "Bring on the tears", effects: { romance: 1, drama: 2, slow: 1 } },
       { text: "Only if it's earned", effects: { thriller: 1, slow: 1 } },
-      { text: "Actually, I'd rather not", effects: { comedy: 2, action: 1, fast: 1 } },
+      { text: "I'd rather not", effects: { comedy: 2, action: 1, fast: 1 } },
     ],
     mode: ['deep'],
   },
   {
     id: 10,
     text: "Pick an era",
-    subtext: "Where would you live?",
     options: [
       { text: "The distant future", effects: { scifi: 2, action: 1 } },
-      { text: "Right now, modern day", effects: { comedy: 1, romance: 1, thriller: 1 } },
-      { text: "A timeless, period setting", effects: { romance: 2, drama: 2, slow: 1 } },
-      { text: "Somewhere that never existed", effects: { scifi: 1, action: 1, comedy: 1 } },
+      { text: "Modern day", effects: { comedy: 1, romance: 1, thriller: 1 } },
+      { text: "A historical setting", effects: { romance: 2, drama: 2, slow: 1 } },
+      { text: "Somewhere imaginary", effects: { scifi: 1, action: 1, comedy: 1 } },
     ],
     mode: ['deep'],
   },
   {
     id: 11,
-    text: "Visual style preference?",
+    text: "Your visual style preference?",
     options: [
       { text: "Sleek and stylized", effects: { action: 1, thriller: 1, fast: 1 } },
       { text: "Warm and intimate", effects: { romance: 2, drama: 1, slow: 1 } },
@@ -231,12 +894,11 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    text: "Final question: Trust our algorithm?",
-    subtext: "One last preference",
+    text: "Last one: What are you hoping for?",
     options: [
-      { text: "Surprise me with something popular", effects: { action: 1, comedy: 1, fast: 1 } },
-      { text: "Give me a hidden gem", effects: { drama: 2, romance: 1, slow: 1 } },
-      { text: "Balance mainstream and artsy", effects: { thriller: 1, scifi: 1 } },
+      { text: "A crowd-pleaser", effects: { action: 1, comedy: 1, fast: 1 } },
+      { text: "A hidden gem", effects: { drama: 2, romance: 1, slow: 1 } },
+      { text: "Something balanced", effects: { thriller: 1, scifi: 1 } },
     ],
     mode: ['deep'],
   },
@@ -268,11 +930,12 @@ export const initialScores: Scores = {
   slow: 0,
 };
 
-export function recommendMovie(scores: Scores): { movie: Movie; reasons: string[]; matchPercent: number } {
+export function recommendMovie(scores: Scores, region: Region): { movie: Movie; reasons: string[]; matchPercent: number } {
+  const regionMovies = movies.filter(m => m.region === region);
   let bestScore = -1;
   const candidates: { movie: Movie; score: number }[] = [];
 
-  for (const movie of movies) {
+  for (const movie of regionMovies) {
     let score = 0;
 
     // Genre matching
@@ -330,10 +993,6 @@ export function recommendMovie(scores: Scores): { movie: Movie; reasons: string[
     reasons.push(`Critically acclaimed with ${movie.rating}/10 rating`);
   }
 
-  if (movie.director) {
-    reasons.push(`Directed by ${movie.director}`);
-  }
-
   return { movie, reasons, matchPercent };
 }
 
@@ -344,26 +1003,26 @@ export interface SavedResult {
   matchPercent: number;
   date: string;
   mode: QuizMode;
+  region: Region;
 }
 
 export function saveResult(result: Omit<SavedResult, 'id' | 'date'>): SavedResult {
   const saved: SavedResult = {
     ...result,
-    id: crypto.randomUUID(),
+    id: Date.now().toString(36),
     date: new Date().toISOString(),
   };
   
-  const existing = getHistory();
-  const updated = [saved, ...existing].slice(0, 20); // Keep last 20
-  localStorage.setItem('cinematch-history', JSON.stringify(updated));
+  const history = getHistory();
+  history.unshift(saved);
+  localStorage.setItem('cinematch-history', JSON.stringify(history.slice(0, 20)));
   
   return saved;
 }
 
 export function getHistory(): SavedResult[] {
   try {
-    const data = localStorage.getItem('cinematch-history');
-    return data ? JSON.parse(data) : [];
+    return JSON.parse(localStorage.getItem('cinematch-history') || '[]');
   } catch {
     return [];
   }
