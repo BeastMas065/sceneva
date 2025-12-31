@@ -48,7 +48,7 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
             <button
               key={mode.id}
               onClick={() => onSelect(mode.id)}
-              className={`group relative p-6 rounded-xl border border-border bg-card hover:bg-muted hover:border-foreground/20 transition-all duration-300 text-left animate-fade-in`}
+              className={`group relative p-6 rounded-xl border border-border bg-card hover:bg-muted/50 hover:border-foreground/10 hover:-translate-y-0.5 transition-all duration-200 ease-out text-left animate-fade-in`}
               style={{ animationDelay: `${0.1 * index}s` }}
             >
               {mode.recommended && (
@@ -57,7 +57,7 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
                 </div>
               )}
 
-              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4 group-hover:bg-background transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4 group-hover:bg-background transition-colors duration-150">
                 <mode.icon className="w-5 h-5" />
               </div>
 
@@ -73,7 +73,7 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
                 <span className="text-xs text-muted-foreground">
                   {mode.time}
                 </span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-150" />
               </div>
             </button>
           ))}

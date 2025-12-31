@@ -111,7 +111,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 0.3s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .link-underline:hover::after {
@@ -119,14 +119,28 @@
     transform-origin: left;
   }
 
-  /* Card hover effect */
+  /* Card hover effect - subtle lift */
   .card-hover {
-    @apply transition-all duration-300;
+    @apply transition-all duration-200 ease-out;
   }
   
   .card-hover:hover {
-    @apply -translate-y-1;
-    box-shadow: 0 8px 30px -10px hsl(var(--foreground) / 0.1);
+    @apply -translate-y-0.5;
+    box-shadow: 0 4px 20px -8px hsl(var(--foreground) / 0.08);
+  }
+
+  /* Interactive element hover */
+  .hover-lift {
+    @apply transition-transform duration-200 ease-out;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-0.5;
+  }
+
+  /* Subtle background transition */
+  .hover-bg {
+    @apply transition-colors duration-150 ease-out;
   }
 
   /* Glass effect for dark mode */
@@ -135,24 +149,24 @@
   }
 
   .glass-hover {
-    @apply transition-all duration-300 hover:bg-card hover:border-foreground/10;
+    @apply transition-all duration-200 hover:bg-card hover:border-foreground/10;
   }
 
   /* Clean button styles */
   .btn-primary {
-    @apply px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg transition-all duration-200;
+    @apply px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg transition-all duration-150 ease-out;
   }
   
   .btn-primary:hover {
-    @apply opacity-90;
+    @apply opacity-90 -translate-y-px;
   }
 
   .btn-outline {
-    @apply px-6 py-3 border border-border bg-transparent text-foreground font-medium rounded-lg transition-all duration-200;
+    @apply px-6 py-3 border border-border bg-transparent text-foreground font-medium rounded-lg transition-all duration-150 ease-out;
   }
   
   .btn-outline:hover {
-    @apply bg-muted border-foreground/20;
+    @apply bg-muted/50 border-foreground/15 -translate-y-px;
   }
 
   /* Page transitions */
