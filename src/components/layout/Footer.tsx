@@ -1,4 +1,4 @@
-vaimport { Film, Heart } from 'lucide-react';
+import { Film, Heart } from 'lucide-react';
 
 export function Footer() {
   return (
