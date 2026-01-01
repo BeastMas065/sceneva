@@ -48,7 +48,7 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
             <button
               key={mode.id}
               onClick={() => onSelect(mode.id)}
-              className="group relative p-6 pt-8 rounded-xl border border-border bg-card text-left animate-fade-in transition-all duration-300 hover:bg-foreground hover:border-foreground hover:scale-[1.06]"
+              className="group relative p-6 pt-8 rounded-xl border border-border bg-card text-left animate-fade-in transition-all duration-300 hover:bg-foreground hover:border-foreground hover:scale-[1.04] hover:-translate-y-2 hover:shadow-2xl"
               style={{ animationDelay: `${0.1 * index}s` }}
             >
               {mode.recommended && (
