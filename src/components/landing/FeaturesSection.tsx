@@ -40,16 +40,16 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div 
               key={feature.title}
-              className="group p-6 rounded-xl border border-border bg-card card-glow border-animate animate-fade-in"
+              className="group p-6 rounded-xl border border-border bg-card animate-fade-in transition-all duration-300 hover:bg-foreground hover:border-foreground hover:scale-[1.03]"
               style={{ animationDelay: `${0.1 * index}s` }}
             >
-              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-background group-hover:scale-110">
-                <feature.icon className="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" />
+              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-background/20 group-hover:rotate-6">
+                <feature.icon className="w-5 h-5 transition-all duration-300 group-hover:text-background" />
               </div>
-              <h3 className="font-display text-lg font-semibold mb-2">
+              <h3 className="font-display text-lg font-semibold mb-2 transition-colors duration-300 group-hover:text-background">
                 {feature.title}
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed transition-colors duration-300 group-hover:text-background/70">
                 {feature.description}
               </p>
             </div>
