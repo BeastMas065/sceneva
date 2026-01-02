@@ -107,20 +107,33 @@ export default function Result() {
                   : 'opacity-0 translate-y-8'
               }`}
             >
-              <div className="border border-border rounded-2xl p-8 md:p-10 bg-card">
-                {/* Match percentage */}
-                <div className="flex justify-center mb-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-                    {matchPercent}% Match
+              <div className="border border-border rounded-2xl overflow-hidden bg-card">
+                {/* Movie Poster */}
+                <div className="relative h-64 md:h-80 w-full bg-gradient-to-br from-muted to-muted/50 overflow-hidden">
+                  <img
+                    src={`https://source.unsplash.com/800x600/?${encodeURIComponent(movie.genre + ' movie ' + movie.displayName)}`}
+                    alt={movie.displayName}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+                  
+                  {/* Match percentage overlay */}
+                  <div className="absolute top-4 right-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-lg">
+                      {matchPercent}% Match
+                    </div>
+                  </div>
+                  
+                  {/* Genre icon overlay */}
+                  <div className="absolute bottom-4 left-4">
+                    <div className="w-12 h-12 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                      <GenreIcon className="w-5 h-5" />
+                    </div>
                   </div>
                 </div>
-
-                {/* Movie icon */}
-                <div className="flex justify-center mb-6">
-                  <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center">
-                    <GenreIcon className="w-6 h-6" />
-                  </div>
-                </div>
+                
+                <div className="p-8 md:p-10">
 
                 {/* Movie title */}
                 <h1 className="font-display text-3xl md:text-5xl font-semibold text-center mb-4">
@@ -198,6 +211,7 @@ export default function Result() {
                     Directed by {movie.director}
                   </p>
                 )}
+                </div>
               </div>
             </div>
 

@@ -1,7 +1,18 @@
 import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export function HeroSection() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center px-4 overflow-hidden">
       {/* Cinematic Background Banner */}
@@ -17,26 +28,41 @@ export function HeroSection() {
           }}
         />
         
-        {/* Scenic mountain silhouettes - cinema landscape feel */}
+        {/* Scenic mountain silhouettes - cinema landscape feel with parallax */}
         <div className="absolute bottom-0 left-0 right-0 h-[60%]">
-          {/* Far mountains - lightest */}
-          <svg className="absolute bottom-0 w-full h-full opacity-[0.04]" viewBox="0 0 1440 400" preserveAspectRatio="none">
+          {/* Far mountains - lightest, slowest parallax */}
+          <svg 
+            className="absolute bottom-0 w-full h-full opacity-[0.04] transition-transform duration-100"
+            viewBox="0 0 1440 400" 
+            preserveAspectRatio="none"
+            style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+          >
             <path 
               d="M0,400 L0,280 Q120,200 240,250 T480,180 T720,220 T960,160 T1200,200 T1440,180 L1440,400 Z" 
               fill="currentColor"
             />
           </svg>
           
-          {/* Mid mountains */}
-          <svg className="absolute bottom-0 w-full h-full opacity-[0.06]" viewBox="0 0 1440 400" preserveAspectRatio="none">
+          {/* Mid mountains - medium parallax */}
+          <svg 
+            className="absolute bottom-0 w-full h-full opacity-[0.06] transition-transform duration-100"
+            viewBox="0 0 1440 400" 
+            preserveAspectRatio="none"
+            style={{ transform: `translateY(${scrollY * 0.2}px)` }}
+          >
             <path 
               d="M0,400 L0,320 Q180,260 360,300 T720,240 T1080,280 T1440,260 L1440,400 Z" 
               fill="currentColor"
             />
           </svg>
           
-          {/* Near mountains - darkest */}
-          <svg className="absolute bottom-0 w-full h-full opacity-[0.08]" viewBox="0 0 1440 400" preserveAspectRatio="none">
+          {/* Near mountains - darkest, fastest parallax */}
+          <svg 
+            className="absolute bottom-0 w-full h-full opacity-[0.08] transition-transform duration-100"
+            viewBox="0 0 1440 400" 
+            preserveAspectRatio="none"
+            style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+          >
             <path 
               d="M0,400 L0,350 Q200,300 400,340 T800,310 T1200,350 T1440,330 L1440,400 Z" 
               fill="currentColor"
