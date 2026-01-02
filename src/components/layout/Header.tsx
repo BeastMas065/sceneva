@@ -1,8 +1,33 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Film, History, Info } from 'lucide-react';
+import { Film, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function Header() {
   const location = useLocation();
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+  
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setIsDark(true);
+    }
+  }, []);
   
   const isActive = (path: string) => location.pathname === path;
 
@@ -44,6 +69,19 @@ export function Header() {
                 {label}
               </Link>
             ))}
+            
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="ml-2 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-all duration-200"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? (
+                <Sun className="w-4 h-4" />
+              ) : (
+                <Moon className="w-4 h-4" />
+              )}
+            </button>
           </nav>
         </div>
       </div>
