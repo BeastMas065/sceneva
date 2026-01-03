@@ -129,9 +129,9 @@ export default function Result() {
               }`}
             >
               <div className="border border-border rounded-2xl overflow-hidden bg-card">
-                {/* Movie Poster */}
-                <div className="relative h-64 md:h-80 w-full overflow-hidden">
-                  {/* Fallback gradient background */}
+                {/* Movie Header with Poster */}
+                <div className="relative flex flex-col md:flex-row">
+                  {/* Background gradient */}
                   <div className={`absolute inset-0 ${genreGradients[movie.genre] || 'bg-gradient-to-br from-muted via-muted/80 to-muted/60'}`} />
                   
                   {/* Film grain texture */}
@@ -139,93 +139,90 @@ export default function Result() {
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
                   }} />
                   
-                  {/* TMDB Poster, Loading Skeleton, or Genre Icon */}
-                  {posterLoading ? (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {/* Shimmer skeleton */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" 
-                           style={{ 
-                             animation: 'shimmer 1.5s infinite',
-                             backgroundSize: '200% 100%'
-                           }} />
-                      <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin" />
+                  {/* Movie Poster - Proper 2:3 aspect ratio */}
+                  <div className="relative w-40 md:w-48 shrink-0 mx-auto md:mx-0 mt-6 md:mt-0 md:m-6 z-10">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden shadow-2xl bg-black/20">
+                      {posterLoading ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" 
+                               style={{ 
+                                 animation: 'shimmer 1.5s infinite',
+                                 backgroundSize: '200% 100%'
+                               }} />
+                          <div className="w-10 h-10 rounded-full border-4 border-white/20 border-t-white/60 animate-spin" />
+                        </div>
+                      ) : posterUrl ? (
+                        <img
+                          src={posterUrl}
+                          alt={movie.displayName}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-black/30">
+                          <GenreIcon className="w-16 h-16 text-white/40" strokeWidth={1} />
+                        </div>
+                      )}
                     </div>
-                  ) : posterUrl ? (
-                    <img
-                      src={posterUrl}
-                      alt={movie.displayName}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <GenreIcon className="w-24 h-24 md:w-32 md:h-32 text-white/30" strokeWidth={1} />
-                    </div>
-                  )}
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
-                  
-                  {/* TMDB Attribution - Required by TMDB Terms */}
-                  {posterUrl && (
-                    <div className="absolute bottom-4 right-4 px-2 py-1 bg-black/60 rounded text-[10px] text-white/70">
-                      Data by TMDB
-                    </div>
-                  )}
-                  
-                  {/* Match percentage overlay */}
-                  <div className="absolute top-4 right-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-lg">
-                      {matchPercent}% Match
-                    </div>
+                    
+                    {/* TMDB Attribution */}
+                    {posterUrl && !posterLoading && (
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/70 rounded text-[9px] text-white/60 whitespace-nowrap">
+                        Data by TMDB
+                      </div>
+                    )}
                   </div>
                   
-                  {/* Genre icon overlay */}
-                  <div className="absolute bottom-4 left-4">
-                    <div className="w-12 h-12 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center">
-                      <GenreIcon className="w-5 h-5" />
+                  {/* Movie Quick Info Overlay */}
+                  <div className="relative flex-1 p-6 md:py-8 md:pr-8 flex flex-col justify-center z-10">
+                    {/* Match percentage */}
+                    <div className="absolute top-4 right-4 md:top-6 md:right-6">
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
+                        {matchPercent}% Match
+                      </div>
+                    </div>
+                    
+                    <h1 className="font-display text-2xl md:text-4xl font-semibold text-white text-center md:text-left mb-2 pr-16 md:pr-20">
+                      {movie.displayName}
+                    </h1>
+                    
+                    {movie.tagline && (
+                      <p className="text-white/70 text-center md:text-left italic mb-4">
+                        "{movie.tagline}"
+                      </p>
+                    )}
+                    
+                    {/* Quick tags */}
+                    <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                      {movie.year && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90">
+                          <Clock className="w-3 h-3" />
+                          {movie.year}
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90 capitalize">
+                        <GenreIcon className="w-3 h-3" />
+                        {movie.genre}
+                      </span>
+                      {movie.rating && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90">
+                          <Star className="w-3 h-3" />
+                          {movie.rating}/10
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
-                
                 <div className="p-8 md:p-10">
-
-                {/* Movie title */}
-                <h1 className="font-display text-3xl md:text-5xl font-semibold text-center mb-4">
-                  {movie.displayName}
-                </h1>
-
-                {/* Tagline */}
-                {movie.tagline && (
-                  <p className="text-lg text-muted-foreground text-center italic mb-6">
-                    "{movie.tagline}"
-                  </p>
-                )}
-
-                {/* Tags */}
-                <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
-                  {movie.year && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
-                      <Clock className="w-3.5 h-3.5" />
-                      {movie.year}
-                    </span>
-                  )}
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm capitalize">
-                    <GenreIcon className="w-3.5 h-3.5" />
-                    {movie.genre}
-                  </span>
-                  {movie.language && (
+                
+                {/* Language tag if available */}
+                {movie.language && (
+                  <div className="flex justify-center mb-6">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
                       <Globe className="w-3.5 h-3.5" />
                       {movie.language}
                     </span>
-                  )}
-                  {movie.rating && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
-                      <Star className="w-3.5 h-3.5" />
-                      {movie.rating}/10
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Synopsis */}
                 {movie.synopsis && (
