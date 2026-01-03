@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { getHistory, SavedResult, Movie } from '@/data/movies';
 import { PageTransition } from '@/components/ui/PageTransition';
+import { searchMoviePoster } from '@/lib/tmdb';
 import { Header } from '@/components/layout/Header';
 
 const genreIcons: Record<string, typeof Zap> = {
@@ -31,12 +32,22 @@ const genreIcons: Record<string, typeof Zap> = {
   scifi: Rocket,
 };
 
+const genreGradients: Record<string, string> = {
+  action: 'bg-gradient-to-br from-orange-600/80 via-red-700/60 to-amber-900/80',
+  romance: 'bg-gradient-to-br from-pink-500/80 via-rose-600/60 to-purple-700/80',
+  comedy: 'bg-gradient-to-br from-yellow-500/80 via-amber-500/60 to-orange-600/80',
+  thriller: 'bg-gradient-to-br from-slate-800/90 via-zinc-900/80 to-neutral-950/90',
+  drama: 'bg-gradient-to-br from-indigo-700/80 via-purple-800/60 to-slate-900/80',
+  scifi: 'bg-gradient-to-br from-cyan-600/80 via-blue-700/60 to-violet-800/80',
+};
+
 export default function Result() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [result, setResult] = useState<SavedResult | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [posterUrl, setPosterUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const history = getHistory();
@@ -44,6 +55,10 @@ export default function Result() {
     if (found) {
       setResult(found);
       setTimeout(() => setIsRevealed(true), 300);
+      
+      // Fetch movie poster from TMDB
+      searchMoviePoster(found.movie.displayName, found.movie.year)
+        .then(url => setPosterUrl(url));
     } else {
       navigate('/');
     }
@@ -108,28 +123,30 @@ export default function Result() {
               }`}
             >
               <div className="border border-border rounded-2xl overflow-hidden bg-card">
-                {/* Movie Poster - Gradient Background */}
+                {/* Movie Poster */}
                 <div className="relative h-64 md:h-80 w-full overflow-hidden">
-                  {/* Dynamic gradient based on genre */}
-                  <div className={`absolute inset-0 ${
-                    movie.genre === 'action' ? 'bg-gradient-to-br from-orange-600/80 via-red-700/60 to-amber-900/80' :
-                    movie.genre === 'romance' ? 'bg-gradient-to-br from-pink-500/80 via-rose-600/60 to-purple-700/80' :
-                    movie.genre === 'comedy' ? 'bg-gradient-to-br from-yellow-500/80 via-amber-500/60 to-orange-600/80' :
-                    movie.genre === 'thriller' ? 'bg-gradient-to-br from-slate-800/90 via-zinc-900/80 to-neutral-950/90' :
-                    movie.genre === 'drama' ? 'bg-gradient-to-br from-indigo-700/80 via-purple-800/60 to-slate-900/80' :
-                    movie.genre === 'scifi' ? 'bg-gradient-to-br from-cyan-600/80 via-blue-700/60 to-violet-800/80' :
-                    'bg-gradient-to-br from-muted via-muted/80 to-muted/60'
-                  }`} />
+                  {/* Fallback gradient background */}
+                  <div className={`absolute inset-0 ${genreGradients[movie.genre] || 'bg-gradient-to-br from-muted via-muted/80 to-muted/60'}`} />
                   
                   {/* Film grain texture */}
                   <div className="absolute inset-0 opacity-20" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
                   }} />
                   
-                  {/* Genre icon centered */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <GenreIcon className="w-24 h-24 md:w-32 md:h-32 text-white/30" strokeWidth={1} />
-                  </div>
+                  {/* TMDB Poster or Genre Icon */}
+                  {posterUrl ? (
+                    <img
+                      src={posterUrl}
+                      alt={movie.displayName}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <GenreIcon className="w-24 h-24 md:w-32 md:h-32 text-white/30" strokeWidth={1} />
+                    </div>
+                  )}
+                  
+                  {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                   
                   {/* Match percentage overlay */}
