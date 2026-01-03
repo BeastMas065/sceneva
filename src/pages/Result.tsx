@@ -48,6 +48,7 @@ export default function Result() {
   const [isRevealed, setIsRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
+  const [posterLoading, setPosterLoading] = useState(true);
 
   useEffect(() => {
     const history = getHistory();
@@ -57,8 +58,13 @@ export default function Result() {
       setTimeout(() => setIsRevealed(true), 300);
       
       // Fetch movie poster from TMDB
+      setPosterLoading(true);
       searchMoviePoster(found.movie.displayName, found.movie.year)
-        .then(url => setPosterUrl(url));
+        .then(url => {
+          setPosterUrl(url);
+          setPosterLoading(false);
+        })
+        .catch(() => setPosterLoading(false));
     } else {
       navigate('/');
     }
@@ -133,8 +139,18 @@ export default function Result() {
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
                   }} />
                   
-                  {/* TMDB Poster or Genre Icon */}
-                  {posterUrl ? (
+                  {/* TMDB Poster, Loading Skeleton, or Genre Icon */}
+                  {posterLoading ? (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {/* Shimmer skeleton */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" 
+                           style={{ 
+                             animation: 'shimmer 1.5s infinite',
+                             backgroundSize: '200% 100%'
+                           }} />
+                      <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin" />
+                    </div>
+                  ) : posterUrl ? (
                     <img
                       src={posterUrl}
                       alt={movie.displayName}
@@ -148,6 +164,13 @@ export default function Result() {
                   
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+                  
+                  {/* TMDB Attribution - Required by TMDB Terms */}
+                  {posterUrl && (
+                    <div className="absolute bottom-4 right-4 px-2 py-1 bg-black/60 rounded text-[10px] text-white/70">
+                      Data by TMDB
+                    </div>
+                  )}
                   
                   {/* Match percentage overlay */}
                   <div className="absolute top-4 right-4">
