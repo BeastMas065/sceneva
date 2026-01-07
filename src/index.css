@@ -10,74 +10,78 @@
 
 @layer base {
   :root {
-    /* Minimalist B&W - Clean & Sophisticated */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    /* Warm minimal - Sophisticated with subtle warmth */
+    --background: 40 20% 99%;
+    --foreground: 30 10% 10%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 8%;
+    --card: 40 15% 97%;
+    --card-foreground: 30 10% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover: 40 20% 99%;
+    --popover-foreground: 30 10% 10%;
 
-    /* Primary is pure black */
-    --primary: 0 0% 8%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary with warm undertone */
+    --primary: 30 8% 12%;
+    --primary-foreground: 40 20% 98%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 12%;
+    --secondary: 35 10% 95%;
+    --secondary-foreground: 30 10% 15%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 35 8% 93%;
+    --muted-foreground: 30 5% 45%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 8%;
+    /* Accent - subtle warm gold */
+    --accent: 38 60% 50%;
+    --accent-foreground: 40 20% 99%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
-    --ring: 0 0% 8%;
+    --border: 35 10% 88%;
+    --input: 35 10% 95%;
+    --ring: 30 8% 12%;
 
     --radius: 0.75rem;
 
-    /* Custom minimalist tokens */
-    --surface: 0 0% 98%;
-    --surface-hover: 0 0% 96%;
+    /* Custom tokens */
+    --surface: 40 15% 97%;
+    --surface-hover: 35 12% 94%;
+    --glow: 38 60% 50%;
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 96%;
+    --background: 25 15% 6%;
+    --foreground: 35 10% 94%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 96%;
+    --card: 25 12% 9%;
+    --card-foreground: 35 10% 94%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 96%;
+    --popover: 25 12% 9%;
+    --popover-foreground: 35 10% 94%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 35 10% 96%;
+    --primary-foreground: 25 15% 6%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 25 10% 14%;
+    --secondary-foreground: 35 8% 88%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 55%;
+    --muted: 25 8% 16%;
+    --muted-foreground: 30 5% 55%;
 
-    --accent: 0 0% 14%;
-    --accent-foreground: 0 0% 96%;
+    /* Accent - warm gold in dark mode */
+    --accent: 40 65% 55%;
+    --accent-foreground: 25 15% 6%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 12%;
-    --ring: 0 0% 100%;
+    --border: 25 8% 18%;
+    --input: 25 10% 14%;
+    --ring: 35 10% 96%;
 
-    --surface: 0 0% 8%;
-    --surface-hover: 0 0% 11%;
+    --surface: 25 12% 10%;
+    --surface-hover: 25 10% 14%;
+    --glow: 40 65% 55%;
   }
 }
 

@@ -55,6 +55,7 @@ export default {
           DEFAULT: "hsl(var(--surface))",
           hover: "hsl(var(--surface-hover))",
         },
+        glow: "hsl(var(--glow))",
       },
       borderRadius: {
         lg: "var(--radius)",
