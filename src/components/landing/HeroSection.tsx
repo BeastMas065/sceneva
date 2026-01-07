@@ -70,15 +70,15 @@ export function HeroSection() {
           </svg>
         </div>
         
-        {/* Horizon glow - sunset/sunrise feel */}
-        <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[150%] h-[300px] bg-gradient-to-t from-foreground/[0.02] via-foreground/[0.04] to-transparent rounded-[100%] blur-3xl" />
+        {/* Horizon glow - warm accent */}
+        <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[150%] h-[300px] bg-gradient-to-t from-glow/[0.03] via-glow/[0.06] to-transparent rounded-[100%] blur-3xl" />
         
         {/* Film strip decorative elements */}
         <div className="absolute top-20 left-8 w-px h-32 bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
         <div className="absolute top-20 right-8 w-px h-32 bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
         
-        {/* Subtle spotlight from top */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-foreground/[0.02] to-transparent rounded-full blur-3xl" />
+        {/* Subtle spotlight from top with warm glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-glow/[0.04] to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="text-center max-w-3xl mx-auto relative">
@@ -88,7 +88,7 @@ export function HeroSection() {
         >
           Find your next
           <br />
-          <span className="italic">perfect movie</span>
+          <span className="italic text-accent">perfect movie</span>
         </h1>
 
         {/* Subheading */}
