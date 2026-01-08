@@ -90,10 +90,37 @@ export default function Quiz() {
   if (!region) {
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Subtle background elements */}
+        {/* Cinema-inspired background */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-glow/[0.04] to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[200px] bg-gradient-to-t from-glow/[0.02] to-transparent rounded-[100%] blur-2xl" />
+          {/* Projector light beams */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full">
+            <div className="absolute top-0 left-1/4 w-[1px] h-full bg-gradient-to-b from-glow/[0.08] via-glow/[0.02] to-transparent rotate-[15deg] origin-top" />
+            <div className="absolute top-0 left-1/3 w-[1px] h-full bg-gradient-to-b from-accent/[0.06] via-accent/[0.01] to-transparent rotate-[8deg] origin-top" />
+            <div className="absolute top-0 right-1/4 w-[1px] h-full bg-gradient-to-b from-glow/[0.08] via-glow/[0.02] to-transparent -rotate-[15deg] origin-top" />
+            <div className="absolute top-0 right-1/3 w-[1px] h-full bg-gradient-to-b from-accent/[0.06] via-accent/[0.01] to-transparent -rotate-[8deg] origin-top" />
+          </div>
+          
+          {/* Film strip borders */}
+          <div className="absolute left-4 sm:left-8 top-24 bottom-24 w-6 sm:w-8 opacity-[0.04]">
+            <div className="h-full border-x border-current flex flex-col justify-between py-2">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="w-full aspect-[4/3] border border-current rounded-sm" />
+              ))}
+            </div>
+          </div>
+          <div className="absolute right-4 sm:right-8 top-24 bottom-24 w-6 sm:w-8 opacity-[0.04]">
+            <div className="h-full border-x border-current flex flex-col justify-between py-2">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="w-full aspect-[4/3] border border-current rounded-sm" />
+              ))}
+            </div>
+          </div>
+          
+          {/* Warm spotlight from top */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-glow/[0.06] via-glow/[0.02] to-transparent rounded-full blur-3xl" />
+          
+          {/* Subtle vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.4)_100%)]" />
           
           {/* Mountain silhouettes */}
           <svg className="absolute bottom-0 w-full h-[40%] opacity-[0.03]" viewBox="0 0 1440 300" preserveAspectRatio="none">
@@ -102,6 +129,9 @@ export default function Quiz() {
           <svg className="absolute bottom-0 w-full h-[40%] opacity-[0.05]" viewBox="0 0 1440 300" preserveAspectRatio="none">
             <path d="M0,300 L0,250 Q180,200 360,230 T720,180 T1080,220 T1440,200 L1440,300 Z" fill="currentColor" />
           </svg>
+          
+          {/* Horizon glow */}
+          <div className="absolute bottom-[15%] left-1/2 -translate-x-1/2 w-[150%] h-[200px] bg-gradient-to-t from-glow/[0.04] via-glow/[0.02] to-transparent rounded-[100%] blur-3xl" />
         </div>
 
         <header className="px-4 sm:px-6 py-4 relative z-10">
@@ -172,9 +202,37 @@ export default function Quiz() {
       {showFade && <div className="fixed inset-0 bg-background z-50 animate-fade-in" />}
       
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Subtle background elements */}
+        {/* Cinema-inspired background */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[350px] bg-gradient-to-b from-glow/[0.03] to-transparent rounded-full blur-3xl" />
+          {/* Projector light beams */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full">
+            <div className="absolute top-0 left-1/4 w-[1px] h-full bg-gradient-to-b from-glow/[0.08] via-glow/[0.02] to-transparent rotate-[15deg] origin-top" />
+            <div className="absolute top-0 left-1/3 w-[1px] h-full bg-gradient-to-b from-accent/[0.06] via-accent/[0.01] to-transparent rotate-[8deg] origin-top" />
+            <div className="absolute top-0 right-1/4 w-[1px] h-full bg-gradient-to-b from-glow/[0.08] via-glow/[0.02] to-transparent -rotate-[15deg] origin-top" />
+            <div className="absolute top-0 right-1/3 w-[1px] h-full bg-gradient-to-b from-accent/[0.06] via-accent/[0.01] to-transparent -rotate-[8deg] origin-top" />
+          </div>
+          
+          {/* Film strip borders */}
+          <div className="absolute left-4 sm:left-8 top-20 bottom-20 w-6 sm:w-8 opacity-[0.04]">
+            <div className="h-full border-x border-current flex flex-col justify-between py-2">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="w-full aspect-[4/3] border border-current rounded-sm" />
+              ))}
+            </div>
+          </div>
+          <div className="absolute right-4 sm:right-8 top-20 bottom-20 w-6 sm:w-8 opacity-[0.04]">
+            <div className="h-full border-x border-current flex flex-col justify-between py-2">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="w-full aspect-[4/3] border border-current rounded-sm" />
+              ))}
+            </div>
+          </div>
+          
+          {/* Warm spotlight from top */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-glow/[0.06] via-glow/[0.02] to-transparent rounded-full blur-3xl" />
+          
+          {/* Subtle vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.4)_100%)]" />
           
           {/* Mountain silhouettes */}
           <svg className="absolute bottom-0 w-full h-[35%] opacity-[0.03]" viewBox="0 0 1440 300" preserveAspectRatio="none">
@@ -183,6 +241,9 @@ export default function Quiz() {
           <svg className="absolute bottom-0 w-full h-[35%] opacity-[0.05]" viewBox="0 0 1440 300" preserveAspectRatio="none">
             <path d="M0,300 L0,250 Q180,200 360,230 T720,180 T1080,220 T1440,200 L1440,300 Z" fill="currentColor" />
           </svg>
+          
+          {/* Horizon glow */}
+          <div className="absolute bottom-[15%] left-1/2 -translate-x-1/2 w-[150%] h-[200px] bg-gradient-to-t from-glow/[0.04] via-glow/[0.02] to-transparent rounded-[100%] blur-3xl" />
         </div>
 
         {/* Progress bar */}
