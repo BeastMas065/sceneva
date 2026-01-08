@@ -90,10 +90,18 @@ export default function Quiz() {
   if (!region) {
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Subtle background glow */}
+        {/* Subtle background elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-glow/[0.04] to-transparent rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[200px] bg-gradient-to-t from-glow/[0.02] to-transparent rounded-[100%] blur-2xl" />
+          
+          {/* Mountain silhouettes */}
+          <svg className="absolute bottom-0 w-full h-[40%] opacity-[0.03]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+            <path d="M0,300 L0,220 Q120,160 240,190 T480,140 T720,170 T960,120 T1200,160 T1440,140 L1440,300 Z" fill="currentColor" />
+          </svg>
+          <svg className="absolute bottom-0 w-full h-[40%] opacity-[0.05]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+            <path d="M0,300 L0,250 Q180,200 360,230 T720,180 T1080,220 T1440,200 L1440,300 Z" fill="currentColor" />
+          </svg>
         </div>
 
         <header className="px-4 sm:px-6 py-4 relative z-10">
@@ -164,9 +172,17 @@ export default function Quiz() {
       {showFade && <div className="fixed inset-0 bg-background z-50 animate-fade-in" />}
       
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Subtle background glow */}
+        {/* Subtle background elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[350px] bg-gradient-to-b from-glow/[0.03] to-transparent rounded-full blur-3xl" />
+          
+          {/* Mountain silhouettes */}
+          <svg className="absolute bottom-0 w-full h-[35%] opacity-[0.03]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+            <path d="M0,300 L0,220 Q120,160 240,190 T480,140 T720,170 T960,120 T1200,160 T1440,140 L1440,300 Z" fill="currentColor" />
+          </svg>
+          <svg className="absolute bottom-0 w-full h-[35%] opacity-[0.05]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+            <path d="M0,300 L0,250 Q180,200 360,230 T720,180 T1080,220 T1440,200 L1440,300 Z" fill="currentColor" />
+          </svg>
         </div>
 
         {/* Progress bar */}
