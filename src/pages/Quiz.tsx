@@ -89,8 +89,14 @@ export default function Quiz() {
   // Region selection screen
   if (!region) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <header className="px-4 sm:px-6 py-4">
+      <div className="min-h-screen flex flex-col relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-glow/[0.04] to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[200px] bg-gradient-to-t from-glow/[0.02] to-transparent rounded-[100%] blur-2xl" />
+        </div>
+
+        <header className="px-4 sm:px-6 py-4 relative z-10">
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -100,9 +106,12 @@ export default function Quiz() {
           </button>
         </header>
 
-        <main className="flex-1 flex items-center justify-center px-4 pb-20">
+        <main className="flex-1 flex items-center justify-center px-4 pb-20 relative z-10">
           <PageTransition>
             <div className="max-w-xl w-full text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
+                Step 1
+              </p>
               <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
                 What are you in the mood for?
               </h1>
@@ -113,28 +122,34 @@ export default function Quiz() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <button
                   onClick={() => setRegion('indian')}
-                  className="group p-6 rounded-xl border border-border bg-card card-glow border-animate text-left"
+                  className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110">
-                    <MapPin className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                      <MapPin className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold mb-2">Indian Cinema</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Bollywood, South Indian, Kannada, Malayalam, Tamil, Telugu — the full spectrum of Indian storytelling
+                    </p>
                   </div>
-                  <h3 className="font-display text-xl font-semibold mb-2">Indian Cinema</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Bollywood, South Indian, Kannada, Malayalam, Tamil, Telugu — the full spectrum of Indian storytelling
-                  </p>
                 </button>
 
                 <button
                   onClick={() => setRegion('foreign')}
-                  className="group p-6 rounded-xl border border-border bg-card card-glow border-animate text-left"
+                  className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110">
-                    <Globe className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                      <Globe className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold mb-2">International</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Hollywood blockbusters, Korean thrillers, European gems — cinema from around the world
+                    </p>
                   </div>
-                  <h3 className="font-display text-xl font-semibold mb-2">International</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Hollywood blockbusters, Korean thrillers, European gems — cinema from around the world
-                  </p>
                 </button>
               </div>
             </div>
@@ -148,17 +163,22 @@ export default function Quiz() {
     <>
       {showFade && <div className="fixed inset-0 bg-background z-50 animate-fade-in" />}
       
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[350px] bg-gradient-to-b from-glow/[0.03] to-transparent rounded-full blur-3xl" />
+        </div>
+
         {/* Progress bar */}
-        <div className="fixed top-0 left-0 right-0 h-0.5 bg-muted z-50">
+        <div className="fixed top-0 left-0 right-0 h-1 bg-muted/50 z-50">
           <div 
-            className="h-full bg-foreground transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-accent to-glow transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
 
         {/* Header */}
-        <header className="px-4 sm:px-6 py-4 flex items-center justify-between">
+        <header className="px-4 sm:px-6 py-4 flex items-center justify-between relative z-10">
           <button
             onClick={handleBack}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -169,17 +189,17 @@ export default function Quiz() {
           
           <div className="text-sm text-muted-foreground">
             <span className="font-medium text-foreground">{currentQuestion + 1}</span>
-            <span className="mx-1">/</span>
+            <span className="mx-1 text-border">/</span>
             <span>{questions.length}</span>
           </div>
 
-          <div className="text-xs text-muted-foreground uppercase tracking-wider">
+          <div className="text-xs text-accent uppercase tracking-wider font-medium">
             {mode}
           </div>
         </header>
 
         {/* Main content */}
-        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8">
+        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 relative z-10">
           <PageTransition key={currentQuestion}>
             <div 
               className={`max-w-2xl w-full text-center transition-all duration-300 ${
@@ -187,6 +207,9 @@ export default function Quiz() {
               }`}
             >
               <div className="mb-12">
+                <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
+                  Question {currentQuestion + 1}
+                </p>
                 <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3 leading-tight">
                   {question.text}
                 </h1>
@@ -203,13 +226,16 @@ export default function Quiz() {
                     key={index}
                     onClick={() => handleAnswer(index)}
                     disabled={isTransitioning}
-                    className={`group w-full p-5 rounded-xl border transition-all duration-300 text-left ${
+                    className={`group w-full p-5 rounded-xl border transition-all duration-300 text-left relative overflow-hidden ${
                       selectedOption === index
-                        ? 'bg-primary text-primary-foreground border-primary scale-[1.02]'
-                        : 'bg-card border-border hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-md'
+                        ? 'bg-primary text-primary-foreground border-primary scale-[1.02] shadow-lg'
+                        : 'bg-card/80 backdrop-blur-sm border-border hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-md'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-4">
+                    {selectedOption !== index && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    )}
+                    <div className="flex items-center justify-between gap-4 relative">
                       <div>
                         <span className="font-medium block">
                           {option.text}
