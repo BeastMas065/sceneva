@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Globe, MapPin } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Globe, MapPin, Film, Tv, Play, Sparkles, Check } from 'lucide-react';
 import { 
   QuizMode, 
   Region,
+  ContentType,
   getQuestionsForMode, 
   Scores, 
   initialScores,
@@ -12,6 +13,13 @@ import {
 } from '@/data/movies';
 import { PageTransition } from '@/components/ui/PageTransition';
 
+const contentTypes: { id: ContentType; name: string; description: string; icon: typeof Film }[] = [
+  { id: 'movies', name: 'Movies', description: 'Feature films, blockbusters, and cinema classics', icon: Film },
+  { id: 'anime', name: 'Anime', description: 'Japanese animated series and films', icon: Sparkles },
+  { id: 'webseries', name: 'Web Series', description: 'Streaming originals and digital series', icon: Play },
+  { id: 'tvshows', name: 'TV Shows', description: 'Traditional television series and dramas', icon: Tv },
+];
+
 export default function Quiz() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -19,6 +27,7 @@ export default function Quiz() {
   
   const questions = getQuestionsForMode(mode);
   
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>([]);
   const [region, setRegion] = useState<Region | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState<Scores>(initialScores);
@@ -81,75 +90,188 @@ export default function Quiz() {
       setSelectedOption(null);
     } else if (region) {
       setRegion(null);
+    } else if (selectedContentTypes.length > 0) {
+      setSelectedContentTypes([]);
     } else {
       navigate('/');
     }
   };
 
-  // Region selection screen
-  if (!region) {
+  const toggleContentType = (type: ContentType) => {
+    setSelectedContentTypes(prev => 
+      prev.includes(type) 
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const handleContinueFromContentTypes = () => {
+    if (selectedContentTypes.length === 0) return;
+    // Move to region selection (we keep content types in state for future use)
+  };
+
+  // Cinema background component to avoid repetition
+  const CinemaBackground = () => (
+    <div className="absolute inset-0 pointer-events-none">
+      {/* Large ambient color orbs - stronger for light mode */}
+      <div className="absolute top-0 left-0 w-[70%] h-[80%] bg-gradient-to-br from-glow/[0.28] via-glow/[0.12] to-transparent blur-[120px]" />
+      <div className="absolute top-0 right-0 w-[60%] h-[70%] bg-gradient-to-bl from-accent/[0.22] via-accent/[0.08] to-transparent blur-[100px]" />
+      <div className="absolute bottom-0 left-1/4 w-[70%] h-[60%] bg-gradient-to-t from-glow/[0.2] via-glow/[0.08] to-transparent blur-[80px]" />
+      
+      {/* Film grain texture */}
+      <div 
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+      
+      {/* Projector light beams - more visible */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full opacity-80">
+        <div className="absolute top-0 left-[18%] w-[4px] h-[90%] bg-gradient-to-b from-glow/50 via-glow/15 to-transparent rotate-[14deg] origin-top blur-[3px]" />
+        <div className="absolute top-0 left-[32%] w-[3px] h-[80%] bg-gradient-to-b from-accent/35 via-accent/10 to-transparent rotate-[7deg] origin-top blur-[2px]" />
+        <div className="absolute top-0 right-[18%] w-[4px] h-[90%] bg-gradient-to-b from-glow/50 via-glow/15 to-transparent -rotate-[14deg] origin-top blur-[3px]" />
+        <div className="absolute top-0 right-[32%] w-[3px] h-[80%] bg-gradient-to-b from-accent/35 via-accent/10 to-transparent -rotate-[7deg] origin-top blur-[2px]" />
+      </div>
+      
+      {/* Film strip borders - more visible */}
+      <div className="absolute left-4 sm:left-8 top-20 bottom-20 w-10 sm:w-12 opacity-[0.22]">
+        <div className="h-full border-x-2 border-glow/60 flex flex-col justify-between py-2 bg-gradient-to-r from-glow/[0.1] to-transparent">
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="w-full aspect-[4/3] border-2 border-glow/50 rounded-sm bg-glow/[0.15]" />
+          ))}
+        </div>
+      </div>
+      <div className="absolute right-4 sm:right-8 top-20 bottom-20 w-10 sm:w-12 opacity-[0.22]">
+        <div className="h-full border-x-2 border-glow/60 flex flex-col justify-between py-2 bg-gradient-to-l from-glow/[0.1] to-transparent">
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="w-full aspect-[4/3] border-2 border-glow/50 rounded-sm bg-glow/[0.15]" />
+          ))}
+        </div>
+      </div>
+      
+      {/* Warm spotlight from top */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] bg-gradient-to-b from-glow/[0.3] via-glow/[0.12] to-transparent rounded-full blur-3xl" />
+      
+      {/* Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.5)_100%)]" />
+      
+      {/* Mountain silhouettes with warm tint */}
+      <svg className="absolute bottom-0 w-full h-[45%] text-glow/[0.2]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+        <path d="M0,300 L0,200 Q120,140 240,170 T480,120 T720,150 T960,100 T1200,140 T1440,120 L1440,300 Z" fill="currentColor" />
+      </svg>
+      <svg className="absolute bottom-0 w-full h-[45%] text-foreground/[0.12]" viewBox="0 0 1440 300" preserveAspectRatio="none">
+        <path d="M0,300 L0,240 Q180,180 360,210 T720,160 T1080,200 T1440,180 L1440,300 Z" fill="currentColor" />
+      </svg>
+      
+      {/* Horizon glow - warm accent */}
+      <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[140%] h-[350px] bg-gradient-to-t from-glow/[0.25] via-glow/[0.1] to-transparent rounded-[100%] blur-3xl" />
+    </div>
+  );
+
+  // Content type selection screen (first step)
+  if (selectedContentTypes.length === 0 || (selectedContentTypes.length > 0 && !region)) {
+    // Show content type selection if none selected, otherwise show region selection
+    const showContentTypeSelection = selectedContentTypes.length === 0;
+
+    if (showContentTypeSelection) {
+      return (
+        <div className="min-h-screen flex flex-col relative overflow-hidden">
+          <CinemaBackground />
+
+          <header className="px-4 sm:px-6 py-4 relative z-10">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="text-sm">Back</span>
+            </button>
+          </header>
+
+          <main className="flex-1 flex items-center justify-center px-4 pb-20 relative z-10">
+            <PageTransition>
+              <div className="max-w-2xl w-full text-center">
+                <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
+                  Step 1
+                </p>
+                <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
+                  What do you want to watch?
+                </h1>
+                <p className="text-muted-foreground mb-10">
+                  Select one or more content types
+                </p>
+
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {contentTypes.map((type) => {
+                    const isSelected = selectedContentTypes.includes(type.id);
+                    return (
+                      <button
+                        key={type.id}
+                        onClick={() => toggleContentType(type.id)}
+                        className={`group p-6 rounded-xl border text-left relative overflow-hidden transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-primary text-primary-foreground border-primary scale-[1.02] shadow-lg'
+                            : 'bg-card/80 backdrop-blur-sm border-border hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-md'
+                        }`}
+                      >
+                        {!isSelected && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        )}
+                        <div className="relative flex items-start gap-4">
+                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                            isSelected 
+                              ? 'bg-primary-foreground/20' 
+                              : 'bg-primary text-primary-foreground group-hover:scale-110 group-hover:shadow-lg'
+                          }`}>
+                            <type.icon className={`w-5 h-5 transition-transform duration-300 ${!isSelected ? 'group-hover:rotate-12' : ''}`} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-display text-xl font-semibold">{type.name}</h3>
+                              {isSelected && <Check className="w-5 h-5" />}
+                            </div>
+                            <p className={`text-sm mt-1 leading-relaxed ${
+                              isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'
+                            }`}>
+                              {type.description}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={handleContinueFromContentTypes}
+                  disabled={selectedContentTypes.length === 0}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-medium rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  Continue
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {selectedContentTypes.length > 0 && (
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Selected: {selectedContentTypes.map(t => contentTypes.find(ct => ct.id === t)?.name).join(', ')}
+                  </p>
+                )}
+              </div>
+            </PageTransition>
+          </main>
+        </div>
+      );
+    }
+
+    // Region selection screen (step 2)
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Cinema-inspired background */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Large ambient color orbs */}
-          <div className="absolute top-0 left-0 w-[60%] h-[70%] bg-gradient-to-br from-glow/[0.18] via-glow/[0.08] to-transparent blur-[100px]" />
-          <div className="absolute top-0 right-0 w-[50%] h-[60%] bg-gradient-to-bl from-accent/[0.14] via-accent/[0.06] to-transparent blur-[80px]" />
-          <div className="absolute bottom-0 left-1/4 w-[60%] h-[50%] bg-gradient-to-t from-glow/[0.12] via-glow/[0.04] to-transparent blur-[60px]" />
-          
-          {/* Film grain texture */}
-          <div 
-            className="absolute inset-0 opacity-[0.05]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          {/* Projector light beams */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full opacity-70">
-            <div className="absolute top-0 left-[18%] w-[3px] h-[85%] bg-gradient-to-b from-glow/35 via-glow/10 to-transparent rotate-[14deg] origin-top blur-[2px]" />
-            <div className="absolute top-0 left-[32%] w-[2px] h-[75%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent rotate-[7deg] origin-top blur-[1px]" />
-            <div className="absolute top-0 right-[18%] w-[3px] h-[85%] bg-gradient-to-b from-glow/35 via-glow/10 to-transparent -rotate-[14deg] origin-top blur-[2px]" />
-            <div className="absolute top-0 right-[32%] w-[2px] h-[75%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent -rotate-[7deg] origin-top blur-[1px]" />
-          </div>
-          
-          {/* Film strip borders */}
-          <div className="absolute left-4 sm:left-8 top-20 bottom-20 w-8 sm:w-10 opacity-[0.15]">
-            <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2 bg-gradient-to-r from-glow/[0.05] to-transparent">
-              {[...Array(10)].map((_, i) => (
-                <div key={i} className="w-full aspect-[4/3] border border-glow/40 rounded-sm bg-glow/[0.08]" />
-              ))}
-            </div>
-          </div>
-          <div className="absolute right-4 sm:right-8 top-20 bottom-20 w-8 sm:w-10 opacity-[0.15]">
-            <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2 bg-gradient-to-l from-glow/[0.05] to-transparent">
-              {[...Array(10)].map((_, i) => (
-                <div key={i} className="w-full aspect-[4/3] border border-glow/40 rounded-sm bg-glow/[0.08]" />
-              ))}
-            </div>
-          </div>
-          
-          {/* Warm spotlight from top */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-glow/[0.2] via-glow/[0.08] to-transparent rounded-full blur-3xl" />
-          
-          {/* Vignette */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.5)_100%)]" />
-          
-          {/* Mountain silhouettes with warm tint */}
-          <svg className="absolute bottom-0 w-full h-[45%] text-glow/[0.15]" viewBox="0 0 1440 300" preserveAspectRatio="none">
-            <path d="M0,300 L0,200 Q120,140 240,170 T480,120 T720,150 T960,100 T1200,140 T1440,120 L1440,300 Z" fill="currentColor" />
-          </svg>
-          <svg className="absolute bottom-0 w-full h-[45%] text-foreground/[0.1]" viewBox="0 0 1440 300" preserveAspectRatio="none">
-            <path d="M0,300 L0,240 Q180,180 360,210 T720,160 T1080,200 T1440,180 L1440,300 Z" fill="currentColor" />
-          </svg>
-          
-          {/* Horizon glow - warm accent */}
-          <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[130%] h-[300px] bg-gradient-to-t from-glow/[0.18] via-glow/[0.06] to-transparent rounded-[100%] blur-3xl" />
-        </div>
+        <CinemaBackground />
 
         <header className="px-4 sm:px-6 py-4 relative z-10">
           <button
-            onClick={() => navigate('/')}
+            onClick={handleBack}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -161,7 +283,7 @@ export default function Quiz() {
           <PageTransition>
             <div className="max-w-xl w-full text-center">
               <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
-                Step 1
+                Step 2
               </p>
               <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
                 What are you in the mood for?
@@ -215,62 +337,7 @@ export default function Quiz() {
       {showFade && <div className="fixed inset-0 bg-background z-50 animate-fade-in" />}
       
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Cinema-inspired background */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Large ambient color orbs */}
-          <div className="absolute top-0 left-0 w-[60%] h-[70%] bg-gradient-to-br from-glow/[0.18] via-glow/[0.08] to-transparent blur-[100px]" />
-          <div className="absolute top-0 right-0 w-[50%] h-[60%] bg-gradient-to-bl from-accent/[0.14] via-accent/[0.06] to-transparent blur-[80px]" />
-          <div className="absolute bottom-0 left-1/4 w-[60%] h-[50%] bg-gradient-to-t from-glow/[0.12] via-glow/[0.04] to-transparent blur-[60px]" />
-          
-          {/* Film grain texture */}
-          <div 
-            className="absolute inset-0 opacity-[0.05]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          {/* Projector light beams */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full opacity-70">
-            <div className="absolute top-0 left-[18%] w-[3px] h-[85%] bg-gradient-to-b from-glow/35 via-glow/10 to-transparent rotate-[14deg] origin-top blur-[2px]" />
-            <div className="absolute top-0 left-[32%] w-[2px] h-[75%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent rotate-[7deg] origin-top blur-[1px]" />
-            <div className="absolute top-0 right-[18%] w-[3px] h-[85%] bg-gradient-to-b from-glow/35 via-glow/10 to-transparent -rotate-[14deg] origin-top blur-[2px]" />
-            <div className="absolute top-0 right-[32%] w-[2px] h-[75%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent -rotate-[7deg] origin-top blur-[1px]" />
-          </div>
-          
-          {/* Film strip borders */}
-          <div className="absolute left-4 sm:left-8 top-16 bottom-16 w-8 sm:w-10 opacity-[0.15]">
-            <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2 bg-gradient-to-r from-glow/[0.05] to-transparent">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="w-full aspect-[4/3] border border-glow/40 rounded-sm bg-glow/[0.08]" />
-              ))}
-            </div>
-          </div>
-          <div className="absolute right-4 sm:right-8 top-16 bottom-16 w-8 sm:w-10 opacity-[0.15]">
-            <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2 bg-gradient-to-l from-glow/[0.05] to-transparent">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="w-full aspect-[4/3] border border-glow/40 rounded-sm bg-glow/[0.08]" />
-              ))}
-            </div>
-          </div>
-          
-          {/* Warm spotlight from top */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-glow/[0.2] via-glow/[0.08] to-transparent rounded-full blur-3xl" />
-          
-          {/* Vignette */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.5)_100%)]" />
-          
-          {/* Mountain silhouettes with warm tint */}
-          <svg className="absolute bottom-0 w-full h-[40%] text-glow/[0.15]" viewBox="0 0 1440 300" preserveAspectRatio="none">
-            <path d="M0,300 L0,200 Q120,140 240,170 T480,120 T720,150 T960,100 T1200,140 T1440,120 L1440,300 Z" fill="currentColor" />
-          </svg>
-          <svg className="absolute bottom-0 w-full h-[40%] text-foreground/[0.1]" viewBox="0 0 1440 300" preserveAspectRatio="none">
-            <path d="M0,300 L0,240 Q180,180 360,210 T720,160 T1080,200 T1440,180 L1440,300 Z" fill="currentColor" />
-          </svg>
-          
-          {/* Horizon glow - warm accent */}
-          <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[130%] h-[300px] bg-gradient-to-t from-glow/[0.18] via-glow/[0.06] to-transparent rounded-[100%] blur-3xl" />
-        </div>
+        <CinemaBackground />
 
         {/* Progress bar */}
         <div className="fixed top-0 left-0 right-0 h-1 bg-muted/50 z-50">
@@ -351,13 +418,11 @@ export default function Quiz() {
                           </span>
                         )}
                       </div>
-                      <ChevronRight 
-                        className={`w-5 h-5 shrink-0 transition-all duration-300 ${
-                          selectedOption === index 
-                            ? 'translate-x-1' 
-                            : 'text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5'
-                        }`}
-                      />
+                      <ChevronRight className={`w-5 h-5 shrink-0 transition-all duration-300 ${
+                        selectedOption === index 
+                          ? 'text-primary-foreground' 
+                          : 'text-muted-foreground group-hover:text-foreground group-hover:translate-x-1'
+                      }`} />
                     </div>
                   </button>
                 ))}
