@@ -26,37 +26,38 @@ const features = [
 export function FeaturesSection() {
   return (
     <section className="relative py-20 px-4 border-t border-border overflow-hidden">
-      {/* Ambient gradient - opposite direction for variety */}
-      <div className="absolute inset-0 bg-gradient-to-tl from-glow/[0.05] via-transparent to-accent/[0.04]" />
+      {/* Large ambient color orbs */}
+      <div className="absolute top-0 left-0 w-[50%] h-[80%] bg-gradient-to-br from-accent/[0.12] via-accent/[0.05] to-transparent blur-[80px]" />
+      <div className="absolute bottom-0 right-0 w-[60%] h-[70%] bg-gradient-to-tl from-glow/[0.14] via-glow/[0.06] to-transparent blur-[80px]" />
       
       {/* Warm spotlight from bottom */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-t from-glow/[0.06] via-glow/[0.02] to-transparent blur-3xl" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-t from-glow/[0.12] via-glow/[0.04] to-transparent blur-3xl" />
 
       {/* Film strip decorations on sides */}
-      <div className="absolute left-0 top-0 bottom-0 w-8 opacity-[0.06]">
-        <div className="h-full border-r border-glow/40 bg-gradient-to-r from-glow/[0.03] to-transparent" />
-        {[...Array(12)].map((_, i) => (
+      <div className="absolute left-0 top-0 bottom-0 w-10 opacity-[0.12]">
+        <div className="h-full border-r-2 border-glow/50 bg-gradient-to-r from-glow/[0.08] to-transparent" />
+        {[...Array(14)].map((_, i) => (
           <div
             key={i}
-            className="absolute left-1 w-4 h-3 rounded-sm border border-glow/30"
-            style={{ top: `${4 + i * 8}%` }}
+            className="absolute left-1.5 w-5 h-4 rounded-sm border border-glow/40 bg-glow/[0.05]"
+            style={{ top: `${3 + i * 7}%` }}
           />
         ))}
       </div>
-      <div className="absolute right-0 top-0 bottom-0 w-8 opacity-[0.06]">
-        <div className="h-full border-l border-glow/40 bg-gradient-to-l from-glow/[0.03] to-transparent" />
-        {[...Array(12)].map((_, i) => (
+      <div className="absolute right-0 top-0 bottom-0 w-10 opacity-[0.12]">
+        <div className="h-full border-l-2 border-glow/50 bg-gradient-to-l from-glow/[0.08] to-transparent" />
+        {[...Array(14)].map((_, i) => (
           <div
             key={i}
-            className="absolute right-1 w-4 h-3 rounded-sm border border-glow/30"
-            style={{ top: `${4 + i * 8}%` }}
+            className="absolute right-1.5 w-5 h-4 rounded-sm border border-glow/40 bg-glow/[0.05]"
+            style={{ top: `${3 + i * 7}%` }}
           />
         ))}
       </div>
 
       {/* Film grain texture */}
       <div 
-        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}

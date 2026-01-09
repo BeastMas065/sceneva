@@ -130,17 +130,19 @@ export default function Result() {
       <div className="min-h-screen bg-background relative overflow-hidden">
         {/* Cinema Background Effects */}
         <div className="fixed inset-0 pointer-events-none">
-          {/* Colored ambient gradients */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-glow/[0.08] to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-accent/[0.06] to-transparent rounded-full blur-3xl" />
+          {/* Large ambient color orbs */}
+          <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-gradient-to-br from-glow/[0.18] via-glow/[0.08] to-transparent blur-[100px]" />
+          <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-gradient-to-tl from-accent/[0.14] via-accent/[0.05] to-transparent blur-[80px]" />
+          <div className="absolute top-1/3 right-1/4 w-[40%] h-[40%] bg-gradient-to-bl from-glow/[0.1] to-transparent blur-[60px]" />
           
           {/* Projector light beams */}
-          <div className="absolute top-0 left-1/3 w-[2px] h-full bg-gradient-to-b from-glow/20 via-glow/5 to-transparent blur-[1px] rotate-3" />
-          <div className="absolute top-0 right-1/3 w-[2px] h-full bg-gradient-to-b from-glow/15 via-glow/3 to-transparent blur-[1px] -rotate-3" />
+          <div className="absolute top-0 left-1/3 w-[3px] h-full bg-gradient-to-b from-glow/30 via-glow/10 to-transparent blur-[2px] rotate-3" />
+          <div className="absolute top-0 right-1/3 w-[3px] h-full bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[2px] -rotate-3" />
+          <div className="absolute top-0 left-1/2 w-[2px] h-[80%] bg-gradient-to-b from-accent/20 via-accent/5 to-transparent blur-[1px]" />
           
           {/* Film grain */}
           <div 
-            className="absolute inset-0 opacity-[0.04]"
+            className="absolute inset-0 opacity-[0.05]"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
             }}
@@ -219,43 +221,45 @@ export default function Result() {
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Cinema Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
-        {/* Colored ambient gradients */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-glow/[0.08] to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-accent/[0.06] to-transparent rounded-full blur-3xl" />
+        {/* Large ambient color orbs */}
+        <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-gradient-to-br from-glow/[0.18] via-glow/[0.08] to-transparent blur-[100px]" />
+        <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-gradient-to-tl from-accent/[0.14] via-accent/[0.05] to-transparent blur-[80px]" />
+        <div className="absolute top-1/3 right-1/4 w-[40%] h-[40%] bg-gradient-to-bl from-glow/[0.1] to-transparent blur-[60px]" />
         
         {/* Projector light beams */}
-        <div className="absolute top-0 left-1/3 w-[2px] h-full bg-gradient-to-b from-glow/20 via-glow/5 to-transparent blur-[1px] rotate-3" />
-        <div className="absolute top-0 right-1/3 w-[2px] h-full bg-gradient-to-b from-glow/15 via-glow/3 to-transparent blur-[1px] -rotate-3" />
+        <div className="absolute top-0 left-1/3 w-[3px] h-full bg-gradient-to-b from-glow/30 via-glow/10 to-transparent blur-[2px] rotate-3" />
+        <div className="absolute top-0 right-1/3 w-[3px] h-full bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[2px] -rotate-3" />
+        <div className="absolute top-0 left-1/2 w-[2px] h-[80%] bg-gradient-to-b from-accent/20 via-accent/5 to-transparent blur-[1px]" />
         
         {/* Film strip borders */}
-        <div className="absolute left-0 top-0 bottom-0 w-6 opacity-[0.08]">
-          <div className="h-full w-full border-r border-glow/30 bg-glow/[0.02] flex flex-col justify-around py-4">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-3 h-2 mx-auto rounded-sm bg-glow/20" />
+        <div className="absolute left-0 top-0 bottom-0 w-8 opacity-[0.15]">
+          <div className="h-full w-full border-r-2 border-glow/50 bg-gradient-to-r from-glow/[0.08] to-transparent flex flex-col justify-around py-4">
+            {[...Array(24)].map((_, i) => (
+              <div key={i} className="w-4 h-3 mx-auto rounded-sm bg-glow/30 border border-glow/40" />
             ))}
           </div>
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 opacity-[0.08]">
-          <div className="h-full w-full border-l border-glow/30 bg-glow/[0.02] flex flex-col justify-around py-4">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-3 h-2 mx-auto rounded-sm bg-glow/20" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 opacity-[0.15]">
+          <div className="h-full w-full border-l-2 border-glow/50 bg-gradient-to-l from-glow/[0.08] to-transparent flex flex-col justify-around py-4">
+            {[...Array(24)].map((_, i) => (
+              <div key={i} className="w-4 h-3 mx-auto rounded-sm bg-glow/30 border border-glow/40" />
             ))}
           </div>
         </div>
         
         {/* Warm spotlight from top */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-glow/[0.12] via-glow/[0.04] to-transparent blur-2xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-glow/[0.2] via-glow/[0.08] to-transparent blur-3xl" />
         
         {/* Film grain texture */}
         <div 
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
           }}
         />
         
         {/* Vignette effect */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_100%)] opacity-40" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.5)_100%)]" />
       </div>
       
       <Header />
