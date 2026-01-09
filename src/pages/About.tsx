@@ -42,11 +42,53 @@ const steps = [
 
 export default function About() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Cinema Background Effects */}
+      <div className="fixed inset-0 pointer-events-none -z-10">
+        {/* Large ambient color orbs */}
+        <div className="absolute top-0 right-0 w-[50%] h-[60%] bg-gradient-to-bl from-glow/[0.15] via-glow/[0.06] to-transparent blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[60%] h-[50%] bg-gradient-to-tr from-accent/[0.12] via-accent/[0.04] to-transparent blur-[80px]" />
+        <div className="absolute top-1/2 left-1/3 w-[40%] h-[40%] bg-gradient-to-br from-glow/[0.08] to-transparent blur-[60px]" />
+        
+        {/* Projector light beams */}
+        <div className="absolute top-0 left-1/4 w-[3px] h-[70%] bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[2px] rotate-6" />
+        <div className="absolute top-0 right-1/4 w-[3px] h-[70%] bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[2px] -rotate-6" />
+        
+        {/* Film strip borders */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 opacity-[0.12]">
+          <div className="h-full w-full border-r-2 border-glow/40 bg-gradient-to-r from-glow/[0.05] to-transparent flex flex-col justify-around py-4">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="w-4 h-3 mx-auto rounded-sm bg-glow/25 border border-glow/30" />
+            ))}
+          </div>
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-8 opacity-[0.12]">
+          <div className="h-full w-full border-l-2 border-glow/40 bg-gradient-to-l from-glow/[0.05] to-transparent flex flex-col justify-around py-4">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="w-4 h-3 mx-auto rounded-sm bg-glow/25 border border-glow/30" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Warm spotlight */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-glow/[0.15] via-glow/[0.05] to-transparent blur-3xl" />
+        
+        {/* Film grain */}
+        <div 
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+          }}
+        />
+        
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,hsl(var(--background)/0.4)_100%)]" />
+      </div>
+      
       <Header />
       
       <PageTransition>
-        <main className="flex-1 pt-24 pb-16 px-4">
+        <main className="flex-1 pt-24 pb-16 px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
             {/* Hero */}
             <div className="text-center mb-16">

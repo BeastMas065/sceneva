@@ -17,22 +17,35 @@ export function HeroSection() {
     <section className="relative min-h-[85vh] flex items-center justify-center px-4 overflow-hidden">
       {/* Cinematic Background Banner */}
       <div className="absolute inset-0 -z-10">
+        {/* Large ambient color orbs */}
+        <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-gradient-to-br from-glow/[0.15] via-glow/[0.08] to-transparent blur-[100px]" />
+        <div className="absolute top-20 right-0 w-[50%] h-[50%] bg-gradient-to-bl from-accent/[0.12] via-accent/[0.05] to-transparent blur-[80px]" />
+        <div className="absolute bottom-0 left-1/3 w-[50%] h-[40%] bg-gradient-to-t from-glow/[0.1] to-transparent blur-[60px]" />
+        
         {/* Gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
         
         {/* Film grain texture overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           }}
         />
         
+        {/* Projector light beams */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full overflow-hidden opacity-50">
+          <div className="absolute top-0 left-[20%] w-[3px] h-[70%] bg-gradient-to-b from-glow/30 via-glow/10 to-transparent rotate-[15deg] origin-top blur-[2px]" />
+          <div className="absolute top-0 left-[35%] w-[2px] h-[60%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent rotate-[8deg] origin-top blur-[1px]" />
+          <div className="absolute top-0 right-[20%] w-[3px] h-[70%] bg-gradient-to-b from-glow/30 via-glow/10 to-transparent -rotate-[15deg] origin-top blur-[2px]" />
+          <div className="absolute top-0 right-[35%] w-[2px] h-[60%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent -rotate-[8deg] origin-top blur-[1px]" />
+        </div>
+        
         {/* Scenic mountain silhouettes - cinema landscape feel with parallax */}
         <div className="absolute bottom-0 left-0 right-0 h-[60%]">
           {/* Far mountains - lightest, slowest parallax */}
           <svg 
-            className="absolute bottom-0 w-full h-full opacity-[0.04] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-glow/[0.12] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.1}px)` }}
@@ -45,7 +58,7 @@ export function HeroSection() {
           
           {/* Mid mountains - medium parallax */}
           <svg 
-            className="absolute bottom-0 w-full h-full opacity-[0.06] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-foreground/[0.08] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.2}px)` }}
@@ -58,7 +71,7 @@ export function HeroSection() {
           
           {/* Near mountains - darkest, fastest parallax */}
           <svg 
-            className="absolute bottom-0 w-full h-full opacity-[0.08] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-foreground/[0.12] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.3}px)` }}
@@ -71,14 +84,26 @@ export function HeroSection() {
         </div>
         
         {/* Horizon glow - warm accent */}
-        <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[150%] h-[300px] bg-gradient-to-t from-glow/[0.03] via-glow/[0.06] to-transparent rounded-[100%] blur-3xl" />
+        <div className="absolute bottom-[15%] left-1/2 -translate-x-1/2 w-[150%] h-[350px] bg-gradient-to-t from-glow/[0.15] via-glow/[0.08] to-transparent rounded-[100%] blur-3xl" />
         
         {/* Film strip decorative elements */}
-        <div className="absolute top-20 left-8 w-px h-32 bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
-        <div className="absolute top-20 right-8 w-px h-32 bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
+        <div className="absolute top-20 left-8 w-8 h-48 opacity-[0.12]">
+          <div className="h-full border-x border-glow/40 flex flex-col justify-between py-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="w-full aspect-[4/3] border border-glow/30 rounded-sm bg-glow/[0.05]" />
+            ))}
+          </div>
+        </div>
+        <div className="absolute top-20 right-8 w-8 h-48 opacity-[0.12]">
+          <div className="h-full border-x border-glow/40 flex flex-col justify-between py-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="w-full aspect-[4/3] border border-glow/30 rounded-sm bg-glow/[0.05]" />
+            ))}
+          </div>
+        </div>
         
-        {/* Subtle spotlight from top with warm glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-b from-glow/[0.04] to-transparent rounded-full blur-3xl" />
+        {/* Warm spotlight from top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-glow/[0.18] via-glow/[0.06] to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="text-center max-w-3xl mx-auto relative">

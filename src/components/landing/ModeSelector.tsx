@@ -33,19 +33,20 @@ const modes = [
 export function ModeSelector({ onSelect }: ModeSelectorProps) {
   return (
     <section className="relative py-20 px-4 border-t border-border overflow-hidden">
-      {/* Ambient gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-glow/[0.04] via-transparent to-accent/[0.03]" />
+      {/* Large ambient color orbs */}
+      <div className="absolute top-0 right-0 w-[50%] h-[80%] bg-gradient-to-bl from-glow/[0.12] via-glow/[0.06] to-transparent blur-[80px]" />
+      <div className="absolute bottom-0 left-0 w-[40%] h-[60%] bg-gradient-to-tr from-accent/[0.1] via-accent/[0.04] to-transparent blur-[60px]" />
       
-      {/* Subtle projector light beams */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
-        {[...Array(5)].map((_, i) => (
+      {/* Projector light beams */}
+      <div className="absolute inset-0 overflow-hidden opacity-60">
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="absolute top-0 w-px bg-gradient-to-b from-glow/20 via-glow/5 to-transparent"
+            className="absolute top-0 w-[2px] bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[1px]"
             style={{
-              left: `${15 + i * 18}%`,
-              height: '60%',
-              transform: `rotate(${-8 + i * 4}deg)`,
+              left: `${10 + i * 16}%`,
+              height: '70%',
+              transform: `rotate(${-10 + i * 4}deg)`,
             }}
           />
         ))}
@@ -53,11 +54,14 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
 
       {/* Film grain texture */}
       <div 
-        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
       />
+      
+      {/* Warm spotlight from center */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-radial from-glow/[0.1] via-glow/[0.03] to-transparent rounded-full blur-3xl" />
 
       <div className="relative max-w-4xl mx-auto">
         <div className="text-center mb-12">

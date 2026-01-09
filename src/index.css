@@ -46,7 +46,8 @@
     /* Custom tokens */
     --surface: 40 15% 97%;
     --surface-hover: 35 12% 94%;
-    --glow: 38 60% 50%;
+    --glow: 32 75% 45%;
+    --glow-strong: 30 85% 40%;
   }
 
   .dark {
@@ -81,7 +82,8 @@
 
     --surface: 25 12% 10%;
     --surface-hover: 25 10% 14%;
-    --glow: 40 65% 55%;
+    --glow: 38 80% 55%;
+    --glow-strong: 35 90% 50%;
   }
 }
 
