@@ -17,35 +17,56 @@ export function HeroSection() {
     <section className="relative min-h-[85vh] flex items-center justify-center px-4 overflow-hidden">
       {/* Cinematic Background Banner */}
       <div className="absolute inset-0 -z-10">
-        {/* Large ambient color orbs */}
-        <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-gradient-to-br from-glow/[0.15] via-glow/[0.08] to-transparent blur-[100px]" />
-        <div className="absolute top-20 right-0 w-[50%] h-[50%] bg-gradient-to-bl from-accent/[0.12] via-accent/[0.05] to-transparent blur-[80px]" />
-        <div className="absolute bottom-0 left-1/3 w-[50%] h-[40%] bg-gradient-to-t from-glow/[0.1] to-transparent blur-[60px]" />
+        {/* Large ambient color orbs - MUCH stronger for light mode */}
+        <div 
+          className="absolute top-0 left-0 w-[70%] h-[70%] bg-gradient-to-br from-glow/[0.3] via-glow/[0.15] to-transparent blur-[120px]"
+          style={{ transform: `translateY(${scrollY * 0.08}px)` }}
+        />
+        <div 
+          className="absolute top-10 right-0 w-[60%] h-[60%] bg-gradient-to-bl from-accent/[0.25] via-accent/[0.1] to-transparent blur-[100px]"
+          style={{ transform: `translateY(${scrollY * 0.06}px)` }}
+        />
+        <div 
+          className="absolute bottom-0 left-1/3 w-[60%] h-[50%] bg-gradient-to-t from-glow/[0.2] to-transparent blur-[80px]"
+          style={{ transform: `translateY(${scrollY * -0.05}px)` }}
+        />
         
         {/* Gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background" />
         
         {/* Film grain texture overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           }}
         />
         
-        {/* Projector light beams */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full overflow-hidden opacity-50">
-          <div className="absolute top-0 left-[20%] w-[3px] h-[70%] bg-gradient-to-b from-glow/30 via-glow/10 to-transparent rotate-[15deg] origin-top blur-[2px]" />
-          <div className="absolute top-0 left-[35%] w-[2px] h-[60%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent rotate-[8deg] origin-top blur-[1px]" />
-          <div className="absolute top-0 right-[20%] w-[3px] h-[70%] bg-gradient-to-b from-glow/30 via-glow/10 to-transparent -rotate-[15deg] origin-top blur-[2px]" />
-          <div className="absolute top-0 right-[35%] w-[2px] h-[60%] bg-gradient-to-b from-accent/25 via-accent/8 to-transparent -rotate-[8deg] origin-top blur-[1px]" />
+        {/* Projector light beams with parallax - MUCH more visible */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-full overflow-hidden opacity-70">
+          <div 
+            className="absolute top-0 left-[20%] w-[4px] h-[80%] bg-gradient-to-b from-glow/50 via-glow/15 to-transparent rotate-[15deg] origin-top blur-[3px]"
+            style={{ transform: `rotate(15deg) translateY(${scrollY * 0.1}px)` }}
+          />
+          <div 
+            className="absolute top-0 left-[35%] w-[3px] h-[70%] bg-gradient-to-b from-accent/40 via-accent/12 to-transparent rotate-[8deg] origin-top blur-[2px]"
+            style={{ transform: `rotate(8deg) translateY(${scrollY * 0.08}px)` }}
+          />
+          <div 
+            className="absolute top-0 right-[20%] w-[4px] h-[80%] bg-gradient-to-b from-glow/50 via-glow/15 to-transparent -rotate-[15deg] origin-top blur-[3px]"
+            style={{ transform: `rotate(-15deg) translateY(${scrollY * 0.1}px)` }}
+          />
+          <div 
+            className="absolute top-0 right-[35%] w-[3px] h-[70%] bg-gradient-to-b from-accent/40 via-accent/12 to-transparent -rotate-[8deg] origin-top blur-[2px]"
+            style={{ transform: `rotate(-8deg) translateY(${scrollY * 0.08}px)` }}
+          />
         </div>
         
-        {/* Scenic mountain silhouettes - cinema landscape feel with parallax */}
+        {/* Scenic mountain silhouettes with parallax */}
         <div className="absolute bottom-0 left-0 right-0 h-[60%]">
-          {/* Far mountains - lightest, slowest parallax */}
+          {/* Far mountains */}
           <svg 
-            className="absolute bottom-0 w-full h-full text-glow/[0.12] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-glow/[0.2] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.1}px)` }}
@@ -56,9 +77,9 @@ export function HeroSection() {
             />
           </svg>
           
-          {/* Mid mountains - medium parallax */}
+          {/* Mid mountains */}
           <svg 
-            className="absolute bottom-0 w-full h-full text-foreground/[0.08] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-foreground/[0.1] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.2}px)` }}
@@ -69,9 +90,9 @@ export function HeroSection() {
             />
           </svg>
           
-          {/* Near mountains - darkest, fastest parallax */}
+          {/* Near mountains */}
           <svg 
-            className="absolute bottom-0 w-full h-full text-foreground/[0.12] transition-transform duration-100"
+            className="absolute bottom-0 w-full h-full text-foreground/[0.15] transition-transform duration-100"
             viewBox="0 0 1440 400" 
             preserveAspectRatio="none"
             style={{ transform: `translateY(${scrollY * 0.3}px)` }}
@@ -83,33 +104,46 @@ export function HeroSection() {
           </svg>
         </div>
         
-        {/* Horizon glow - warm accent */}
-        <div className="absolute bottom-[15%] left-1/2 -translate-x-1/2 w-[150%] h-[350px] bg-gradient-to-t from-glow/[0.15] via-glow/[0.08] to-transparent rounded-[100%] blur-3xl" />
+        {/* Horizon glow - warm accent - MUCH stronger */}
+        <div 
+          className="absolute bottom-[12%] left-1/2 -translate-x-1/2 w-[160%] h-[400px] bg-gradient-to-t from-glow/[0.25] via-glow/[0.1] to-transparent rounded-[100%] blur-3xl"
+          style={{ transform: `translateX(-50%) translateY(${scrollY * 0.08}px)` }}
+        />
         
-        {/* Film strip decorative elements */}
-        <div className="absolute top-20 left-8 w-8 h-48 opacity-[0.12]">
-          <div className="h-full border-x border-glow/40 flex flex-col justify-between py-2">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="w-full aspect-[4/3] border border-glow/30 rounded-sm bg-glow/[0.05]" />
+        {/* Film strip decorative elements with parallax */}
+        <div 
+          className="absolute top-20 left-8 w-10 h-56 opacity-[0.18]"
+          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
+        >
+          <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="w-full aspect-[4/3] border-2 border-glow/40 rounded-sm bg-glow/[0.1]" />
             ))}
           </div>
         </div>
-        <div className="absolute top-20 right-8 w-8 h-48 opacity-[0.12]">
-          <div className="h-full border-x border-glow/40 flex flex-col justify-between py-2">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="w-full aspect-[4/3] border border-glow/30 rounded-sm bg-glow/[0.05]" />
+        <div 
+          className="absolute top-20 right-8 w-10 h-56 opacity-[0.18]"
+          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
+        >
+          <div className="h-full border-x-2 border-glow/50 flex flex-col justify-between py-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="w-full aspect-[4/3] border-2 border-glow/40 rounded-sm bg-glow/[0.1]" />
             ))}
           </div>
         </div>
         
-        {/* Warm spotlight from top */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-glow/[0.18] via-glow/[0.06] to-transparent rounded-full blur-3xl" />
+        {/* Warm spotlight from top - MUCH stronger */}
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-glow/[0.3] via-glow/[0.1] to-transparent rounded-full blur-3xl"
+          style={{ transform: `translateX(-50%) translateY(${scrollY * 0.05}px)` }}
+        />
       </div>
 
       <div className="text-center max-w-3xl mx-auto relative">
         {/* Main heading */}
         <h1 
           className="font-display text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight mb-6 animate-fade-in"
+          style={{ transform: `translateY(${scrollY * -0.1}px)` }}
         >
           Find your next
           <br />
@@ -119,7 +153,7 @@ export function HeroSection() {
         {/* Subheading */}
         <p 
           className="text-lg text-muted-foreground max-w-xl mx-auto mb-10 animate-fade-in leading-relaxed"
-          style={{ animationDelay: '0.1s' }}
+          style={{ animationDelay: '0.1s', transform: `translateY(${scrollY * -0.08}px)` }}
         >
           Answer a few questions about your mood. Our algorithm will recommend the ideal film — Indian or international.
         </p>
@@ -127,7 +161,7 @@ export function HeroSection() {
         {/* CTA Buttons */}
         <div 
           className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in"
-          style={{ animationDelay: '0.2s' }}
+          style={{ animationDelay: '0.2s', transform: `translateY(${scrollY * -0.06}px)` }}
         >
           <Link
             to="/quiz"
@@ -152,7 +186,7 @@ export function HeroSection() {
         {/* Stats */}
         <div 
           className="mt-20 flex items-center justify-center gap-12 md:gap-20 animate-fade-in"
-          style={{ animationDelay: '0.3s' }}
+          style={{ animationDelay: '0.3s', transform: `translateY(${scrollY * -0.04}px)` }}
         >
           {[
             { value: '100+', label: 'Movies' },

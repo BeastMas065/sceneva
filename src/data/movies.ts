@@ -1,4 +1,5 @@
 export type Region = 'indian' | 'foreign';
+export type ContentType = 'movies' | 'anime' | 'webseries' | 'tvshows';
 
 export interface Movie {
   name: string;

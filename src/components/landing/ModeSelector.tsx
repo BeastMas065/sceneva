@@ -1,5 +1,6 @@
 import { Zap, Target, Brain, ArrowRight } from 'lucide-react';
 import { QuizMode } from '@/data/movies';
+import { useEffect, useState } from 'react';
 
 interface ModeSelectorProps {
   onSelect: (mode: QuizMode) => void;
@@ -31,22 +32,39 @@ const modes = [
 ];
 
 export function ModeSelector({ onSelect }: ModeSelectorProps) {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Parallax offset calculation (starts after hero ~85vh)
+  const parallaxOffset = Math.max(0, scrollY - window.innerHeight * 0.6);
+
   return (
     <section className="relative py-20 px-4 border-t border-border overflow-hidden">
-      {/* Large ambient color orbs */}
-      <div className="absolute top-0 right-0 w-[50%] h-[80%] bg-gradient-to-bl from-glow/[0.12] via-glow/[0.06] to-transparent blur-[80px]" />
-      <div className="absolute bottom-0 left-0 w-[40%] h-[60%] bg-gradient-to-tr from-accent/[0.1] via-accent/[0.04] to-transparent blur-[60px]" />
+      {/* Large ambient color orbs with parallax */}
+      <div 
+        className="absolute top-0 right-0 w-[60%] h-[90%] bg-gradient-to-bl from-glow/[0.25] via-glow/[0.12] to-transparent blur-[100px]"
+        style={{ transform: `translateY(${parallaxOffset * 0.1}px)` }}
+      />
+      <div 
+        className="absolute bottom-0 left-0 w-[50%] h-[70%] bg-gradient-to-tr from-accent/[0.2] via-accent/[0.08] to-transparent blur-[80px]"
+        style={{ transform: `translateY(${parallaxOffset * -0.05}px)` }}
+      />
       
-      {/* Projector light beams */}
-      <div className="absolute inset-0 overflow-hidden opacity-60">
+      {/* Projector light beams with parallax */}
+      <div className="absolute inset-0 overflow-hidden opacity-70">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="absolute top-0 w-[2px] bg-gradient-to-b from-glow/25 via-glow/8 to-transparent blur-[1px]"
+            className="absolute top-0 w-[3px] bg-gradient-to-b from-glow/40 via-glow/15 to-transparent blur-[2px]"
             style={{
               left: `${10 + i * 16}%`,
-              height: '70%',
-              transform: `rotate(${-10 + i * 4}deg)`,
+              height: '80%',
+              transform: `rotate(${-10 + i * 4}deg) translateY(${parallaxOffset * 0.08}px)`,
             }}
           />
         ))}
@@ -54,17 +72,23 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
 
       {/* Film grain texture */}
       <div 
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        className="absolute inset-0 opacity-[0.05] pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
       />
       
       {/* Warm spotlight from center */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-radial from-glow/[0.1] via-glow/[0.03] to-transparent rounded-full blur-3xl" />
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-radial from-glow/[0.2] via-glow/[0.08] to-transparent rounded-full blur-3xl"
+        style={{ transform: `translate(-50%, -50%) translateY(${parallaxOffset * 0.05}px)` }}
+      />
 
       <div className="relative max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+        <div 
+          className="text-center mb-12"
+          style={{ transform: `translateY(${parallaxOffset * -0.03}px)` }}
+        >
           <h2 className="font-display text-3xl font-semibold mb-3">
             Choose your experience
           </h2>
@@ -79,7 +103,10 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
               key={mode.id}
               onClick={() => onSelect(mode.id)}
               className="group relative p-6 pt-8 rounded-xl border border-border bg-card/80 backdrop-blur-sm text-left animate-fade-in transition-all duration-300 hover:bg-foreground hover:border-foreground hover:scale-[1.04] hover:-translate-y-2 hover:shadow-2xl hover:shadow-glow/10"
-              style={{ animationDelay: `${0.1 * index}s` }}
+              style={{ 
+                animationDelay: `${0.1 * index}s`,
+                transform: `translateY(${parallaxOffset * -0.02}px)`,
+              }}
             >
               {mode.recommended && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-medium rounded-full whitespace-nowrap transition-colors duration-300 group-hover:bg-background group-hover:text-foreground shadow-lg shadow-glow/20">
