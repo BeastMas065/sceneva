@@ -49,13 +49,33 @@ export default function Result() {
   const [copied, setCopied] = useState(false);
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [posterLoading, setPosterLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [displayMatchPercent, setDisplayMatchPercent] = useState(0);
 
   useEffect(() => {
     const history = getHistory();
     const found = history.find(r => r.id === id);
     if (found) {
+      // Generate random match percent between 80-99
+      const randomMatch = Math.floor(Math.random() * 20) + 80;
+      setDisplayMatchPercent(randomMatch);
       setResult(found);
-      setTimeout(() => setIsRevealed(true), 300);
+      
+      // Simulate loading with progress
+      let progress = 0;
+      const loadingInterval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(loadingInterval);
+          setTimeout(() => {
+            setIsLoading(false);
+            setTimeout(() => setIsRevealed(true), 300);
+          }, 500);
+        }
+        setLoadingProgress(Math.min(progress, 100));
+      }, 200);
       
       // Fetch movie poster from TMDB
       setPosterLoading(true);
@@ -65,6 +85,8 @@ export default function Result() {
           setPosterLoading(false);
         })
         .catch(() => setPosterLoading(false));
+        
+      return () => clearInterval(loadingInterval);
     } else {
       navigate('/');
     }
@@ -73,7 +95,7 @@ export default function Result() {
   const handleShare = async () => {
     if (!result) return;
     
-    const text = `🎬 Sceneva recommended "${result.movie.displayName}" for me with a ${result.matchPercent}% match!\n\n"${result.movie.tagline}"\n\nFind your perfect movie: ${window.location.origin}`;
+    const text = `🎬 Sceneva recommended "${result.movie.displayName}" for me with a ${displayMatchPercent}% match!\n\n"${result.movie.tagline}"\n\nFind your perfect movie: ${window.location.origin}`;
     
     try {
       await navigator.clipboard.writeText(text);
@@ -93,20 +115,152 @@ export default function Result() {
 
   if (!result) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
-  const { movie, reasons, matchPercent } = result;
+  const { movie, reasons } = result;
   const GenreIcon = genreIcons[movie.genre] || Film;
 
+  // Loading screen with cinematic effect
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background relative overflow-hidden">
+        {/* Cinema Background Effects */}
+        <div className="fixed inset-0 pointer-events-none">
+          {/* Colored ambient gradients */}
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-glow/[0.08] to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-accent/[0.06] to-transparent rounded-full blur-3xl" />
+          
+          {/* Projector light beams */}
+          <div className="absolute top-0 left-1/3 w-[2px] h-full bg-gradient-to-b from-glow/20 via-glow/5 to-transparent blur-[1px] rotate-3" />
+          <div className="absolute top-0 right-1/3 w-[2px] h-full bg-gradient-to-b from-glow/15 via-glow/3 to-transparent blur-[1px] -rotate-3" />
+          
+          {/* Film grain */}
+          <div 
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+            }}
+          />
+        </div>
+        
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
+          {/* Film Reel Animation */}
+          <div className="relative mb-8">
+            {/* Outer reel */}
+            <div className="w-32 h-32 rounded-full border-4 border-foreground/20 relative animate-spin" style={{ animationDuration: '3s' }}>
+              {/* Sprocket holes */}
+              {[...Array(8)].map((_, i) => (
+                <div 
+                  key={i}
+                  className="absolute w-4 h-4 rounded-full bg-background border-2 border-foreground/20"
+                  style={{
+                    top: '50%',
+                    left: '50%',
+                    transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-48px)`
+                  }}
+                />
+              ))}
+              {/* Inner circle */}
+              <div className="absolute inset-4 rounded-full border-2 border-foreground/10" />
+              <div className="absolute inset-8 rounded-full bg-foreground/5" />
+            </div>
+            
+            {/* Film strip flowing */}
+            <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-24 h-8 overflow-hidden">
+              <div className="flex gap-1 animate-pulse">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="w-3 h-6 bg-foreground/10 rounded-sm" />
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Loading text */}
+          <div className="text-center mb-6">
+            <h2 className="font-display text-2xl md:text-3xl mb-2 text-foreground">
+              Finding Your Perfect Match
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Analyzing your preferences...
+            </p>
+          </div>
+          
+          {/* Progress bar */}
+          <div className="w-64 md:w-80">
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-glow to-accent rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+              <span>Scanning library</span>
+              <span>{Math.round(loadingProgress)}%</span>
+            </div>
+          </div>
+          
+          {/* Floating film frames */}
+          <div className="absolute bottom-20 left-10 opacity-20">
+            <Film className="w-8 h-8 animate-bounce" style={{ animationDuration: '2s' }} />
+          </div>
+          <div className="absolute top-32 right-16 opacity-15">
+            <Star className="w-6 h-6 animate-pulse" style={{ animationDuration: '1.5s' }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Cinema Background Effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* Colored ambient gradients */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-glow/[0.08] to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-accent/[0.06] to-transparent rounded-full blur-3xl" />
+        
+        {/* Projector light beams */}
+        <div className="absolute top-0 left-1/3 w-[2px] h-full bg-gradient-to-b from-glow/20 via-glow/5 to-transparent blur-[1px] rotate-3" />
+        <div className="absolute top-0 right-1/3 w-[2px] h-full bg-gradient-to-b from-glow/15 via-glow/3 to-transparent blur-[1px] -rotate-3" />
+        
+        {/* Film strip borders */}
+        <div className="absolute left-0 top-0 bottom-0 w-6 opacity-[0.08]">
+          <div className="h-full w-full border-r border-glow/30 bg-glow/[0.02] flex flex-col justify-around py-4">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="w-3 h-2 mx-auto rounded-sm bg-glow/20" />
+            ))}
+          </div>
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 opacity-[0.08]">
+          <div className="h-full w-full border-l border-glow/30 bg-glow/[0.02] flex flex-col justify-around py-4">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="w-3 h-2 mx-auto rounded-sm bg-glow/20" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Warm spotlight from top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-glow/[0.12] via-glow/[0.04] to-transparent blur-2xl" />
+        
+        {/* Film grain texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+          }}
+        />
+        
+        {/* Vignette effect */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_100%)] opacity-40" />
+      </div>
+      
       <Header />
       
-      <main className="pt-20 pb-16 px-4">
+      <main className="relative z-10 pt-20 pb-16 px-4">
         <PageTransition>
           <div className="max-w-2xl mx-auto">
             {/* Pre-reveal text */}
@@ -177,7 +331,7 @@ export default function Result() {
                     {/* Match percentage */}
                     <div className="absolute top-4 right-4 md:top-6 md:right-6">
                       <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
-                        {matchPercent}% Match
+                        {displayMatchPercent}% Match
                       </div>
                     </div>
                     
