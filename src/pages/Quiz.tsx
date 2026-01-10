@@ -1,19 +1,20 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronRight, ArrowLeft, Globe, MapPin, Film, Tv, Play, Sparkles, Check } from 'lucide-react';
 import { 
   QuizMode, 
   Region,
   ContentType,
-  getQuestionsForMode, 
+  getQuestionsForModeAndContent, 
   Scores, 
   initialScores,
-  recommendMovie,
+  recommendContent,
   saveResult,
+  ContentItem,
 } from '@/data';
 import { PageTransition } from '@/components/ui/PageTransition';
 
-const contentTypes: { id: ContentType; name: string; description: string; icon: typeof Film }[] = [
+const contentTypeOptions: { id: ContentType; name: string; description: string; icon: typeof Film }[] = [
   { id: 'movies', name: 'Movies', description: 'Feature films, blockbusters, and cinema classics', icon: Film },
   { id: 'anime', name: 'Anime', description: 'Japanese & Korean animated series and films', icon: Sparkles },
   { id: 'webseries', name: 'Web Series', description: 'Streaming originals and digital series', icon: Play },
@@ -25,8 +26,6 @@ export default function Quiz() {
   const [searchParams] = useSearchParams();
   const mode = (searchParams.get('mode') as QuizMode) || 'standard';
   
-  const questions = getQuestionsForMode(mode);
-  
   const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>([]);
   const [region, setRegion] = useState<Region | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -36,29 +35,44 @@ export default function Quiz() {
   const [showFade, setShowFade] = useState(false);
   const [currentVariant, setCurrentVariant] = useState<{ text: string; subtext?: string } | null>(null);
 
+  // Get questions based on mode AND selected content types
+  const questions = getQuestionsForModeAndContent(mode, selectedContentTypes.length > 0 ? selectedContentTypes : ['movies']);
+  
   const question = questions[currentQuestion];
   const progress = region ? ((currentQuestion + 1) / questions.length) * 100 : 0;
   const isLastQuestion = currentQuestion === questions.length - 1;
+
+  // Check if only anime is selected (for special region handling)
+  const isAnimeOnly = selectedContentTypes.length === 1 && selectedContentTypes[0] === 'anime';
+  
+  // Initialize first question variant
+  useEffect(() => {
+    if (questions.length > 0 && !currentVariant) {
+      const firstQ = questions[0];
+      const randomVariant = firstQ.variants[Math.floor(Math.random() * firstQ.variants.length)];
+      setCurrentVariant(randomVariant);
+    }
+  }, [questions, currentVariant]);
 
   const handleComplete = useCallback((finalScores: Scores) => {
     if (!region) return;
     setShowFade(true);
     
-    // Map region types for legacy function
-    const legacyRegion = region === 'international' ? 'foreign' : region === 'indian' ? 'indian' : 'foreign';
-    const result = recommendMovie(finalScores, legacyRegion as 'indian' | 'foreign');
+    // Use the new content recommendation system
+    const result = recommendContent(finalScores, region, selectedContentTypes);
     const saved = saveResult({
-      movie: result.movie,
+      movie: result.item as ContentItem,
       reasons: result.reasons,
       matchPercent: result.matchPercent,
       mode,
       region,
+      contentTypes: selectedContentTypes,
     });
     
     setTimeout(() => {
       navigate(`/result/${saved.id}`);
     }, 500);
-  }, [navigate, mode, region]);
+  }, [navigate, mode, region, selectedContentTypes]);
 
   const handleAnswer = (optionIndex: number) => {
     if (isTransitioning) return;
@@ -212,7 +226,7 @@ export default function Quiz() {
                 </p>
 
                 <div className="grid sm:grid-cols-2 gap-4 mb-8">
-                  {contentTypes.map((type) => {
+                  {contentTypeOptions.map((type) => {
                     const isSelected = selectedContentTypes.includes(type.id);
                     return (
                       <button
@@ -263,7 +277,7 @@ export default function Quiz() {
 
                 {selectedContentTypes.length > 0 && (
                   <p className="text-sm text-muted-foreground mt-4">
-                    Selected: {selectedContentTypes.map(t => contentTypes.find(ct => ct.id === t)?.name).join(', ')}
+                    Selected: {selectedContentTypes.map(t => contentTypeOptions.find(ct => ct.id === t)?.name).join(', ')}
                   </p>
                 )}
               </div>
@@ -273,7 +287,7 @@ export default function Quiz() {
       );
     }
 
-    // Region selection screen (step 2)
+    // Region selection screen (step 2) - different for anime
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
         <CinemaBackground />
@@ -295,44 +309,86 @@ export default function Quiz() {
                 Step 2
               </p>
               <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
-                What are you in the mood for?
+                {isAnimeOnly ? "Choose your anime origin" : "What are you in the mood for?"}
               </h1>
               <p className="text-muted-foreground mb-10">
-                Choose your cinema preference
+                {isAnimeOnly ? "Japanese or Korean animation?" : "Choose your cinema preference"}
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <button
-                  onClick={() => setRegion('indian')}
-                  className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                      <MapPin className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
-                    </div>
-                    <h3 className="font-display text-xl font-semibold mb-2">Indian Cinema</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Bollywood, South Indian, Kannada, Malayalam, Tamil, Telugu — the full spectrum of Indian storytelling
-                    </p>
-                  </div>
-                </button>
+                {isAnimeOnly ? (
+                  <>
+                    {/* Japanese Anime Option */}
+                    <button
+                      onClick={() => setRegion('japanese')}
+                      className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                          <span className="text-xl">🇯🇵</span>
+                        </div>
+                        <h3 className="font-display text-xl font-semibold mb-2">Japanese Anime</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Studio Ghibli, Attack on Titan, Demon Slayer — the legendary anime from Japan
+                        </p>
+                      </div>
+                    </button>
 
-                <button
-                  onClick={() => setRegion('international')}
-                  className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                      <Globe className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
-                    </div>
-                    <h3 className="font-display text-xl font-semibold mb-2">International</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Hollywood blockbusters, Korean thrillers, European gems — cinema from around the world
-                    </p>
-                  </div>
-                </button>
+                    {/* Korean Anime Option */}
+                    <button
+                      onClick={() => setRegion('korean')}
+                      className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                          <span className="text-xl">🇰🇷</span>
+                        </div>
+                        <h3 className="font-display text-xl font-semibold mb-2">Korean Manhwa</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Solo Leveling, Tower of God, Lookism — Korean webtoon adaptations
+                        </p>
+                      </div>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {/* Indian Cinema Option */}
+                    <button
+                      onClick={() => setRegion('indian')}
+                      className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                          <MapPin className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                        </div>
+                        <h3 className="font-display text-xl font-semibold mb-2">Indian Cinema</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Bollywood, South Indian, Kannada, Malayalam, Tamil, Telugu — the full spectrum of Indian storytelling
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* International Option */}
+                    <button
+                      onClick={() => setRegion('international')}
+                      className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                          <Globe className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                        </div>
+                        <h3 className="font-display text-xl font-semibold mb-2">International</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Hollywood blockbusters, European gems, streaming originals — cinema from around the world
+                        </p>
+                      </div>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </PageTransition>
