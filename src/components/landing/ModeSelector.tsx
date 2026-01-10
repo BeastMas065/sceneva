@@ -1,5 +1,5 @@
 import { Zap, Target, Brain, ArrowRight } from 'lucide-react';
-import { QuizMode } from '@/data/movies';
+import { QuizMode } from '@/data';
 import { useEffect, useState } from 'react';
 
 interface ModeSelectorProps {

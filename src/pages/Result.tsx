@@ -18,7 +18,7 @@ import {
   User,
   Globe,
 } from 'lucide-react';
-import { getHistory, SavedResult, Movie } from '@/data/movies';
+import { getHistory, SavedResult, Movie } from '@/data';
 import { PageTransition } from '@/components/ui/PageTransition';
 import { searchMoviePoster } from '@/lib/tmdb';
 import { Header } from '@/components/layout/Header';

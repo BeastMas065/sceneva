@@ -10,7 +10,7 @@ import {
   Brain,
   History as HistoryIcon,
 } from 'lucide-react';
-import { getHistory, clearHistory, SavedResult, QuizMode } from '@/data/movies';
+import { getHistory, clearHistory, SavedResult, QuizMode } from '@/data';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/ui/PageTransition';

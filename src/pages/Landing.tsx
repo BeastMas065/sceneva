@@ -5,7 +5,7 @@ import { HeroSection } from '@/components/landing/HeroSection';
 import { ModeSelector } from '@/components/landing/ModeSelector';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PageTransition } from '@/components/ui/PageTransition';
-import { QuizMode } from '@/data/movies';
+import { QuizMode } from '@/data';
 
 export default function Landing() {
   const navigate = useNavigate();
