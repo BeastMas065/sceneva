@@ -10,14 +10,14 @@ import {
   initialScores,
   recommendMovie,
   saveResult,
-} from '@/data/movies';
+} from '@/data';
 import { PageTransition } from '@/components/ui/PageTransition';
 
 const contentTypes: { id: ContentType; name: string; description: string; icon: typeof Film }[] = [
   { id: 'movies', name: 'Movies', description: 'Feature films, blockbusters, and cinema classics', icon: Film },
-  { id: 'anime', name: 'Anime', description: 'Japanese animated series and films', icon: Sparkles },
+  { id: 'anime', name: 'Anime', description: 'Japanese & Korean animated series and films', icon: Sparkles },
   { id: 'webseries', name: 'Web Series', description: 'Streaming originals and digital series', icon: Play },
-  { id: 'tvshows', name: 'TV Shows', description: 'Traditional television series and dramas', icon: Tv },
+  { id: 'animated', name: 'Animated Films', description: 'Cartoon movies like Toy Story, Shrek, and more', icon: Tv },
 ];
 
 export default function Quiz() {
@@ -34,6 +34,7 @@ export default function Quiz() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showFade, setShowFade] = useState(false);
+  const [currentVariant, setCurrentVariant] = useState<{ text: string; subtext?: string } | null>(null);
 
   const question = questions[currentQuestion];
   const progress = region ? ((currentQuestion + 1) / questions.length) * 100 : 0;
@@ -43,7 +44,9 @@ export default function Quiz() {
     if (!region) return;
     setShowFade(true);
     
-    const result = recommendMovie(finalScores, region);
+    // Map region types for legacy function
+    const legacyRegion = region === 'international' ? 'foreign' : region === 'indian' ? 'indian' : 'foreign';
+    const result = recommendMovie(finalScores, legacyRegion as 'indian' | 'foreign');
     const saved = saveResult({
       movie: result.movie,
       reasons: result.reasons,
@@ -78,6 +81,12 @@ export default function Quiz() {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedOption(null);
         setIsTransitioning(false);
+        // Pick a new random variant for the next question
+        const nextQ = questions[currentQuestion + 1];
+        if (nextQ) {
+          const randomVariant = nextQ.variants[Math.floor(Math.random() * nextQ.variants.length)];
+          setCurrentVariant(randomVariant);
+        }
       } else {
         handleComplete(newScores);
       }
@@ -310,7 +319,7 @@ export default function Quiz() {
                 </button>
 
                 <button
-                  onClick={() => setRegion('foreign')}
+                  onClick={() => setRegion('international')}
                   className="group p-6 rounded-xl border border-border bg-card/80 backdrop-blur-sm card-glow border-animate text-left relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -381,11 +390,11 @@ export default function Quiz() {
                   Question {currentQuestion + 1}
                 </p>
                 <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3 leading-tight">
-                  {question.text}
+                  {currentVariant?.text || question.variants[0]?.text}
                 </h1>
-                {question.subtext && (
+                {(currentVariant?.subtext || question.variants[0]?.subtext) && (
                   <p className="text-muted-foreground">
-                    {question.subtext}
+                    {currentVariant?.subtext || question.variants[0]?.subtext}
                   </p>
                 )}
               </div>

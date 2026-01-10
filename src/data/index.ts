@@ -5,11 +5,14 @@ export * from './questions';
 // Keep the original movies export and types
 export type Region = 'indian' | 'international' | 'japanese' | 'korean';
 export type QuizMode = 'quick' | 'standard' | 'deep';
+export type ContentType = 'movies' | 'anime' | 'webseries' | 'animated';
 
 // Import from new files
 import { ContentItem, getAllContent, getContentByType, webSeries, animatedContent, animeContent } from './content';
-import { Scores, initialScores, getQuestionsForModeAndContent, getRandomVariant } from './questions';
-export { Scores, initialScores, getQuestionsForModeAndContent, getRandomVariant };
+import type { Scores } from './questions';
+import { initialScores, getQuestionsForModeAndContent, getRandomVariant } from './questions';
+export type { Scores };
+export { initialScores, getQuestionsForModeAndContent, getRandomVariant };
 
 // Legacy support - get questions for mode (uses movies as default)
 export function getQuestionsForMode(mode: QuizMode) {
