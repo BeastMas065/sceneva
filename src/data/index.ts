@@ -1,18 +1,14 @@
-// Re-export everything for backwards compatibility
-export * from './content';
-export * from './questions';
+// Import types and values for use within this file
+import type { Region, ContentType, ContentItem } from './content';
+import { getAllContent, getContentByType, webSeries, animatedContent, animeContent } from './content';
+import type { QuizMode, Scores, Question, QuestionVariant } from './questions';
+import { initialScores, getQuestionsForModeAndContent, getRandomVariant, universalQuestions, animeQuestions, webSeriesQuestions, animatedQuestions, movieQuestions } from './questions';
 
-// Keep the original movies export and types
-export type Region = 'indian' | 'international' | 'japanese' | 'korean';
-export type QuizMode = 'quick' | 'standard' | 'deep';
-export type ContentType = 'movies' | 'anime' | 'webseries' | 'animated';
-
-// Import and re-export from new files
-import { ContentItem, getAllContent, getContentByType, webSeries, animatedContent, animeContent } from './content';
-import type { Scores } from './questions';
-import { initialScores, getQuestionsForModeAndContent, getRandomVariant } from './questions';
-export type { Scores, ContentItem };
-export { initialScores, getQuestionsForModeAndContent, getRandomVariant, getAllContent, getContentByType };
+// Re-export everything
+export type { Region, ContentType, ContentItem };
+export { getAllContent, getContentByType, webSeries, animatedContent, animeContent };
+export type { QuizMode, Scores, Question, QuestionVariant };
+export { initialScores, getQuestionsForModeAndContent, getRandomVariant, universalQuestions, animeQuestions, webSeriesQuestions, animatedQuestions, movieQuestions };
 
 // Legacy support - get questions for mode (uses movies as default)
 export function getQuestionsForMode(mode: QuizMode) {
@@ -23,7 +19,7 @@ export function getQuestionsForMode(mode: QuizMode) {
 export function recommendContent(
   scores: Scores, 
   region: Region, 
-  contentTypes: ('movies' | 'anime' | 'webseries' | 'animated')[]
+  contentTypes: ContentType[]
 ): { item: ContentItem; reasons: string[]; matchPercent: number } {
   // Get all content matching the filters
   let candidates = getAllContent().filter(item => 
@@ -33,6 +29,11 @@ export function recommendContent(
   if (candidates.length === 0) {
     // Fallback to any content of the type
     candidates = getAllContent().filter(item => contentTypes.includes(item.contentType));
+  }
+
+  // If still no candidates, get all content
+  if (candidates.length === 0) {
+    candidates = getAllContent();
   }
 
   const scored: { item: ContentItem; score: number }[] = [];
@@ -55,7 +56,7 @@ export function recommendContent(
   const topCandidates = scored.slice(0, 5);
   const pick = topCandidates[Math.floor(Math.random() * topCandidates.length)];
 
-  const maxScore = Math.max(...Object.values(scores)) * 3;
+  const scoreValues = Object.values(scores).filter((v): v is number => typeof v === 'number');
   const matchPercent = Math.floor(Math.random() * 20) + 80; // 80-99%
 
   const reasons: string[] = [];
@@ -108,7 +109,7 @@ export interface SavedResult {
   date: string;
   mode: QuizMode;
   region: Region;
-  contentTypes?: ('movies' | 'anime' | 'webseries' | 'animated')[];
+  contentTypes?: ContentType[];
 }
 
 export function saveResult(result: Omit<SavedResult, 'id' | 'date'>): SavedResult {
