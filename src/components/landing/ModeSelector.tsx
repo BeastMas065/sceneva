@@ -17,7 +17,7 @@ const modes = [
   {
     id: 'standard' as QuizMode,
     name: 'Standard',
-    description: '7 questions for a balanced recommendation.',
+    description: '12 questions for a balanced recommendation.',
     time: '~2 min',
     icon: Target,
     recommended: true,
@@ -26,7 +26,7 @@ const modes = [
   {
     id: 'deep' as QuizMode,
     name: 'Deep Dive',
-    description: '12 questions. Maximum personalization.',
+    description: '21 questions. Maximum personalization.',
     time: '~4 min',
     icon: Brain,
   },
