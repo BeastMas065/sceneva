@@ -27,6 +27,7 @@ export default function Quiz() {
   const mode = (searchParams.get('mode') as QuizMode) || 'standard';
   
   const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>([]);
+  const [contentTypesConfirmed, setContentTypesConfirmed] = useState(false);
   const [region, setRegion] = useState<Region | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState<Scores>(initialScores);
@@ -113,8 +114,8 @@ export default function Quiz() {
       setSelectedOption(null);
     } else if (region) {
       setRegion(null);
-    } else if (selectedContentTypes.length > 0) {
-      setSelectedContentTypes([]);
+    } else if (contentTypesConfirmed) {
+      setContentTypesConfirmed(false);
     } else {
       navigate('/');
     }
@@ -130,8 +131,12 @@ export default function Quiz() {
 
   const handleContinueFromContentTypes = () => {
     if (selectedContentTypes.length === 0) return;
-    // Move to region selection (we keep content types in state for future use)
+    setContentTypesConfirmed(true);
   };
+
+  // Determine which step to show based on state
+  const showContentTypeSelection = !contentTypesConfirmed;
+  const showRegionSelection = contentTypesConfirmed && !region;
 
   // Cinema background component to avoid repetition
   const CinemaBackground = () => (
@@ -193,11 +198,7 @@ export default function Quiz() {
   );
 
   // Content type selection screen (first step)
-  if (selectedContentTypes.length === 0 || (selectedContentTypes.length > 0 && !region)) {
-    // Show content type selection if none selected, otherwise show region selection
-    const showContentTypeSelection = selectedContentTypes.length === 0;
-
-    if (showContentTypeSelection) {
+  if (showContentTypeSelection) {
       return (
         <div className="min-h-screen flex flex-col relative overflow-hidden">
           <CinemaBackground />
@@ -285,9 +286,10 @@ export default function Quiz() {
           </main>
         </div>
       );
-    }
+  }
 
-    // Region selection screen (step 2) - different for anime
+  // Region selection screen (step 2) - different for anime
+  if (showRegionSelection) {
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
         <CinemaBackground />
