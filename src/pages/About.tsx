@@ -17,13 +17,14 @@ const truthBombs = [
   { truth: 'Matches keywords to genres', lie: 'Deep learning' },
   { truth: 'Random selection from top picks', lie: 'Probabilistic modeling' },
   { truth: 'Hand-coded preference logic', lie: 'Machine learning algorithms' },
+  { truth: 'Content-specific question pools', lie: 'Personalized training data' },
 ];
 
 const steps = [
   {
     number: '01',
-    title: 'Answer Questions',
-    description: 'Tell us about your mood, preferences, and what kind of experience you\'re looking for.',
+    title: 'Pick Your Content',
+    description: 'Choose what you want to watch — movies, anime, web series, or animated films.',
     icon: Brain,
   },
   {
@@ -35,7 +36,7 @@ const steps = [
   {
     number: '03',
     title: 'Perfect Match',
-    description: 'We pick a movie from our curated database that matches your profile. Magic!',
+    description: 'We pick from our curated database of 100+ titles that matches your vibe. Magic!',
     icon: Sparkles,
   },
 ];
@@ -105,7 +106,7 @@ export default function About() {
               
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Spoiler alert: There's no AI. Just some clever programming, 
-                a love for movies, and a healthy dose of randomness.
+                a love for movies, anime, and web series, plus a healthy dose of randomness.
               </p>
             </div>
 
@@ -186,7 +187,7 @@ export default function About() {
               
               <div className="glass rounded-2xl p-6 md:p-8 text-left font-mono text-sm">
                 <pre className="overflow-x-auto text-muted-foreground">
-{`function recommendMovie(answers) {
+{`function recommendContent(answers, contentTypes) {
   // Step 1: Add up preference scores
   let scores = { action: 0, romance: 0, comedy: 0 };
   
@@ -194,12 +195,17 @@ export default function About() {
     scores[answer.genre] += answer.weight;
   });
   
-  // Step 2: Find matching movies
-  let matches = movies.filter(m => 
-    m.genre === getTopGenre(scores)
+  // Step 2: Filter by content type (anime, movies, etc)
+  let pool = content.filter(c => 
+    contentTypes.includes(c.type)
   );
   
-  // Step 3: Pick randomly (the "AI" part)
+  // Step 3: Find matching content
+  let matches = pool.filter(c => 
+    c.genre === getTopGenre(scores)
+  );
+  
+  // Step 4: Pick randomly (the "AI" part)
   return matches[Math.random() * matches.length];
   
   // That's it. That's the algorithm.
