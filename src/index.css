@@ -30,8 +30,8 @@
     --muted: 35 8% 93%;
     --muted-foreground: 30 5% 45%;
 
-    /* Accent - warm gold for light mode - MUCH stronger */
-    --accent: 32 90% 45%;
+    /* Accent - warm gold for light mode - reduced for visual calm */
+    --accent: 32 75% 42%;
     --accent-foreground: 40 20% 99%;
 
     --destructive: 0 72% 51%;
@@ -43,11 +43,11 @@
 
     --radius: 0.75rem;
 
-    /* Custom tokens - MUCH stronger for light mode visibility */
+    /* Custom tokens - reduced brightness for calmer backgrounds */
     --surface: 40 15% 97%;
     --surface-hover: 35 12% 94%;
-    --glow: 28 95% 42%;
-    --glow-strong: 25 100% 38%;
+    --glow: 28 70% 38%;
+    --glow-strong: 25 80% 35%;
   }
 
   .dark {

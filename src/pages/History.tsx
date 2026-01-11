@@ -31,7 +31,11 @@ export default function History() {
   const [results, setResults] = useState<SavedResult[]>([]);
 
   useEffect(() => {
-    setResults(getHistory());
+    // Sort by most recent first
+    const history = getHistory().sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+    setResults(history);
   }, []);
 
   const handleClear = () => {
@@ -160,15 +164,20 @@ export default function History() {
                             {result.movie.tagline}
                           </p>
                           
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground/70">
-                            <span className="flex items-center gap-1">
+                          <div className="flex items-center gap-3 flex-wrap text-xs">
+                            <span className="flex items-center gap-1 text-muted-foreground/70">
                               <Clock className="w-3 h-3" />
                               {formatDate(result.date)}
                             </span>
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1 px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
                               <ModeIcon className="w-3 h-3" />
-                              {modeLabels[result.mode]} mode
+                              {modeLabels[result.mode]}
                             </span>
+                            {result.movie.genre && (
+                              <span className="px-2 py-0.5 bg-accent/10 text-accent rounded-full capitalize">
+                                {result.movie.genre}
+                              </span>
+                            )}
                           </div>
                         </div>
                         

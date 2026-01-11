@@ -35,6 +35,8 @@ export default function Quiz() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showFade, setShowFade] = useState(false);
   const [currentVariant, setCurrentVariant] = useState<{ text: string; subtext?: string } | null>(null);
+  const [microFeedback, setMicroFeedback] = useState<string | null>(null);
+  const [moodTags, setMoodTags] = useState<{ mood: string; energy: string }>({ mood: 'Neutral', energy: 'Medium' });
 
   // Get questions based on mode AND selected content types
   const questions = getQuestionsForModeAndContent(mode, selectedContentTypes.length > 0 ? selectedContentTypes : ['movies']);
@@ -70,16 +72,59 @@ export default function Quiz() {
       contentTypes: selectedContentTypes,
     });
     
+    // Smooth transition delay before navigation
     setTimeout(() => {
       navigate(`/result/${saved.id}`);
-    }, 500);
+    }, 800);
   }, [navigate, mode, region, selectedContentTypes]);
+
+  // Micro-feedback phrases
+  const feedbackPhrases = ['Got it', 'Understood', 'Noted', 'Perfect', 'Interesting'];
+
+  // Update mood tags based on scores
+  const updateMoodTags = (newScores: Scores) => {
+    const topGenres = Object.entries(newScores)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 2);
+    
+    const moodMap: Record<string, string> = {
+      romance: 'Emotional',
+      drama: 'Thoughtful',
+      comedy: 'Light',
+      action: 'Energetic',
+      thriller: 'Intense',
+      scifi: 'Curious',
+      fantasy: 'Imaginative',
+      horror: 'Adventurous',
+    };
+    
+    const energyMap: Record<string, string> = {
+      action: 'High',
+      thriller: 'High',
+      comedy: 'Medium',
+      scifi: 'Medium',
+      drama: 'Low',
+      romance: 'Low',
+      fantasy: 'Medium',
+      horror: 'High',
+    };
+    
+    const topGenre = topGenres[0]?.[0] || 'drama';
+    setMoodTags({
+      mood: moodMap[topGenre] || 'Balanced',
+      energy: energyMap[topGenre] || 'Medium',
+    });
+  };
 
   const handleAnswer = (optionIndex: number) => {
     if (isTransitioning) return;
     
     setSelectedOption(optionIndex);
     const option = question.options[optionIndex];
+    
+    // Show micro-feedback
+    const randomFeedback = feedbackPhrases[Math.floor(Math.random() * feedbackPhrases.length)];
+    setMicroFeedback(randomFeedback);
     
     const newScores = { ...scores };
     Object.entries(option.effects).forEach(([key, value]) => {
@@ -88,10 +133,12 @@ export default function Quiz() {
       }
     });
     setScores(newScores);
+    updateMoodTags(newScores);
 
     setIsTransitioning(true);
     
     setTimeout(() => {
+      setMicroFeedback(null);
       if (!isLastQuestion) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedOption(null);
@@ -105,7 +152,7 @@ export default function Quiz() {
       } else {
         handleComplete(newScores);
       }
-    }, 400);
+    }, 500);
   };
 
   const handleBack = () => {
@@ -401,7 +448,14 @@ export default function Quiz() {
 
   return (
     <>
-      {showFade && <div className="fixed inset-0 bg-background z-50 animate-fade-in" />}
+      {showFade && (
+        <div className="fixed inset-0 bg-background z-50 flex items-center justify-center transition-opacity duration-700 animate-fade-in">
+          <div className="text-center">
+            <div className="w-12 h-12 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground text-sm">Finding your match...</p>
+          </div>
+        </div>
+      )}
       
       <div className="min-h-screen flex flex-col relative overflow-hidden">
         <CinemaBackground />
@@ -443,6 +497,18 @@ export default function Quiz() {
                 isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
               }`}
             >
+              {/* Dynamic mood tags */}
+              {currentQuestion > 0 && (
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <span className="px-2 py-1 text-xs bg-muted rounded-full text-muted-foreground">
+                    Mood: <span className="text-foreground font-medium">{moodTags.mood}</span>
+                  </span>
+                  <span className="px-2 py-1 text-xs bg-muted rounded-full text-muted-foreground">
+                    Energy: <span className="text-foreground font-medium">{moodTags.energy}</span>
+                  </span>
+                </div>
+              )}
+              
               <div className="mb-12">
                 <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
                   Question {currentQuestion + 1}
@@ -456,6 +522,15 @@ export default function Quiz() {
                   </p>
                 )}
               </div>
+              
+              {/* Micro-feedback */}
+              {microFeedback && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
+                  <div className="px-4 py-2 bg-foreground text-background rounded-full text-sm font-medium animate-fade-in shadow-lg">
+                    {microFeedback}
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-3">
                 {question.options.map((option, index) => (
