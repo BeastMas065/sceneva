@@ -150,12 +150,20 @@ export function HeroSection() {
           <span className="italic text-accent">perfect movie</span>
         </h1>
 
+        {/* Value proposition - one line */}
+        <p 
+          className="text-base text-foreground/80 font-medium max-w-lg mx-auto mb-4 animate-fade-in"
+          style={{ animationDelay: '0.1s', transform: `translateY(${scrollY * -0.09}px)` }}
+        >
+          Stop scrolling for 30 minutes. Get a recommendation in 2.
+        </p>
+
         {/* Subheading */}
         <p 
-          className="text-lg text-muted-foreground max-w-xl mx-auto mb-10 animate-fade-in leading-relaxed"
-          style={{ animationDelay: '0.1s', transform: `translateY(${scrollY * -0.08}px)` }}
+          className="text-muted-foreground max-w-xl mx-auto mb-10 animate-fade-in leading-relaxed"
+          style={{ animationDelay: '0.15s', transform: `translateY(${scrollY * -0.08}px)` }}
         >
-          Answer a few questions about your mood. Our algorithm will recommend the ideal film — Indian or international.
+          Answer a few mood-based questions. Our decision engine matches you to movies, anime, or web series.
         </p>
 
         {/* CTA Buttons */}

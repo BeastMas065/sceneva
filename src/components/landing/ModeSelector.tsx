@@ -21,6 +21,7 @@ const modes = [
     time: '~2 min',
     icon: Target,
     recommended: true,
+    recommendedLabel: 'Recommended for first-time users',
   },
   {
     id: 'deep' as QuizMode,
@@ -109,8 +110,15 @@ export function ModeSelector({ onSelect }: ModeSelectorProps) {
               }}
             >
               {mode.recommended && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-xs font-medium rounded-full whitespace-nowrap transition-colors duration-300 group-hover:bg-background group-hover:text-foreground shadow-lg shadow-glow/20">
-                  Recommended
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="px-3 py-1.5 bg-accent text-accent-foreground text-xs font-medium rounded-full whitespace-nowrap transition-colors duration-300 group-hover:bg-accent/90 shadow-lg">
+                    ★ Recommended
+                  </div>
+                  {'recommendedLabel' in mode && mode.recommendedLabel && (
+                    <p className="text-[10px] text-accent mt-1 text-center font-medium whitespace-nowrap">
+                      {mode.recommendedLabel}
+                    </p>
+                  )}
                 </div>
               )}
 
