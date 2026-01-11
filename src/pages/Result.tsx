@@ -13,12 +13,14 @@ import {
   Rocket,
   CheckCircle2,
   Share2,
-  Copy,
   Check,
-  User,
   Globe,
+  Tv,
+  Play,
+  Sparkles,
+  Wand2,
 } from 'lucide-react';
-import { getHistory, SavedResult, Movie } from '@/data';
+import { getHistory, SavedResult, ContentItem } from '@/data';
 import { PageTransition } from '@/components/ui/PageTransition';
 import { searchMoviePoster } from '@/lib/tmdb';
 import { Header } from '@/components/layout/Header';
@@ -30,6 +32,9 @@ const genreIcons: Record<string, typeof Zap> = {
   thriller: Skull,
   drama: Drama,
   scifi: Rocket,
+  fantasy: Wand2,
+  horror: Skull,
+  'slice-of-life': Heart,
 };
 
 const genreGradients: Record<string, string> = {
@@ -39,6 +44,16 @@ const genreGradients: Record<string, string> = {
   thriller: 'bg-gradient-to-br from-slate-800/90 via-zinc-900/80 to-neutral-950/90',
   drama: 'bg-gradient-to-br from-indigo-700/80 via-purple-800/60 to-slate-900/80',
   scifi: 'bg-gradient-to-br from-cyan-600/80 via-blue-700/60 to-violet-800/80',
+  fantasy: 'bg-gradient-to-br from-purple-600/80 via-violet-700/60 to-indigo-800/80',
+  horror: 'bg-gradient-to-br from-gray-900/90 via-red-950/70 to-black/90',
+  'slice-of-life': 'bg-gradient-to-br from-green-500/80 via-teal-600/60 to-cyan-700/80',
+};
+
+const contentTypeLabels: Record<string, { label: string; icon: typeof Film }> = {
+  movies: { label: 'Movie', icon: Film },
+  anime: { label: 'Anime', icon: Sparkles },
+  webseries: { label: 'Web Series', icon: Play },
+  animated: { label: 'Animated Film', icon: Tv },
 };
 
 export default function Result() {
@@ -95,7 +110,9 @@ export default function Result() {
   const handleShare = async () => {
     if (!result) return;
     
-    const text = `🎬 Sceneva recommended "${result.movie.displayName}" for me with a ${displayMatchPercent}% match!\n\n"${result.movie.tagline}"\n\nFind your perfect movie: ${window.location.origin}`;
+    const content = result.movie as ContentItem;
+    const contentLabel = contentTypeLabels[content.contentType || 'movies']?.label || 'content';
+    const text = `🎬 Sceneva recommended "${content.displayName}" for me with a ${displayMatchPercent}% match!\n\n"${content.tagline}"\n\nFind your perfect ${contentLabel.toLowerCase()}: ${window.location.origin}`;
     
     try {
       await navigator.clipboard.writeText(text);
@@ -121,8 +138,11 @@ export default function Result() {
     );
   }
 
-  const { movie, reasons } = result;
-  const GenreIcon = genreIcons[movie.genre] || Film;
+  const content = result.movie as ContentItem;
+  const GenreIcon = genreIcons[content.genre] || Film;
+  const contentType = content.contentType || 'movies';
+  const ContentTypeInfo = contentTypeLabels[contentType] || contentTypeLabels.movies;
+  const { reasons } = result;
 
   // Loading screen with cinematic effect
   if (isLoading) {
@@ -287,17 +307,17 @@ export default function Result() {
               }`}
             >
               <div className="border border-border rounded-2xl overflow-hidden bg-card">
-                {/* Movie Header with Poster */}
+                {/* Content Header with Poster */}
                 <div className="relative flex flex-col md:flex-row">
                   {/* Background gradient */}
-                  <div className={`absolute inset-0 ${genreGradients[movie.genre] || 'bg-gradient-to-br from-muted via-muted/80 to-muted/60'}`} />
+                  <div className={`absolute inset-0 ${genreGradients[content.genre] || 'bg-gradient-to-br from-muted via-muted/80 to-muted/60'}`} />
                   
                   {/* Film grain texture */}
                   <div className="absolute inset-0 opacity-20" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
                   }} />
                   
-                  {/* Movie Poster - Proper 2:3 aspect ratio */}
+                  {/* Content Poster - Proper 2:3 aspect ratio */}
                   <div className="relative w-40 md:w-48 shrink-0 mx-auto md:mx-0 mt-6 md:mt-0 md:m-6 z-10">
                     <div className="aspect-[2/3] rounded-lg overflow-hidden shadow-2xl bg-black/20">
                       {posterLoading ? (
@@ -312,12 +332,12 @@ export default function Result() {
                       ) : posterUrl ? (
                         <img
                           src={posterUrl}
-                          alt={movie.displayName}
+                          alt={content.displayName}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-black/30">
-                          <GenreIcon className="w-16 h-16 text-white/40" strokeWidth={1} />
+                          <ContentTypeInfo.icon className="w-16 h-16 text-white/40" strokeWidth={1} />
                         </div>
                       )}
                     </div>
@@ -330,41 +350,52 @@ export default function Result() {
                     )}
                   </div>
                   
-                  {/* Movie Quick Info Overlay */}
+                  {/* Content Quick Info Overlay */}
                   <div className="relative flex-1 p-6 md:py-8 md:pr-8 flex flex-col justify-center z-10">
-                    {/* Match percentage */}
-                    <div className="absolute top-4 right-4 md:top-6 md:right-6">
+                    {/* Match percentage & Content type badge */}
+                    <div className="absolute top-4 right-4 md:top-6 md:right-6 flex flex-col gap-2 items-end">
                       <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
                         {displayMatchPercent}% Match
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white/80 text-xs">
+                        <ContentTypeInfo.icon className="w-3 h-3" />
+                        {ContentTypeInfo.label}
                       </div>
                     </div>
                     
                     <h1 className="font-display text-2xl md:text-4xl font-semibold text-white text-center md:text-left mb-2 pr-16 md:pr-20">
-                      {movie.displayName}
+                      {content.displayName}
                     </h1>
                     
-                    {movie.tagline && (
+                    {content.tagline && (
                       <p className="text-white/70 text-center md:text-left italic mb-4">
-                        "{movie.tagline}"
+                        "{content.tagline}"
                       </p>
                     )}
                     
                     {/* Quick tags */}
                     <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                      {movie.year && (
+                      {content.year && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90">
                           <Clock className="w-3 h-3" />
-                          {movie.year}
+                          {content.year}
                         </span>
                       )}
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90 capitalize">
                         <GenreIcon className="w-3 h-3" />
-                        {movie.genre}
+                        {content.genre === 'slice-of-life' ? 'Slice of Life' : content.genre}
                       </span>
-                      {movie.rating && (
+                      {content.rating && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90">
                           <Star className="w-3 h-3" />
-                          {movie.rating}/10
+                          {content.rating}/10
+                        </span>
+                      )}
+                      {/* Seasons for web series and anime */}
+                      {content.seasons && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/90">
+                          <Tv className="w-3 h-3" />
+                          {content.seasons} {content.seasons === 1 ? 'Season' : 'Seasons'}
                         </span>
                       )}
                     </div>
@@ -373,31 +404,31 @@ export default function Result() {
                 <div className="p-8 md:p-10">
                 
                 {/* Language tag if available */}
-                {movie.language && (
+                {content.language && (
                   <div className="flex justify-center mb-6">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm">
                       <Globe className="w-3.5 h-3.5" />
-                      {movie.language}
+                      {content.language}
                     </span>
                   </div>
                 )}
 
                 {/* Synopsis */}
-                {movie.synopsis && (
+                {content.synopsis && (
                   <div className="mb-8 p-5 bg-muted/50 rounded-xl">
                     <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
                       The Story
                     </h3>
                     <p className="text-foreground/90 leading-relaxed">
-                      {movie.synopsis}
+                      {content.synopsis}
                     </p>
                   </div>
                 )}
 
-                {/* Why this movie */}
+                {/* Why this recommendation */}
                 <div className="p-5 border border-border rounded-xl">
                   <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 font-medium">
-                    Why this movie?
+                    Why this {ContentTypeInfo.label.toLowerCase()}?
                   </h3>
                   <ul className="space-y-3">
                     {reasons.map((reason, index) => (
@@ -415,9 +446,9 @@ export default function Result() {
                   </ul>
                 </div>
 
-                {movie.director && (
+                {content.director && (
                   <p className="text-center text-sm text-muted-foreground mt-6">
-                    Directed by {movie.director}
+                    {contentType === 'webseries' || contentType === 'anime' ? 'Created by' : 'Directed by'} {content.director}
                   </p>
                 )}
                 </div>
