@@ -1,4 +1,4 @@
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Play, Sparkles, Film } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
@@ -198,8 +198,8 @@ export function HeroSection() {
         >
           {[
             { value: '100+', label: 'Titles' },
-            { value: '2', label: 'Regions' },
-            { value: '5', label: 'Questions' }
+            { value: '4', label: 'Content Types' },
+            { value: '12', label: 'Questions' }
           ].map((stat) => (
             <div key={stat.label} className="text-center group cursor-default">
               <div className="font-display text-2xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110">
