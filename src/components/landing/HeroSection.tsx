@@ -199,7 +199,7 @@ export function HeroSection() {
           {[
             { value: '100+', label: 'Titles' },
             { value: '2', label: 'Regions' },
-            { value: '7', label: 'Questions' }
+            { value: '5', label: 'Questions' }
           ].map((stat) => (
             <div key={stat.label} className="text-center group cursor-default">
               <div className="font-display text-2xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110">
