@@ -79,10 +79,23 @@ export const universalQuestions: Question[] = [
     ],
     mode: ['quick', 'standard', 'deep'],
   },
-  
-  // Standard Mode: +2 questions = 5 total
   {
     id: 3,
+    variants: [
+      { text: "How do you want to feel after?" },
+      { text: "End goal for tonight?" },
+    ],
+    options: [
+      { text: "Pumped and energized", effects: { action: 2, fast: 2, comedy: 1 } },
+      { text: "Moved and thoughtful", effects: { drama: 2, romance: 1, slow: 1 } },
+      { text: "On the edge of my seat", effects: { thriller: 2, scifi: 1, fast: 1 } },
+    ],
+    mode: ['quick', 'standard', 'deep'],
+  },
+  
+  // Standard Mode: +4 questions = 7 total
+  {
+    id: 4,
     variants: [
       { text: "Choose your hero" },
       { text: "Who do you root for?" },
@@ -96,7 +109,7 @@ export const universalQuestions: Question[] = [
     mode: ['standard', 'deep'],
   },
   {
-    id: 4,
+    id: 5,
     variants: [
       { text: "Your attention span right now?", subtext: "Be honest" },
       { text: "Energy level check", subtext: "No judgment" },
@@ -109,10 +122,23 @@ export const universalQuestions: Question[] = [
     mode: ['standard', 'deep'],
   },
   {
-    id: 5,
+    id: 6,
     variants: [
-      { text: "Last one: What matters most?" },
-      { text: "Final question: Your priority?" },
+      { text: "Setting preference?" },
+      { text: "Where should the story unfold?" },
+    ],
+    options: [
+      { text: "Real world, grounded", effects: { drama: 2, thriller: 1 } },
+      { text: "Larger than life", effects: { action: 2, fantasy: 1, fast: 1 } },
+      { text: "Something imaginative", effects: { scifi: 2, fantasy: 1 } },
+    ],
+    mode: ['standard', 'deep'],
+  },
+  {
+    id: 7,
+    variants: [
+      { text: "What matters most?" },
+      { text: "Your priority tonight?" },
     ],
     options: [
       { text: "Pure entertainment", effects: { action: 1, comedy: 1, fast: 1 } },
@@ -122,9 +148,9 @@ export const universalQuestions: Question[] = [
     mode: ['standard', 'deep'],
   },
   
-  // Deep Mode: +5 questions = 10 total
+  // Deep Mode: +6 questions = 13 total
   {
-    id: 6,
+    id: 8,
     variants: [
       { text: "Great stories make you question..." },
       { text: "What themes resonate?" },
@@ -138,7 +164,7 @@ export const universalQuestions: Question[] = [
     mode: ['deep'],
   },
   {
-    id: 7,
+    id: 9,
     variants: [
       { text: "Sad endings - yes or no?" },
       { text: "Ready for potential heartbreak?" },
@@ -151,7 +177,7 @@ export const universalQuestions: Question[] = [
     mode: ['deep'],
   },
   {
-    id: 8,
+    id: 10,
     variants: [
       { text: "Pick an era" },
       { text: "When should this be set?" },
@@ -165,7 +191,7 @@ export const universalQuestions: Question[] = [
     mode: ['deep'],
   },
   {
-    id: 9,
+    id: 11,
     variants: [
       { text: "Pick a soundtrack" },
       { text: "What music fits?" },
@@ -179,7 +205,20 @@ export const universalQuestions: Question[] = [
     mode: ['deep'],
   },
   {
-    id: 10,
+    id: 12,
+    variants: [
+      { text: "Complexity level?" },
+      { text: "How deep should the plot go?" },
+    ],
+    options: [
+      { text: "Keep it simple", effects: { comedy: 2, action: 1, fast: 1 } },
+      { text: "Some twists are fine", effects: { thriller: 1, drama: 1 } },
+      { text: "Make me think", effects: { scifi: 2, thriller: 2, slow: 1 } },
+    ],
+    mode: ['deep'],
+  },
+  {
+    id: 13,
     variants: [
       { text: "Finally: What should this deliver?" },
       { text: "The ultimate goal?" },
