@@ -19,8 +19,10 @@ import {
   Play,
   Sparkles,
   Wand2,
+  Eye,
+  Shuffle,
 } from 'lucide-react';
-import { getHistory, SavedResult, ContentItem } from '@/data';
+import { getHistory, SavedResult, ContentItem, recommendContent, initialScores } from '@/data';
 import { PageTransition } from '@/components/ui/PageTransition';
 import { searchMoviePoster } from '@/lib/tmdb';
 import { Header } from '@/components/layout/Header';
@@ -67,6 +69,8 @@ export default function Result() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [displayMatchPercent, setDisplayMatchPercent] = useState(0);
+  const [watchedNames, setWatchedNames] = useState<string[]>([]);
+  const [isShuffling, setIsShuffling] = useState(false);
 
   useEffect(() => {
     const history = getHistory();
@@ -76,6 +80,7 @@ export default function Result() {
       const randomMatch = Math.floor(Math.random() * 20) + 80;
       setDisplayMatchPercent(randomMatch);
       setResult(found);
+      setWatchedNames(found.watchedNames || [(found.movie as ContentItem).name]);
       
       // Simulate loading with progress
       let progress = 0;
@@ -106,6 +111,61 @@ export default function Result() {
       navigate('/');
     }
   }, [id, navigate]);
+
+  const handleWatched = () => {
+    if (!result || !result.scores || !result.contentTypes || !result.region) return;
+    
+    setIsShuffling(true);
+    const currentContent = result.movie as ContentItem;
+    const updatedWatchedNames = [...watchedNames, currentContent.name];
+    
+    // Get a new recommendation excluding watched items
+    const newResult = recommendContent(
+      result.scores,
+      result.region,
+      result.contentTypes,
+      updatedWatchedNames
+    );
+    
+    // Update local storage
+    const history = getHistory();
+    const updatedHistory = history.map(r => 
+      r.id === result.id 
+        ? { 
+            ...r, 
+            movie: newResult.item, 
+            reasons: newResult.reasons, 
+            matchPercent: newResult.matchPercent,
+            watchedNames: updatedWatchedNames
+          }
+        : r
+    );
+    localStorage.setItem('sceneva-history', JSON.stringify(updatedHistory));
+    
+    // Update state
+    setWatchedNames(updatedWatchedNames);
+    setResult({
+      ...result,
+      movie: newResult.item,
+      reasons: newResult.reasons,
+      matchPercent: newResult.matchPercent,
+      watchedNames: updatedWatchedNames,
+    });
+    setDisplayMatchPercent(Math.floor(Math.random() * 20) + 80);
+    
+    // Fetch new poster
+    setPosterLoading(true);
+    searchMoviePoster(newResult.item.displayName, newResult.item.year)
+      .then(url => {
+        setPosterUrl(url);
+        setPosterLoading(false);
+        setIsShuffling(false);
+      })
+      .catch(() => {
+        setPosterLoading(false);
+        setIsShuffling(false);
+      });
+  };
 
   const handleShare = async () => {
     if (!result) return;
@@ -491,6 +551,24 @@ export default function Result() {
               }`}
               style={{ transitionDelay: '800ms' }}
             >
+              <button
+                onClick={handleWatched}
+                disabled={isShuffling || !result?.scores}
+                className="group flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium transition-all duration-300 hover:bg-muted hover:border-foreground/20 hover:-translate-y-1 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              >
+                {isShuffling ? (
+                  <>
+                    <Shuffle className="w-4 h-4 animate-spin" />
+                    Finding...
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                    Watched
+                  </>
+                )}
+              </button>
+              
               <Link
                 to="/"
                 className="group flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium transition-all duration-300 hover:bg-muted hover:border-foreground/20 hover:-translate-y-1 hover:shadow-md"

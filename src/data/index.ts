@@ -19,19 +19,30 @@ export function getQuestionsForMode(mode: QuizMode) {
 export function recommendContent(
   scores: Scores, 
   region: Region, 
-  contentTypes: ContentType[]
+  contentTypes: ContentType[],
+  excludeNames: string[] = []
 ): { item: ContentItem; reasons: string[]; matchPercent: number } {
   // Get all content matching the filters
   let candidates = getAllContent().filter(item => 
-    contentTypes.includes(item.contentType) && item.region === region
+    contentTypes.includes(item.contentType) && 
+    item.region === region &&
+    !excludeNames.includes(item.name)
   );
 
   if (candidates.length === 0) {
-    // Fallback to any content of the type
-    candidates = getAllContent().filter(item => contentTypes.includes(item.contentType));
+    // Fallback to any content of the type (excluding already seen)
+    candidates = getAllContent().filter(item => 
+      contentTypes.includes(item.contentType) &&
+      !excludeNames.includes(item.name)
+    );
   }
 
-  // If still no candidates, get all content
+  // If still no candidates, get all content excluding seen ones
+  if (candidates.length === 0) {
+    candidates = getAllContent().filter(item => !excludeNames.includes(item.name));
+  }
+
+  // Final fallback - just get all content
   if (candidates.length === 0) {
     candidates = getAllContent();
   }
@@ -110,6 +121,8 @@ export interface SavedResult {
   mode: QuizMode;
   region: Region;
   contentTypes?: ContentType[];
+  scores?: Scores;
+  watchedNames?: string[];
 }
 
 export function saveResult(result: Omit<SavedResult, 'id' | 'date'>): SavedResult {

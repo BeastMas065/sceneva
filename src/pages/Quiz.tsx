@@ -70,6 +70,8 @@ export default function Quiz() {
       mode,
       region,
       contentTypes: selectedContentTypes,
+      scores: finalScores,
+      watchedNames: [result.item.name],
     });
     
     // Smooth transition delay before navigation
