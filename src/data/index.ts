@@ -15,51 +15,97 @@ export function getQuestionsForMode(mode: QuizMode) {
   return getQuestionsForModeAndContent(mode, ['movies']);
 }
 
-// Recommend content based on scores - IMPROVED ALGORITHM
+// Recommend content based on scores - PRECISION ALGORITHM
 export function recommendContent(
   scores: Scores, 
   region: Region, 
   contentTypes: ContentType[],
-  excludeNames: string[] = []
+  excludeNames: string[] = [],
+  preferredGenre?: string // Optional: user's explicitly selected genre
 ): { item: ContentItem; reasons: string[]; matchPercent: number } {
-  // Get all content matching the filters
-  let candidates = getAllContent().filter(item => 
+  
+  // Find the user's dominant genre from scores
+  const genreScores = {
+    action: scores.action,
+    romance: scores.romance,
+    comedy: scores.comedy,
+    thriller: scores.thriller,
+    drama: scores.drama,
+    scifi: scores.scifi,
+    fantasy: scores.fantasy,
+    horror: scores.horror || 0,
+  };
+  
+  // Get top genres (sorted by score)
+  const sortedGenres = Object.entries(genreScores)
+    .sort(([, a], [, b]) => b - a)
+    .filter(([, score]) => score > 0);
+  
+  const topGenre = preferredGenre || sortedGenres[0]?.[0];
+  const topGenreScore = genreScores[topGenre as keyof typeof genreScores] || 0;
+  const hasStrongGenrePreference = topGenreScore >= 5; // User really wants this genre
+  
+  // Step 1: Get all matching content
+  let allCandidates = getAllContent().filter(item => 
     contentTypes.includes(item.contentType) && 
-    item.region === region &&
     !excludeNames.includes(item.name)
   );
-
-  if (candidates.length === 0) {
-    candidates = getAllContent().filter(item => 
-      contentTypes.includes(item.contentType) &&
-      !excludeNames.includes(item.name)
+  
+  // Step 2: Filter by region (soft filter - prefer but don't require)
+  let regionFiltered = allCandidates.filter(item => item.region === region);
+  
+  // Step 3: STRICT genre filtering if user has a strong preference
+  let genreFiltered: ContentItem[] = [];
+  if (hasStrongGenrePreference && topGenre) {
+    // Primary: exact genre match
+    genreFiltered = regionFiltered.filter(item => 
+      item.genre === topGenre || 
+      (item.secondaryGenres && item.secondaryGenres.includes(topGenre as any))
     );
+    
+    // If no matches in preferred region, expand to all regions but keep genre strict
+    if (genreFiltered.length === 0) {
+      genreFiltered = allCandidates.filter(item => 
+        item.genre === topGenre || 
+        (item.secondaryGenres && item.secondaryGenres.includes(topGenre as any))
+      );
+    }
   }
-
+  
+  // Use genre filtered if we have matches, otherwise fall back
+  let candidates = genreFiltered.length > 0 ? genreFiltered : 
+                   regionFiltered.length > 0 ? regionFiltered : 
+                   allCandidates;
+  
+  // Last resort fallback
   if (candidates.length === 0) {
     candidates = getAllContent().filter(item => !excludeNames.includes(item.name));
   }
-
   if (candidates.length === 0) {
     candidates = getAllContent();
   }
 
-  // Calculate max possible score for normalization
-  const scoreValues = [
-    scores.action, scores.romance, scores.comedy, scores.thriller,
-    scores.drama, scores.scifi, scores.fantasy, scores.horror || 0
-  ];
-  const maxGenreScore = Math.max(...scoreValues, 1);
-
-  const scored: { item: ContentItem; score: number; genreMatch: number; paceMatch: number; preferenceMatch: number }[] = [];
+  // Score each candidate with enhanced properties
+  const scored: { 
+    item: ContentItem; 
+    score: number; 
+    genreScore: number;
+    moodScore: number;
+    paceScore: number;
+    complexityScore: number;
+    emotionalScore: number;
+    ratingBonus: number;
+  }[] = [];
 
   for (const item of candidates) {
     let genreScore = 0;
+    let moodScore = 0;
     let paceScore = 0;
-    let preferenceScore = 0;
-
-    // Primary genre matching - weighted by how strongly user prefers this genre
-    const genreScoreMap: Record<string, number> = {
+    let complexityScore = 0;
+    let emotionalScore = 0;
+    
+    // === GENRE SCORING (Primary factor) ===
+    const genreMap: Record<string, number> = {
       action: scores.action,
       romance: scores.romance,
       comedy: scores.comedy,
@@ -68,66 +114,126 @@ export function recommendContent(
       scifi: scores.scifi,
       fantasy: scores.fantasy,
       horror: scores.horror || 0,
-      'slice-of-life': (scores.drama + scores.comedy) / 2, // Map slice-of-life
+      'slice-of-life': (scores.drama + scores.comedy) / 2,
     };
     
-    genreScore = (genreScoreMap[item.genre] || 0) * 3;
-
-    // Pace matching - strong multiplier
-    if (item.pace === 'fast' && scores.fast > scores.slow) {
-      paceScore = (scores.fast - scores.slow) * 2;
-    } else if (item.pace === 'slow' && scores.slow > scores.fast) {
-      paceScore = (scores.slow - scores.fast) * 2;
-    } else if (item.pace === 'fast' && scores.fast < scores.slow) {
-      paceScore = (scores.fast - scores.slow); // Negative if mismatch
-    } else if (item.pace === 'slow' && scores.slow < scores.fast) {
-      paceScore = (scores.slow - scores.fast);
-    }
-
-    // Sub-preference matching
-    if (scores.emotional > 0) {
-      if (['drama', 'romance'].includes(item.genre)) {
-        preferenceScore += scores.emotional * 1.5;
+    // Primary genre: 5x weight
+    genreScore += (genreMap[item.genre] || 0) * 5;
+    
+    // Secondary genres: 2x weight each
+    if (item.secondaryGenres) {
+      for (const sg of item.secondaryGenres) {
+        genreScore += (genreMap[sg] || 0) * 2;
       }
     }
-    if (scores.intellectual > 0) {
-      if (['thriller', 'scifi'].includes(item.genre)) {
-        preferenceScore += scores.intellectual * 1.5;
+    
+    // Bonus if genre matches user's explicit preference
+    if (preferredGenre && (item.genre === preferredGenre || item.secondaryGenres?.includes(preferredGenre as any))) {
+      genreScore += 10;
+    }
+    
+    // === MOOD SCORING (Uses new enhanced properties) ===
+    if (item.mood) {
+      // Emotional preference -> emotional, melancholic moods
+      if (scores.emotional > 0) {
+        if (item.mood.includes('emotional') || item.mood.includes('melancholic')) {
+          moodScore += scores.emotional * 2;
+        }
+        if (item.mood.includes('light') || item.mood.includes('cozy')) {
+          moodScore += scores.emotional * 0.5;
+        }
+      }
+      
+      // Intellectual preference -> dark, thrilling moods
+      if (scores.intellectual > 0) {
+        if (item.mood.includes('dark') || item.mood.includes('thrilling')) {
+          moodScore += scores.intellectual * 2;
+        }
+        if (item.mood.includes('intense')) {
+          moodScore += scores.intellectual * 1.5;
+        }
+      }
+      
+      // Escapist preference -> uplifting, cozy, light moods
+      if (scores.escapist > 0) {
+        if (item.mood.includes('uplifting') || item.mood.includes('cozy') || item.mood.includes('light')) {
+          moodScore += scores.escapist * 2;
+        }
+      }
+      
+      // Grounded preference -> dark, intense, emotional moods
+      if (scores.grounded > 0) {
+        if (item.mood.includes('dark') || item.mood.includes('intense')) {
+          moodScore += scores.grounded * 1.5;
+        }
+        // Penalize fantasy/escapist moods for grounded preference
+        if (item.mood.includes('cozy') && item.genre === 'fantasy') {
+          moodScore -= scores.grounded * 0.5;
+        }
       }
     }
-    if (scores.escapist > 0) {
-      if (['fantasy', 'scifi', 'action'].includes(item.genre)) {
-        preferenceScore += scores.escapist * 1.2;
+    
+    // === PACE SCORING ===
+    const paceDiff = scores.fast - scores.slow;
+    if (item.pace === 'fast' && paceDiff > 0) {
+      paceScore = paceDiff * 2;
+    } else if (item.pace === 'slow' && paceDiff < 0) {
+      paceScore = Math.abs(paceDiff) * 2;
+    } else if (item.pace === 'medium') {
+      paceScore = 1; // Neutral, slight bonus
+    } else {
+      // Mismatch penalty
+      paceScore = -Math.abs(paceDiff);
+    }
+    
+    // === COMPLEXITY SCORING ===
+    if (item.complexity) {
+      // Intellectual users prefer complex content
+      if (scores.intellectual > scores.escapist) {
+        if (item.complexity === 'complex') complexityScore += scores.intellectual * 1.5;
+        else if (item.complexity === 'moderate') complexityScore += scores.intellectual * 0.5;
+      } else {
+        // Escapist users prefer simpler content
+        if (item.complexity === 'simple') complexityScore += scores.escapist * 1;
+        else if (item.complexity === 'complex') complexityScore -= scores.escapist * 0.5;
       }
     }
-    if (scores.grounded > 0) {
-      if (['drama', 'thriller', 'comedy'].includes(item.genre)) {
-        preferenceScore += scores.grounded * 1.2;
-      }
-      if (['fantasy', 'scifi'].includes(item.genre)) {
-        preferenceScore -= scores.grounded * 0.5;
+    
+    // === EMOTIONAL INTENSITY SCORING ===
+    if (item.emotionalIntensity) {
+      if (scores.emotional > 3) {
+        // High emotional preference = prefer high intensity
+        emotionalScore += (item.emotionalIntensity - 2.5) * scores.emotional * 0.5;
+      } else if (scores.escapist > scores.emotional) {
+        // Escapist = prefer lower intensity
+        emotionalScore += (3.5 - item.emotionalIntensity) * scores.escapist * 0.3;
       }
     }
-
-    // Rating bonus - higher rated content gets slight preference
-    const ratingBonus = item.rating ? (item.rating - 7) * 0.5 : 0;
-
-    const totalScore = genreScore + paceScore + preferenceScore + ratingBonus;
-
+    
+    // === RATING BONUS ===
+    const ratingBonus = item.rating ? (item.rating - 7) * 1.5 : 0;
+    
+    // === TOTAL SCORE ===
+    const totalScore = genreScore + moodScore + paceScore + complexityScore + emotionalScore + ratingBonus;
+    
     scored.push({ 
       item, 
       score: totalScore, 
-      genreMatch: genreScore, 
-      paceMatch: paceScore,
-      preferenceMatch: preferenceScore
+      genreScore,
+      moodScore,
+      paceScore,
+      complexityScore,
+      emotionalScore,
+      ratingBonus,
     });
   }
 
+  // Sort by score
   scored.sort((a, b) => b.score - a.score);
   
-  // Pick from top 3 with weighted randomness (better scores = higher chance)
-  const topCandidates = scored.slice(0, 3);
-  const weights = topCandidates.map((c, i) => Math.max(1, c.score) * (3 - i));
+  // Pick from top 3 with weighted randomness
+  const topCandidates = scored.slice(0, Math.min(3, scored.length));
+  const weights = topCandidates.map((c, i) => Math.max(1, c.score + 10) * (3 - i));
   const totalWeight = weights.reduce((a, b) => a + b, 0);
   let random = Math.random() * totalWeight;
   let pickIndex = 0;
@@ -139,84 +245,75 @@ export function recommendContent(
     }
   }
   
-  const pick = topCandidates[pickIndex];
+  const pick = topCandidates[pickIndex] || scored[0];
+  
+  // Calculate match percent
   const bestScore = scored[0]?.score || 1;
   const worstScore = scored[scored.length - 1]?.score || 0;
   const scoreRange = Math.max(bestScore - worstScore, 1);
-  
-  // Calculate REAL match percent based on how well this item scored
   const normalizedScore = (pick.score - worstScore) / scoreRange;
-  const matchPercent = Math.round(65 + normalizedScore * 30); // 65-95% range based on actual match
+  const matchPercent = Math.round(70 + normalizedScore * 25); // 70-95% range
 
-  // Generate specific reasons based on WHY this matched
+  // Generate specific reasons
   const reasons: string[] = [];
   
-  // Genre-specific reasons
+  // Genre reason
   const genreReasons: Record<string, string[]> = {
-    action: [
-      "Your answers show you crave adrenaline and excitement",
-      "You're in the mood for high-octane thrills"
-    ],
-    romance: [
-      "You appreciate emotional, heartfelt connections",
-      "Your responses indicate you want something touching"
-    ],
-    comedy: [
-      "You're looking to laugh and unwind",
-      "Your answers suggest you need some lighthearted fun"
-    ],
-    thriller: [
-      "You enjoy suspense and keeping guessing",
-      "Your preferences lean toward psychological intensity"
-    ],
-    drama: [
-      "You value meaningful, character-driven stories",
-      "Your responses show you want depth and emotion"
-    ],
-    scifi: [
-      "You're drawn to imaginative, thought-provoking concepts",
-      "Your answers reveal a love for big ideas"
-    ],
-    fantasy: [
-      "You want to escape into magical worlds",
-      "Your preferences show you love fantastical adventures"
-    ],
-    horror: [
-      "You're ready to be scared and thrilled",
-      "Your answers indicate you enjoy the dark side"
-    ],
+    action: ["You're craving high-octane thrills", "Perfect for your adrenaline fix"],
+    romance: ["Matches your desire for emotional connections", "For the hopeless romantic in you"],
+    comedy: ["You need something to make you laugh", "Light-hearted fun incoming"],
+    thriller: ["For your love of suspense and tension", "Will keep you guessing throughout"],
+    drama: ["Rich, character-driven storytelling awaits", "Deep emotional journey ahead"],
+    scifi: ["Feeds your curiosity for big ideas", "Thought-provoking concepts await"],
+    fantasy: ["Perfect escape into magical worlds", "For your imagination to run wild"],
+    horror: ["Ready to embrace the dark side", "Thrilling scares await you"],
+    'slice-of-life': ["Warm, relatable everyday moments", "Cozy and heartwarming"],
   };
-
-  const genre = pick.item.genre;
-  if (genreReasons[genre]) {
-    reasons.push(genreReasons[genre][Math.floor(Math.random() * genreReasons[genre].length)]);
+  
+  if (genreReasons[pick.item.genre]) {
+    reasons.push(genreReasons[pick.item.genre][Math.floor(Math.random() * genreReasons[pick.item.genre].length)]);
   }
-
-  // Pace-based reason
-  if (pick.paceMatch > 0) {
-    if (pick.item.pace === 'fast') {
-      reasons.push("Matches your desire for quick, engaging pacing");
-    } else {
-      reasons.push("Aligns with your preference for thoughtful, deliberate storytelling");
+  
+  // Mood reason
+  if (pick.moodScore > 2 && pick.item.mood) {
+    const moodDescriptions: Record<string, string> = {
+      dark: "Has the dark, intense atmosphere you enjoy",
+      light: "Light and easy to watch",
+      emotional: "Will take you on an emotional ride",
+      intense: "Matches your need for intensity",
+      uplifting: "Will leave you feeling good",
+      melancholic: "Beautifully bittersweet",
+      thrilling: "Edge-of-your-seat excitement",
+      cozy: "Warm and comforting vibes",
+    };
+    for (const mood of pick.item.mood) {
+      if (moodDescriptions[mood]) {
+        reasons.push(moodDescriptions[mood]);
+        break;
+      }
     }
   }
-
+  
+  // Pace reason
+  if (pick.paceScore > 1) {
+    if (pick.item.pace === 'fast') {
+      reasons.push("Quick pacing to keep you engaged");
+    } else if (pick.item.pace === 'slow') {
+      reasons.push("Thoughtful pacing you'll appreciate");
+    }
+  }
+  
+  // Themes reason
+  if (pick.item.themes && pick.item.themes.length > 0) {
+    const themeStr = pick.item.themes.slice(0, 2).join(' and ');
+    reasons.push(`Explores ${themeStr}`);
+  }
+  
   // Rating reason
   if (pick.item.rating && pick.item.rating >= 8.5) {
-    reasons.push(`Exceptionally highly rated at ${pick.item.rating}/10`);
+    reasons.push(`Critically acclaimed at ${pick.item.rating}/10`);
   } else if (pick.item.rating && pick.item.rating >= 8.0) {
-    reasons.push(`Well-regarded with a ${pick.item.rating}/10 rating`);
-  }
-
-  // Preference-based reasons
-  if (pick.preferenceMatch > 2) {
-    if (scores.emotional > scores.intellectual && scores.emotional > scores.escapist) {
-      reasons.push("Perfect for the emotional experience you're seeking");
-    } else if (scores.intellectual > scores.emotional && scores.intellectual > scores.escapist) {
-      reasons.push("Will give you plenty to think about");
-    } else if (scores.escapist > 0) {
-      reasons.push("Great for escaping reality for a while");
-    }
+    reasons.push(`Highly rated at ${pick.item.rating}/10`);
   }
 
   return { item: pick.item, reasons: reasons.slice(0, 3), matchPercent };
@@ -251,6 +348,7 @@ export interface SavedResult {
   contentTypes?: ContentType[];
   scores?: Scores;
   watchedNames?: string[];
+  preferredGenre?: string; // User's explicitly selected genre preference
 }
 
 export function saveResult(result: Omit<SavedResult, 'id' | 'date'>): SavedResult {

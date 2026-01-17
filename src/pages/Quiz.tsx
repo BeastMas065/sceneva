@@ -86,8 +86,9 @@ export default function Quiz() {
     if (!region) return;
     setShowFade(true);
     
-    // Use the new content recommendation system
-    const result = recommendContent(finalScores, region, selectedContentTypes);
+    // Pass the explicit genre preference to the recommendation system
+    const preferredGenre = genrePreference && genrePreference !== 'none' ? genrePreference : undefined;
+    const result = recommendContent(finalScores, region, selectedContentTypes, [], preferredGenre);
     const saved = saveResult({
       movie: result.item as ContentItem,
       reasons: result.reasons,
@@ -97,13 +98,14 @@ export default function Quiz() {
       contentTypes: selectedContentTypes,
       scores: finalScores,
       watchedNames: [result.item.name],
+      preferredGenre, // Save the genre preference for shuffle feature
     });
     
     // Smooth transition delay before navigation
     setTimeout(() => {
       navigate(`/result/${saved.id}`);
     }, 800);
-  }, [navigate, mode, region, selectedContentTypes]);
+  }, [navigate, mode, region, selectedContentTypes, genrePreference]);
 
   // Micro-feedback phrases
   const feedbackPhrases = ['Got it', 'Understood', 'Noted', 'Perfect', 'Interesting'];

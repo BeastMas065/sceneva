@@ -119,12 +119,13 @@ export default function Result() {
     const currentContent = result.movie as ContentItem;
     const updatedWatchedNames = [...watchedNames, currentContent.name];
     
-    // Get a new recommendation excluding watched items
+    // Get a new recommendation excluding watched items, passing the preferred genre
     const newResult = recommendContent(
       result.scores,
       result.region,
       result.contentTypes,
-      updatedWatchedNames
+      updatedWatchedNames,
+      result.preferredGenre // Pass the saved genre preference
     );
     
     // Update local storage
