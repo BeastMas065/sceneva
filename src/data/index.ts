@@ -1,11 +1,11 @@
-// Import types and values for use within this file
-import type { Region, ContentType, ContentItem } from './content';
+// Import types and values from organized content files
+import type { Region, ContentType, ContentItem, Mood, Complexity, Violence } from './content';
 import { getAllContent, getContentByType, webSeries, animatedContent, animeContent, moviesContent } from './content';
 import type { QuizMode, Scores, Question, QuestionVariant } from './questions';
 import { initialScores, getQuestionsForModeAndContent, getRandomVariant, universalQuestions, animeQuestions, webSeriesQuestions, animatedQuestions, movieQuestions } from './questions';
 
 // Re-export everything
-export type { Region, ContentType, ContentItem };
+export type { Region, ContentType, ContentItem, Mood, Complexity, Violence };
 export { getAllContent, getContentByType, webSeries, animatedContent, animeContent, moviesContent };
 export type { QuizMode, Scores, Question, QuestionVariant };
 export { initialScores, getQuestionsForModeAndContent, getRandomVariant, universalQuestions, animeQuestions, webSeriesQuestions, animatedQuestions, movieQuestions };
