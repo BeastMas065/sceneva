@@ -15,7 +15,7 @@ export function getQuestionsForMode(mode: QuizMode) {
   return getQuestionsForModeAndContent(mode, ['movies']);
 }
 
-// Recommend content based on scores
+// Recommend content based on scores - IMPROVED ALGORITHM
 export function recommendContent(
   scores: Scores, 
   region: Region, 
@@ -30,68 +30,196 @@ export function recommendContent(
   );
 
   if (candidates.length === 0) {
-    // Fallback to any content of the type (excluding already seen)
     candidates = getAllContent().filter(item => 
       contentTypes.includes(item.contentType) &&
       !excludeNames.includes(item.name)
     );
   }
 
-  // If still no candidates, get all content excluding seen ones
   if (candidates.length === 0) {
     candidates = getAllContent().filter(item => !excludeNames.includes(item.name));
   }
 
-  // Final fallback - just get all content
   if (candidates.length === 0) {
     candidates = getAllContent();
   }
 
-  const scored: { item: ContentItem; score: number }[] = [];
+  // Calculate max possible score for normalization
+  const scoreValues = [
+    scores.action, scores.romance, scores.comedy, scores.thriller,
+    scores.drama, scores.scifi, scores.fantasy, scores.horror || 0
+  ];
+  const maxGenreScore = Math.max(...scoreValues, 1);
+
+  const scored: { item: ContentItem; score: number; genreMatch: number; paceMatch: number; preferenceMatch: number }[] = [];
 
   for (const item of candidates) {
-    let score = 0;
-    if (item.genre === 'action') score += scores.action * 2;
-    if (item.genre === 'romance') score += scores.romance * 2;
-    if (item.genre === 'comedy') score += scores.comedy * 2;
-    if (item.genre === 'thriller') score += scores.thriller * 2;
-    if (item.genre === 'drama') score += scores.drama * 2;
-    if (item.genre === 'scifi') score += scores.scifi * 2;
-    if (item.genre === 'fantasy') score += (scores.fantasy || 0) * 2;
-    if (item.pace === 'fast') score += scores.fast;
-    if (item.pace === 'slow') score += scores.slow;
-    scored.push({ item, score });
+    let genreScore = 0;
+    let paceScore = 0;
+    let preferenceScore = 0;
+
+    // Primary genre matching - weighted by how strongly user prefers this genre
+    const genreScoreMap: Record<string, number> = {
+      action: scores.action,
+      romance: scores.romance,
+      comedy: scores.comedy,
+      thriller: scores.thriller,
+      drama: scores.drama,
+      scifi: scores.scifi,
+      fantasy: scores.fantasy,
+      horror: scores.horror || 0,
+      'slice-of-life': (scores.drama + scores.comedy) / 2, // Map slice-of-life
+    };
+    
+    genreScore = (genreScoreMap[item.genre] || 0) * 3;
+
+    // Pace matching - strong multiplier
+    if (item.pace === 'fast' && scores.fast > scores.slow) {
+      paceScore = (scores.fast - scores.slow) * 2;
+    } else if (item.pace === 'slow' && scores.slow > scores.fast) {
+      paceScore = (scores.slow - scores.fast) * 2;
+    } else if (item.pace === 'fast' && scores.fast < scores.slow) {
+      paceScore = (scores.fast - scores.slow); // Negative if mismatch
+    } else if (item.pace === 'slow' && scores.slow < scores.fast) {
+      paceScore = (scores.slow - scores.fast);
+    }
+
+    // Sub-preference matching
+    if (scores.emotional > 0) {
+      if (['drama', 'romance'].includes(item.genre)) {
+        preferenceScore += scores.emotional * 1.5;
+      }
+    }
+    if (scores.intellectual > 0) {
+      if (['thriller', 'scifi'].includes(item.genre)) {
+        preferenceScore += scores.intellectual * 1.5;
+      }
+    }
+    if (scores.escapist > 0) {
+      if (['fantasy', 'scifi', 'action'].includes(item.genre)) {
+        preferenceScore += scores.escapist * 1.2;
+      }
+    }
+    if (scores.grounded > 0) {
+      if (['drama', 'thriller', 'comedy'].includes(item.genre)) {
+        preferenceScore += scores.grounded * 1.2;
+      }
+      if (['fantasy', 'scifi'].includes(item.genre)) {
+        preferenceScore -= scores.grounded * 0.5;
+      }
+    }
+
+    // Rating bonus - higher rated content gets slight preference
+    const ratingBonus = item.rating ? (item.rating - 7) * 0.5 : 0;
+
+    const totalScore = genreScore + paceScore + preferenceScore + ratingBonus;
+
+    scored.push({ 
+      item, 
+      score: totalScore, 
+      genreMatch: genreScore, 
+      paceMatch: paceScore,
+      preferenceMatch: preferenceScore
+    });
   }
 
   scored.sort((a, b) => b.score - a.score);
-  const topCandidates = scored.slice(0, 5);
-  const pick = topCandidates[Math.floor(Math.random() * topCandidates.length)];
+  
+  // Pick from top 3 with weighted randomness (better scores = higher chance)
+  const topCandidates = scored.slice(0, 3);
+  const weights = topCandidates.map((c, i) => Math.max(1, c.score) * (3 - i));
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  let random = Math.random() * totalWeight;
+  let pickIndex = 0;
+  for (let i = 0; i < weights.length; i++) {
+    random -= weights[i];
+    if (random <= 0) {
+      pickIndex = i;
+      break;
+    }
+  }
+  
+  const pick = topCandidates[pickIndex];
+  const bestScore = scored[0]?.score || 1;
+  const worstScore = scored[scored.length - 1]?.score || 0;
+  const scoreRange = Math.max(bestScore - worstScore, 1);
+  
+  // Calculate REAL match percent based on how well this item scored
+  const normalizedScore = (pick.score - worstScore) / scoreRange;
+  const matchPercent = Math.round(65 + normalizedScore * 30); // 65-95% range based on actual match
 
-  const scoreValues = Object.values(scores).filter((v): v is number => typeof v === 'number');
-  const matchPercent = Math.floor(Math.random() * 20) + 80; // 80-99%
-
+  // Generate specific reasons based on WHY this matched
   const reasons: string[] = [];
-  const genreReasons: Record<string, string> = {
-    action: "You crave adrenaline and excitement",
-    romance: "You appreciate emotional, heartfelt stories",
-    comedy: "You love content that makes you laugh",
-    thriller: "You enjoy suspense and psychological depth",
-    drama: "You value meaningful, character-driven narratives",
-    scifi: "You are drawn to imaginative, thought-provoking worlds",
-    fantasy: "You love magical and fantastical adventures",
+  
+  // Genre-specific reasons
+  const genreReasons: Record<string, string[]> = {
+    action: [
+      "Your answers show you crave adrenaline and excitement",
+      "You're in the mood for high-octane thrills"
+    ],
+    romance: [
+      "You appreciate emotional, heartfelt connections",
+      "Your responses indicate you want something touching"
+    ],
+    comedy: [
+      "You're looking to laugh and unwind",
+      "Your answers suggest you need some lighthearted fun"
+    ],
+    thriller: [
+      "You enjoy suspense and keeping guessing",
+      "Your preferences lean toward psychological intensity"
+    ],
+    drama: [
+      "You value meaningful, character-driven stories",
+      "Your responses show you want depth and emotion"
+    ],
+    scifi: [
+      "You're drawn to imaginative, thought-provoking concepts",
+      "Your answers reveal a love for big ideas"
+    ],
+    fantasy: [
+      "You want to escape into magical worlds",
+      "Your preferences show you love fantastical adventures"
+    ],
+    horror: [
+      "You're ready to be scared and thrilled",
+      "Your answers indicate you enjoy the dark side"
+    ],
   };
 
-  if (genreReasons[pick.item.genre]) {
-    reasons.push(genreReasons[pick.item.genre]);
-  }
-  if (pick.item.rating && pick.item.rating >= 8.0) {
-    reasons.push(`Highly rated with ${pick.item.rating}/10`);
-  }
-  if (pick.item.pace === 'fast' && scores.fast > scores.slow) {
-    reasons.push("Matches your preference for fast-paced storytelling");
+  const genre = pick.item.genre;
+  if (genreReasons[genre]) {
+    reasons.push(genreReasons[genre][Math.floor(Math.random() * genreReasons[genre].length)]);
   }
 
-  return { item: pick.item, reasons, matchPercent };
+  // Pace-based reason
+  if (pick.paceMatch > 0) {
+    if (pick.item.pace === 'fast') {
+      reasons.push("Matches your desire for quick, engaging pacing");
+    } else {
+      reasons.push("Aligns with your preference for thoughtful, deliberate storytelling");
+    }
+  }
+
+  // Rating reason
+  if (pick.item.rating && pick.item.rating >= 8.5) {
+    reasons.push(`Exceptionally highly rated at ${pick.item.rating}/10`);
+  } else if (pick.item.rating && pick.item.rating >= 8.0) {
+    reasons.push(`Well-regarded with a ${pick.item.rating}/10 rating`);
+  }
+
+  // Preference-based reasons
+  if (pick.preferenceMatch > 2) {
+    if (scores.emotional > scores.intellectual && scores.emotional > scores.escapist) {
+      reasons.push("Perfect for the emotional experience you're seeking");
+    } else if (scores.intellectual > scores.emotional && scores.intellectual > scores.escapist) {
+      reasons.push("Will give you plenty to think about");
+    } else if (scores.escapist > 0) {
+      reasons.push("Great for escaping reality for a while");
+    }
+  }
+
+  return { item: pick.item, reasons: reasons.slice(0, 3), matchPercent };
 }
 
 // Legacy movie interface for backwards compatibility
