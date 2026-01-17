@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Globe, MapPin, Film, Tv, Play, Sparkles, Check } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Globe, MapPin, Film, Tv, Play, Sparkles, Check, Wand2, Zap, Heart, Skull, Brain, Laugh, Sword, Castle, Rocket } from 'lucide-react';
 import { 
   QuizMode, 
   Region,
@@ -21,6 +21,20 @@ const contentTypeOptions: { id: ContentType; name: string; description: string; 
   { id: 'animated', name: 'Animated Films', description: 'Cartoon movies like Toy Story, Shrek, and more', icon: Tv },
 ];
 
+// Genre preference options for the optional step
+type GenrePreference = 'action' | 'romance' | 'comedy' | 'thriller' | 'drama' | 'scifi' | 'fantasy' | 'horror' | 'none';
+
+const genrePreferenceOptions: { id: GenrePreference; name: string; description: string; icon: typeof Zap }[] = [
+  { id: 'action', name: 'Action', description: 'Explosions, fights, adrenaline', icon: Sword },
+  { id: 'romance', name: 'Romance', description: 'Love stories, relationships', icon: Heart },
+  { id: 'comedy', name: 'Comedy', description: 'Laughs and good vibes', icon: Laugh },
+  { id: 'thriller', name: 'Thriller', description: 'Suspense and mystery', icon: Brain },
+  { id: 'drama', name: 'Drama', description: 'Deep emotions, real stories', icon: Zap },
+  { id: 'scifi', name: 'Sci-Fi', description: 'Future, space, technology', icon: Rocket },
+  { id: 'fantasy', name: 'Fantasy', description: 'Magic, mythical worlds', icon: Castle },
+  { id: 'horror', name: 'Horror', description: 'Scares and dark themes', icon: Skull },
+];
+
 export default function Quiz() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -28,6 +42,8 @@ export default function Quiz() {
   
   const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>([]);
   const [contentTypesConfirmed, setContentTypesConfirmed] = useState(false);
+  const [genrePreference, setGenrePreference] = useState<GenrePreference | null>(null);
+  const [genrePreferenceConfirmed, setGenrePreferenceConfirmed] = useState(false);
   const [region, setRegion] = useState<Region | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState<Scores>(initialScores);
@@ -48,14 +64,23 @@ export default function Quiz() {
   // Check if only anime is selected (for special region handling)
   const isAnimeOnly = selectedContentTypes.length === 1 && selectedContentTypes[0] === 'anime';
   
+  // Apply genre preference boost to initial scores
+  useEffect(() => {
+    if (genrePreference && genrePreference !== 'none') {
+      const boostedScores = { ...initialScores };
+      boostedScores[genrePreference as keyof Scores] = 5; // Strong initial boost for preferred genre
+      setScores(boostedScores);
+    }
+  }, [genrePreference]);
+
   // Initialize first question variant
   useEffect(() => {
-    if (questions.length > 0 && !currentVariant) {
+    if (questions.length > 0 && region && !currentVariant) {
       const firstQ = questions[0];
       const randomVariant = firstQ.variants[Math.floor(Math.random() * firstQ.variants.length)];
       setCurrentVariant(randomVariant);
     }
-  }, [questions, currentVariant]);
+  }, [questions, region, currentVariant]);
 
   const handleComplete = useCallback((finalScores: Scores) => {
     if (!region) return;
@@ -163,6 +188,9 @@ export default function Quiz() {
       setSelectedOption(null);
     } else if (region) {
       setRegion(null);
+    } else if (genrePreferenceConfirmed) {
+      setGenrePreferenceConfirmed(false);
+      setGenrePreference(null);
     } else if (contentTypesConfirmed) {
       setContentTypesConfirmed(false);
     } else {
@@ -183,9 +211,20 @@ export default function Quiz() {
     setContentTypesConfirmed(true);
   };
 
+  const handleGenreSelect = (genre: GenrePreference) => {
+    setGenrePreference(genre);
+    setGenrePreferenceConfirmed(true);
+  };
+
+  const handleSkipGenrePreference = () => {
+    setGenrePreference('none');
+    setGenrePreferenceConfirmed(true);
+  };
+
   // Determine which step to show based on state
   const showContentTypeSelection = !contentTypesConfirmed;
-  const showRegionSelection = contentTypesConfirmed && !region;
+  const showGenrePreference = contentTypesConfirmed && !genrePreferenceConfirmed;
+  const showRegionSelection = contentTypesConfirmed && genrePreferenceConfirmed && !region;
 
   // Cinema background component to avoid repetition
   const CinemaBackground = () => (
@@ -337,7 +376,94 @@ export default function Quiz() {
       );
   }
 
-  // Region selection screen (step 2) - different for anime
+  // Genre preference selection screen (step 2 - optional)
+  if (showGenrePreference) {
+    return (
+      <div className="min-h-screen flex flex-col relative overflow-hidden">
+        <CinemaBackground />
+
+        <header className="px-4 sm:px-6 py-4 relative z-10">
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">Back</span>
+          </button>
+        </header>
+
+        <main className="flex-1 flex items-center justify-center px-4 pb-20 relative z-10">
+          <PageTransition>
+            <div className="max-w-3xl w-full text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
+                Step 2 · Optional
+              </p>
+              <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
+                Do you have a genre in mind?
+              </h1>
+              <p className="text-muted-foreground mb-8">
+                Pick one to help us narrow down, or skip if you're open to anything
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                {genrePreferenceOptions.map((genre) => {
+                  const isSelected = genrePreference === genre.id;
+                  return (
+                    <button
+                      key={genre.id}
+                      onClick={() => handleGenreSelect(genre.id)}
+                      className={`group p-4 rounded-xl border text-center relative overflow-hidden transition-all duration-300 ${
+                        isSelected
+                          ? 'bg-primary text-primary-foreground border-primary scale-[1.02] shadow-lg'
+                          : 'bg-card/80 backdrop-blur-sm border-border hover:bg-muted/70 hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-md'
+                      }`}
+                    >
+                      {!isSelected && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
+                      <div className="relative flex flex-col items-center gap-2">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                          isSelected 
+                            ? 'bg-primary-foreground/20' 
+                            : 'bg-primary/10 text-primary group-hover:scale-110'
+                        }`}>
+                          <genre.icon className={`w-5 h-5 ${isSelected ? 'text-primary-foreground' : ''}`} />
+                        </div>
+                        <div>
+                          <h3 className="font-display text-sm font-semibold">{genre.name}</h3>
+                          <p className={`text-xs mt-0.5 ${
+                            isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'
+                          }`}>
+                            {genre.description}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={handleSkipGenrePreference}
+                className="inline-flex items-center gap-2 px-6 py-3 border border-border bg-card/50 backdrop-blur-sm text-foreground font-medium rounded-xl transition-all duration-300 hover:bg-muted/70 hover:border-foreground/20"
+              >
+                <Wand2 className="w-4 h-4" />
+                Surprise me — no preference
+              </button>
+
+              {genrePreference && genrePreference !== 'none' && (
+                <p className="text-sm text-accent mt-6">
+                  Great! We'll prioritize {genrePreferenceOptions.find(g => g.id === genrePreference)?.name.toLowerCase()} for you
+                </p>
+              )}
+            </div>
+          </PageTransition>
+        </main>
+      </div>
+    );
+  }
+
+  // Region selection screen (step 3) - different for anime
   if (showRegionSelection) {
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
@@ -357,7 +483,7 @@ export default function Quiz() {
           <PageTransition>
             <div className="max-w-xl w-full text-center">
               <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4 font-medium">
-                Step 2
+                Step 3
               </p>
               <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-3">
                 {isAnimeOnly ? "Choose your anime origin" : "What are you in the mood for?"}
