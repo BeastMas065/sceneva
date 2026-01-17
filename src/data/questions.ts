@@ -10,8 +10,14 @@ export interface Scores {
   drama: number;
   scifi: number;
   fantasy: number;
+  horror: number;
   fast: number;
   slow: number;
+  // Sub-preferences for better matching
+  emotional: number;
+  intellectual: number;
+  escapist: number;
+  grounded: number;
 }
 
 export const initialScores: Scores = {
@@ -22,8 +28,13 @@ export const initialScores: Scores = {
   drama: 0,
   scifi: 0,
   fantasy: 0,
+  horror: 0,
   fast: 0,
   slow: 0,
+  emotional: 0,
+  intellectual: 0,
+  escapist: 0,
+  grounded: 0,
 };
 
 export interface QuestionVariant {
@@ -33,62 +44,62 @@ export interface QuestionVariant {
 
 export interface Question {
   id: number;
-  variants: QuestionVariant[]; // Multiple ways to ask the same question
+  variants: QuestionVariant[];
   options: {
     text: string;
     subtext?: string;
     effects: Partial<Scores>;
   }[];
   mode: QuizMode[];
-  contentTypes?: ContentType[]; // If specified, only show for these content types
+  contentTypes?: ContentType[];
 }
 
-// Helper to get random variant
 export function getRandomVariant(question: Question): QuestionVariant {
   return question.variants[Math.floor(Math.random() * question.variants.length)];
 }
 
-// ========== UNIVERSAL QUESTIONS (All content types) ==========
+// ========== UNIVERSAL QUESTIONS ==========
 export const universalQuestions: Question[] = [
-  // Quick Mode Questions (3) - Core mood questions
+  // Quick Mode Questions (3) - Core differentiating questions
   {
     id: 1,
     variants: [
-      { text: "What's your mood tonight?", subtext: "First instinct, don't overthink" },
-      { text: "What vibe are you chasing?", subtext: "Go with your gut" },
-      { text: "What energy do you need?", subtext: "No wrong answers" },
+      { text: "It's Friday night. You're scrolling. What makes you stop?", subtext: "Trust your instinct" },
+      { text: "What thumbnail would make you click instantly?", subtext: "First gut reaction" },
     ],
     options: [
-      { text: "I want excitement", subtext: "Action, thrills, edge-of-seat", effects: { action: 2, thriller: 1, fast: 1 } },
-      { text: "I want to feel something", subtext: "Emotions, love, real stories", effects: { romance: 2, drama: 1, slow: 1 } },
-      { text: "I want to escape", subtext: "Laughs, wonder, new worlds", effects: { comedy: 2, scifi: 1, fantasy: 1 } },
+      { text: "Explosions, fight scenes, chaos", subtext: "Pure adrenaline", effects: { action: 3, fast: 2, thriller: 1, escapist: 1 } },
+      { text: "Two people about to kiss", subtext: "Romantic tension", effects: { romance: 3, drama: 1, emotional: 2, slow: 1 } },
+      { text: "Someone laughing uncontrollably", subtext: "Good vibes only", effects: { comedy: 3, fast: 1, escapist: 1 } },
+      { text: "A dark room, someone scared", subtext: "Mystery awaits", effects: { thriller: 3, horror: 1, slow: 1, intellectual: 1 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
   {
     id: 2,
     variants: [
-      { text: "Pick your perfect moment" },
-      { text: "What scene gets you hyped?" },
+      { text: "Your brain right now needs...", subtext: "Be honest with yourself" },
+      { text: "What would hit different tonight?" },
     ],
     options: [
-      { text: "An epic showdown", effects: { action: 2, thriller: 1, fast: 1 } },
-      { text: "Two strangers connect", effects: { romance: 2, drama: 1, slow: 1 } },
-      { text: "A perfectly timed joke", effects: { comedy: 2, fast: 1 } },
-      { text: "A mind-bending twist", effects: { thriller: 2, scifi: 1 } },
+      { text: "To completely shut off", subtext: "No thinking required", effects: { action: 2, comedy: 2, fast: 2, escapist: 2 } },
+      { text: "To feel deeply", subtext: "Bring on the emotions", effects: { drama: 3, romance: 2, slow: 1, emotional: 3 } },
+      { text: "To be constantly guessing", subtext: "Keep me engaged", effects: { thriller: 3, scifi: 1, intellectual: 2 } },
+      { text: "To escape to another world", subtext: "Take me somewhere else", effects: { fantasy: 3, scifi: 2, escapist: 3 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
   {
     id: 3,
     variants: [
-      { text: "How do you want to feel after?" },
-      { text: "End goal for tonight?" },
+      { text: "Pick your poison", subtext: "The ending you need" },
+      { text: "After watching, you want to feel..." },
     ],
     options: [
-      { text: "Pumped and energized", effects: { action: 2, fast: 2, comedy: 1 } },
-      { text: "Moved and thoughtful", effects: { drama: 2, romance: 1, slow: 1 } },
-      { text: "On the edge of my seat", effects: { thriller: 2, scifi: 1, fast: 1 } },
+      { text: "Pumped, energized, hyped", effects: { action: 2, comedy: 1, fast: 3, escapist: 1 } },
+      { text: "Satisfied, warm, content", effects: { romance: 2, comedy: 1, drama: 1, emotional: 2 } },
+      { text: "Devastated in the best way", effects: { drama: 3, romance: 1, slow: 2, emotional: 3 } },
+      { text: "Mind blown, still processing", effects: { thriller: 2, scifi: 2, intellectual: 3, slow: 1 } },
     ],
     mode: ['quick', 'standard', 'deep'],
   },
@@ -97,53 +108,50 @@ export const universalQuestions: Question[] = [
   {
     id: 4,
     variants: [
-      { text: "Choose your hero" },
-      { text: "Who do you root for?" },
+      { text: "Your ideal main character is...", subtext: "Who do you see yourself in?" },
     ],
     options: [
-      { text: "The unstoppable fighter", effects: { action: 2, fast: 1 } },
-      { text: "The hopeless romantic", effects: { romance: 2, slow: 1 } },
-      { text: "The lovable underdog", effects: { comedy: 1, drama: 1 } },
-      { text: "The brilliant mind", effects: { thriller: 1, scifi: 2 } },
+      { text: "The one who punches first", subtext: "Actions speak louder", effects: { action: 3, fast: 1, grounded: -1 } },
+      { text: "The one with the broken heart", subtext: "Emotionally complex", effects: { romance: 2, drama: 2, emotional: 2 } },
+      { text: "The one making everyone laugh", subtext: "Comic relief king/queen", effects: { comedy: 3, fast: 1 } },
+      { text: "The one solving the mystery", subtext: "Always thinking", effects: { thriller: 2, scifi: 1, intellectual: 3 } },
     ],
     mode: ['standard', 'deep'],
   },
   {
     id: 5,
     variants: [
-      { text: "Your attention span right now?", subtext: "Be honest" },
-      { text: "Energy level check", subtext: "No judgment" },
+      { text: "How patient are you feeling?", subtext: "Be realistic" },
+      { text: "Attention span check", subtext: "No judgment here" },
     ],
     options: [
-      { text: "Hook me fast", effects: { fast: 2, comedy: 1 } },
-      { text: "I can be patient", effects: { slow: 2, drama: 1 } },
-      { text: "Depends on the story", effects: { thriller: 1 } },
+      { text: "Hook me in 5 minutes or I'm out", effects: { fast: 3, action: 1, comedy: 1, slow: -2 } },
+      { text: "I can wait for a good payoff", effects: { slow: 3, drama: 2, fast: -1 } },
+      { text: "Depends on how intriguing it is", effects: { thriller: 2, intellectual: 1 } },
     ],
     mode: ['standard', 'deep'],
   },
   {
     id: 6,
     variants: [
-      { text: "Setting preference?" },
-      { text: "Where should the story unfold?" },
+      { text: "Which world would you live in?", subtext: "Setting matters" },
     ],
     options: [
-      { text: "Real world, grounded", effects: { drama: 2, thriller: 1 } },
-      { text: "Larger than life", effects: { action: 2, fantasy: 1, fast: 1 } },
-      { text: "Something imaginative", effects: { scifi: 2, fantasy: 1 } },
+      { text: "Grounded in reality", subtext: "Real cities, real problems", effects: { drama: 2, thriller: 1, grounded: 3, fantasy: -1 } },
+      { text: "Slightly heightened reality", subtext: "Real but cinematic", effects: { action: 2, comedy: 1, romance: 1 } },
+      { text: "Completely fantastical", subtext: "Dragons, magic, aliens", effects: { fantasy: 3, scifi: 2, escapist: 2, grounded: -2 } },
     ],
     mode: ['standard', 'deep'],
   },
   {
     id: 7,
     variants: [
-      { text: "What matters most?" },
-      { text: "Your priority tonight?" },
+      { text: "What do you want to walk away with?" },
     ],
     options: [
-      { text: "Pure entertainment", effects: { action: 1, comedy: 1, fast: 1 } },
-      { text: "A hidden gem", effects: { drama: 2, romance: 1, slow: 1 } },
-      { text: "Something balanced", effects: { thriller: 1, scifi: 1 } },
+      { text: "A good time, nothing more", subtext: "Pure entertainment", effects: { comedy: 2, action: 2, fast: 1, escapist: 1 } },
+      { text: "A new favorite character", subtext: "Someone to root for", effects: { drama: 2, romance: 1, emotional: 2 } },
+      { text: "Something to discuss", subtext: "Talking points", effects: { thriller: 2, scifi: 1, drama: 1, intellectual: 2 } },
     ],
     mode: ['standard', 'deep'],
   },
@@ -152,99 +160,92 @@ export const universalQuestions: Question[] = [
   {
     id: 8,
     variants: [
-      { text: "Great stories make you question..." },
-      { text: "What themes resonate?" },
+      { text: "Violence level tolerance?", subtext: "Honestly" },
     ],
     options: [
-      { text: "What you're capable of", effects: { action: 2, drama: 1 } },
-      { text: "Who and how you love", effects: { romance: 2, drama: 1 } },
-      { text: "If life is too serious", effects: { comedy: 2 } },
-      { text: "What reality even is", effects: { scifi: 2, thriller: 2, fantasy: 1 } },
+      { text: "Bring the blood and chaos", effects: { action: 3, thriller: 2, horror: 1 } },
+      { text: "Suggestive but not graphic", effects: { thriller: 1, drama: 1 } },
+      { text: "Keep it minimal please", effects: { romance: 2, comedy: 2, drama: 1, action: -2 } },
     ],
     mode: ['deep'],
   },
   {
     id: 9,
     variants: [
-      { text: "Sad endings - yes or no?" },
-      { text: "Ready for potential heartbreak?" },
+      { text: "Sad endings: yes or no?", subtext: "The real question" },
     ],
     options: [
-      { text: "Bring on the tears", effects: { romance: 1, drama: 2, slow: 1 } },
-      { text: "Only if it's earned", effects: { thriller: 1, slow: 1 } },
-      { text: "I'd rather not", effects: { comedy: 2, action: 1, fast: 1 } },
+      { text: "Destroy me emotionally", effects: { drama: 3, romance: 1, emotional: 3, slow: 1 } },
+      { text: "Only if it's meaningful", effects: { drama: 1, intellectual: 1, slow: 1 } },
+      { text: "I need a happy ending", effects: { comedy: 2, romance: 1, action: 1, drama: -1 } },
     ],
     mode: ['deep'],
   },
   {
     id: 10,
     variants: [
-      { text: "Pick an era" },
-      { text: "When should this be set?" },
+      { text: "Pick a time period", subtext: "When should this be set?" },
     ],
     options: [
-      { text: "The distant future", effects: { scifi: 2, action: 1 } },
-      { text: "Modern day", effects: { comedy: 1, romance: 1, thriller: 1 } },
-      { text: "A historical setting", effects: { romance: 2, drama: 2, slow: 1 } },
-      { text: "Somewhere imaginary", effects: { fantasy: 2, action: 1, comedy: 1 } },
+      { text: "Future / Sci-fi setting", effects: { scifi: 3, action: 1, intellectual: 1 } },
+      { text: "Present day", effects: { comedy: 1, romance: 1, thriller: 1, grounded: 2 } },
+      { text: "Historical / Period piece", effects: { drama: 2, romance: 2, slow: 2 } },
+      { text: "Timeless fantasy realm", effects: { fantasy: 3, action: 1, escapist: 2 } },
     ],
     mode: ['deep'],
   },
   {
     id: 11,
     variants: [
-      { text: "Pick a soundtrack" },
-      { text: "What music fits?" },
+      { text: "What music should be playing?", subtext: "The soundtrack vibe" },
     ],
     options: [
-      { text: "Epic orchestral", effects: { action: 2, drama: 1, fantasy: 1 } },
-      { text: "Melancholic and soft", effects: { romance: 2, slow: 1 } },
-      { text: "Upbeat and fun", effects: { comedy: 2, fast: 1 } },
-      { text: "Electronic and moody", effects: { scifi: 2, thriller: 1 } },
+      { text: "Epic orchestral swells", effects: { action: 2, fantasy: 2, drama: 1, emotional: 1 } },
+      { text: "Indie, melancholic acoustic", effects: { romance: 2, drama: 2, slow: 2 } },
+      { text: "Upbeat, catchy tunes", effects: { comedy: 3, fast: 2 } },
+      { text: "Synthy, electronic, moody", effects: { scifi: 2, thriller: 2, intellectual: 1 } },
     ],
     mode: ['deep'],
   },
   {
     id: 12,
     variants: [
-      { text: "Complexity level?" },
-      { text: "How deep should the plot go?" },
+      { text: "How complex should the plot be?", subtext: "Twists and turns?" },
     ],
     options: [
-      { text: "Keep it simple", effects: { comedy: 2, action: 1, fast: 1 } },
-      { text: "Some twists are fine", effects: { thriller: 1, drama: 1 } },
-      { text: "Make me think", effects: { scifi: 2, thriller: 2, slow: 1 } },
+      { text: "Simple and straightforward", effects: { comedy: 2, action: 1, romance: 1, fast: 2, intellectual: -1 } },
+      { text: "Some unexpected twists", effects: { thriller: 2, drama: 1 } },
+      { text: "Make me rewatch to understand", effects: { scifi: 2, thriller: 2, intellectual: 3, slow: 1 } },
     ],
     mode: ['deep'],
   },
   {
     id: 13,
     variants: [
-      { text: "Finally: What should this deliver?" },
-      { text: "The ultimate goal?" },
+      { text: "Last question: What matters most to you?", subtext: "The deciding factor" },
     ],
     options: [
-      { text: "Pure entertainment", effects: { action: 1, comedy: 2, fast: 1 } },
-      { text: "Emotional depth", effects: { drama: 2, romance: 1, slow: 1 } },
-      { text: "Something thought-provoking", effects: { thriller: 1, scifi: 2, slow: 1 } },
+      { text: "Spectacular visuals and action", effects: { action: 3, scifi: 1, fantasy: 1, fast: 1 } },
+      { text: "Deeply relatable characters", effects: { drama: 3, romance: 2, emotional: 2 } },
+      { text: "A story that surprises me", effects: { thriller: 3, intellectual: 2 } },
+      { text: "Making me laugh or feel good", effects: { comedy: 3, romance: 1, escapist: 1 } },
     ],
     mode: ['deep'],
   },
 ];
 
-// ========== ANIME-SPECIFIC QUESTIONS (2 for standard, +1 for deep = 3 total) ==========
+// ========== ANIME-SPECIFIC QUESTIONS ==========
 export const animeQuestions: Question[] = [
   {
     id: 101,
     variants: [
-      { text: "What anime style appeals to you?" },
-      { text: "Visual aesthetic for tonight?" },
+      { text: "What anime visual style appeals to you?" },
     ],
     options: [
-      { text: "Fluid, high-action sequences", effects: { action: 2, fast: 2 } },
-      { text: "Beautiful, atmospheric art", effects: { drama: 1, romance: 1, slow: 2 } },
-      { text: "Expressive character comedy", effects: { comedy: 2, fast: 1 } },
-      { text: "Dark, detailed worlds", effects: { thriller: 2, fantasy: 1 } },
+      { text: "Sakuga fights - fluid animation", subtext: "Action choreography", effects: { action: 3, fast: 2 } },
+      { text: "Atmospheric, beautiful backgrounds", subtext: "Studio Ghibli vibes", effects: { drama: 2, fantasy: 1, slow: 2, emotional: 1 } },
+      { text: "Expressive, exaggerated comedy", subtext: "Funny faces galore", effects: { comedy: 3, fast: 1 } },
+      { text: "Dark, detailed, gritty art", subtext: "Mature aesthetics", effects: { thriller: 2, horror: 1, drama: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['anime'],
@@ -252,13 +253,12 @@ export const animeQuestions: Question[] = [
   {
     id: 102,
     variants: [
-      { text: "Episode count preference?" },
-      { text: "How long a commitment?" },
+      { text: "How many episodes can you commit to?" },
     ],
     options: [
-      { text: "12-24 episodes is perfect", effects: { fast: 1, thriller: 1 } },
-      { text: "I can binge hundreds", effects: { action: 1, slow: 1 } },
-      { text: "Just give me a movie", effects: { drama: 1, romance: 1 } },
+      { text: "12-24 episodes max", subtext: "Tight, complete story", effects: { thriller: 1, drama: 1, fast: 1 } },
+      { text: "50-100 episodes is fine", subtext: "Let it build", effects: { action: 1, drama: 1, emotional: 1 } },
+      { text: "200+ episodes? Let's go", subtext: "Long-running epics", effects: { action: 2, slow: 1, fantasy: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['anime'],
@@ -266,32 +266,30 @@ export const animeQuestions: Question[] = [
   {
     id: 103,
     variants: [
-      { text: "Anime tropes you enjoy?" },
-      { text: "Classic anime elements?" },
+      { text: "Which anime trope do you enjoy?" },
     ],
     options: [
-      { text: "Tournament arcs", effects: { action: 2, fast: 1 } },
-      { text: "School settings", effects: { comedy: 1, romance: 2 } },
-      { text: "Found family", effects: { drama: 2, action: 1 } },
-      { text: "Isekai (another world)", effects: { fantasy: 2, scifi: 1 } },
+      { text: "Tournament arcs", effects: { action: 3, fast: 1 } },
+      { text: "School romance", effects: { romance: 3, comedy: 1 } },
+      { text: "Found family / Nakama power", effects: { drama: 2, action: 1, emotional: 2 } },
+      { text: "Isekai (transported to another world)", effects: { fantasy: 3, escapist: 2 } },
     ],
     mode: ['deep'],
     contentTypes: ['anime'],
   },
 ];
 
-// ========== WEB SERIES-SPECIFIC QUESTIONS (2 for standard, +1 for deep = 3 total) ==========
+// ========== WEB SERIES-SPECIFIC QUESTIONS ==========
 export const webSeriesQuestions: Question[] = [
   {
     id: 201,
     variants: [
-      { text: "How many seasons can you commit to?" },
-      { text: "Binge capacity?" },
+      { text: "Binge or weekly release preference?" },
     ],
     options: [
-      { text: "One complete story (1 season)", effects: { fast: 1, thriller: 1 } },
-      { text: "A few seasons (2-4)", effects: { drama: 1 } },
-      { text: "I want an epic saga (5+)", effects: { action: 1, slow: 1 } },
+      { text: "All at once - full binge", subtext: "One sitting", effects: { fast: 2, action: 1, thriller: 1 } },
+      { text: "I prefer weekly anticipation", subtext: "Savor it slowly", effects: { slow: 2, drama: 1 } },
+      { text: "Doesn't matter if it's good", effects: { drama: 1, thriller: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['webseries'],
@@ -299,13 +297,12 @@ export const webSeriesQuestions: Question[] = [
   {
     id: 202,
     variants: [
-      { text: "Cliffhangers - love or hate?" },
-      { text: "Can you handle the wait?" },
+      { text: "How do you feel about cliffhangers?" },
     ],
     options: [
-      { text: "Love the suspense!", effects: { thriller: 2, fast: 1 } },
-      { text: "They stress me out", effects: { comedy: 1, romance: 1 } },
-      { text: "Only if there's resolution", effects: { drama: 1, slow: 1 } },
+      { text: "Love them - bring the suspense!", effects: { thriller: 3, fast: 1 } },
+      { text: "They stress me out", effects: { comedy: 2, romance: 1 } },
+      { text: "Only if resolved well", effects: { drama: 2, slow: 1, intellectual: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['webseries'],
@@ -313,31 +310,29 @@ export const webSeriesQuestions: Question[] = [
   {
     id: 203,
     variants: [
-      { text: "Episodic or serialized?" },
-      { text: "Story structure?" },
+      { text: "Episodic or serialized storytelling?" },
     ],
     options: [
-      { text: "Standalone episodes", effects: { comedy: 2, fast: 1 } },
-      { text: "Serialized story", effects: { thriller: 2, drama: 1, slow: 1 } },
-      { text: "Mix of both", effects: { action: 1, drama: 1 } },
+      { text: "Standalone episodes", subtext: "Each one complete", effects: { comedy: 3, fast: 1 } },
+      { text: "Continuous serialized story", subtext: "One big narrative", effects: { thriller: 2, drama: 2, slow: 1 } },
+      { text: "Hybrid - case of the week + ongoing", effects: { action: 1, drama: 1, thriller: 1 } },
     ],
     mode: ['deep'],
     contentTypes: ['webseries'],
   },
 ];
 
-// ========== ANIMATED/CARTOON-SPECIFIC QUESTIONS (2 for standard, +1 for deep = 3 total) ==========
+// ========== ANIMATED/CARTOON-SPECIFIC QUESTIONS ==========
 export const animatedQuestions: Question[] = [
   {
     id: 301,
     variants: [
-      { text: "Who are you watching with?" },
-      { text: "Audience for tonight?" },
+      { text: "Who's watching with you?" },
     ],
     options: [
-      { text: "Just me - anything goes", effects: { action: 1, drama: 1 } },
-      { text: "With kids - keep it fun", effects: { comedy: 2, fast: 1 } },
-      { text: "Family movie night", effects: { comedy: 1, drama: 1 } },
+      { text: "Just me - anything goes", effects: { action: 1, drama: 2, thriller: 1 } },
+      { text: "Family with young kids", effects: { comedy: 3, fast: 1, action: -1, thriller: -2 } },
+      { text: "Mixed ages - keep it universal", effects: { comedy: 2, drama: 1, emotional: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['animated'],
@@ -346,12 +341,11 @@ export const animatedQuestions: Question[] = [
     id: 302,
     variants: [
       { text: "Animation style preference?" },
-      { text: "What look do you prefer?" },
     ],
     options: [
-      { text: "3D CGI (Pixar style)", effects: { comedy: 1, action: 1 } },
-      { text: "Classic 2D animation", effects: { drama: 1, romance: 1 } },
-      { text: "Unique artistic style", effects: { drama: 2, slow: 1 } },
+      { text: "3D CGI (Pixar/DreamWorks style)", effects: { comedy: 1, action: 1, fast: 1 } },
+      { text: "Classic 2D hand-drawn", effects: { drama: 1, romance: 1, emotional: 1 } },
+      { text: "Unique artistic vision", subtext: "Spider-Verse, Into the Wild", effects: { drama: 2, scifi: 1, intellectual: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['animated'],
@@ -359,31 +353,29 @@ export const animatedQuestions: Question[] = [
   {
     id: 303,
     variants: [
-      { text: "Depth of storytelling?" },
-      { text: "How mature should themes be?" },
+      { text: "Emotional depth level?" },
     ],
     options: [
-      { text: "Deep and meaningful", effects: { drama: 2, slow: 1 } },
-      { text: "Fun and lighthearted", effects: { comedy: 2, fast: 1 } },
-      { text: "Action-packed adventure", effects: { action: 2, fast: 1 } },
+      { text: "Make me cry (in a good way)", effects: { drama: 3, emotional: 3, slow: 1 } },
+      { text: "Fun and lighthearted", effects: { comedy: 3, fast: 2, escapist: 1 } },
+      { text: "Action-packed adventure", effects: { action: 3, fantasy: 1, fast: 2 } },
     ],
     mode: ['deep'],
     contentTypes: ['animated'],
   },
 ];
 
-// ========== MOVIE-SPECIFIC QUESTIONS (2 for standard, +1 for deep = 3 total) ==========
+// ========== MOVIE-SPECIFIC QUESTIONS ==========
 export const movieQuestions: Question[] = [
   {
     id: 401,
     variants: [
-      { text: "How long can you sit still?" },
-      { text: "Runtime preference?" },
+      { text: "Runtime tolerance?" },
     ],
     options: [
-      { text: "Under 2 hours please", effects: { fast: 2, comedy: 1 } },
-      { text: "2-2.5 hours is fine", effects: { drama: 1 } },
-      { text: "Epic 3+ hour films? Yes!", effects: { slow: 2, action: 1 } },
+      { text: "Under 2 hours, tight and focused", effects: { fast: 2, comedy: 1, action: 1 } },
+      { text: "2-2.5 hours is the sweet spot", effects: { drama: 1, thriller: 1 } },
+      { text: "3+ hour epics? Yes please", effects: { slow: 3, drama: 2, fantasy: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['movies'],
@@ -391,13 +383,12 @@ export const movieQuestions: Question[] = [
   {
     id: 402,
     variants: [
-      { text: "Award-winners or blockbusters?" },
-      { text: "Oscars or popcorn?" },
+      { text: "Critically acclaimed or crowd pleaser?" },
     ],
     options: [
-      { text: "Oscar-worthy cinema", effects: { drama: 2, slow: 1 } },
-      { text: "Box office hits", effects: { action: 2, fast: 1 } },
-      { text: "Cult classics", effects: { comedy: 1, thriller: 1 } },
+      { text: "Award-winning cinema", subtext: "Oscars, festivals", effects: { drama: 3, slow: 2, intellectual: 2 } },
+      { text: "Box office blockbusters", subtext: "Popular for a reason", effects: { action: 3, fast: 2, escapist: 1 } },
+      { text: "Hidden gems and cult classics", effects: { thriller: 1, comedy: 1, drama: 1, intellectual: 1 } },
     ],
     mode: ['standard', 'deep'],
     contentTypes: ['movies'],
@@ -405,13 +396,12 @@ export const movieQuestions: Question[] = [
   {
     id: 403,
     variants: [
-      { text: "Sequel or standalone?" },
-      { text: "Part of a franchise?" },
+      { text: "Franchise or standalone?" },
     ],
     options: [
-      { text: "Complete story in one film", effects: { drama: 1, slow: 1 } },
-      { text: "Part of a series is fine", effects: { action: 2, fantasy: 1 } },
-      { text: "Love cinematic universes", effects: { scifi: 1, action: 1 } },
+      { text: "Complete story in one film", effects: { drama: 2, slow: 1, grounded: 1 } },
+      { text: "Part of a series is fine", effects: { action: 2, fantasy: 1, scifi: 1 } },
+      { text: "Cinematic universes are my thing", effects: { action: 2, scifi: 1, fantasy: 1, escapist: 1 } },
     ],
     mode: ['deep'],
     contentTypes: ['movies'],
@@ -423,10 +413,8 @@ export function getQuestionsForModeAndContent(
   mode: QuizMode, 
   contentTypes: ContentType[]
 ): Question[] {
-  // Start with universal questions filtered by mode
   let questions = universalQuestions.filter(q => q.mode.includes(mode));
   
-  // Add content-specific questions
   if (contentTypes.includes('anime')) {
     questions = questions.concat(animeQuestions.filter(q => q.mode.includes(mode)));
   }
@@ -440,6 +428,5 @@ export function getQuestionsForModeAndContent(
     questions = questions.concat(movieQuestions.filter(q => q.mode.includes(mode)));
   }
   
-  // Sort by ID to maintain order
   return questions.sort((a, b) => a.id - b.id);
 }
